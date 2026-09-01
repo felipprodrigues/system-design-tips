@@ -1,0 +1,7 @@
+.page {
+  flex: 1;
+  max-width: var(--sd-page-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--sd-page-pad-y) var(--sd-page-pad-x) 120px;
+}

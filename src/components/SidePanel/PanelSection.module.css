@@ -1,0 +1,73 @@
+.section {
+  border: 1px solid var(--sd-border);
+  border-radius: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section.highlight {
+  border-color: var(--sd-accent);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.18);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: var(--sd-surface2);
+  border: none;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.section.open .head {
+  border-radius: 10px 10px 0 0;
+}
+
+.head:hover {
+  background: #2a2e42;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sd-text);
+  line-height: 1.4;
+}
+
+.chevron {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--sd-muted);
+  transition: transform 0.22s ease;
+}
+
+.section.open .chevron {
+  transform: rotate(180deg);
+}
+
+.body {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 0.28s ease, opacity 0.22s ease;
+}
+
+.section.open .body {
+  opacity: 1;
+}
+
+.body.settled {
+  overflow: visible;
+}
+
+.inner {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

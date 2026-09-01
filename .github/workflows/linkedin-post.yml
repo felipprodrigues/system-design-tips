@@ -1,0 +1,20 @@
+name: Announce Lesson on LinkedIn
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  post:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'lesson/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/post-to-linkedin.mjs "${{ github.event.pull_request.head.ref }}"
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          SITE_URL: ${{ vars.SITE_URL }}

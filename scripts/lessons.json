@@ -1,0 +1,50 @@
+{
+  "module": {
+    "title": "Foundations of Distributed Architecture",
+    "basePath": "/lessons"
+  },
+  "lessons": [
+    {
+      "number": 1,
+      "slug": "01-horizontal-vs-vertical-scaling",
+      "title": "Horizontal vs Vertical Scaling",
+      "subtitle": "Understanding how systems grow — and the trade-offs each approach demands.",
+      "insight": "Most real systems don't pick one and ignore the other — they start vertical for simplicity, then shift horizontal once demand outgrows what a single box can handle."
+    },
+    {
+      "number": 2,
+      "slug": "02-latency-throughput-availability",
+      "title": "Latency, Throughput & Availability",
+      "subtitle": "The three pillars of system observability — if you can't measure these, you can't operate.",
+      "insight": "Optimizing one in isolation is easy. The hard part is the trade-off — pushing throughput up often pushes latency up too."
+    },
+    {
+      "number": 3,
+      "slug": "03-cap-theorem",
+      "title": "CAP Theorem & Trade-offs",
+      "subtitle": "When the network fails, you must choose — and there is no middle ground.",
+      "insight": "During a network partition you only get two of three: consistency, availability, partition tolerance. Most real systems pick AP or CP and design around it."
+    },
+    {
+      "number": 4,
+      "slug": "04-load-balancing",
+      "title": "Core Concepts of Load Balancing",
+      "subtitle": "Distribute traffic, eliminate single points of failure, and scale without downtime.",
+      "insight": "A load balancer isn't just traffic distribution — it's what turns a single point of failure into a resilient cluster."
+    },
+    {
+      "number": 5,
+      "slug": "05-requirements-and-estimation",
+      "title": "Design Requirements & Estimating Resource Needs",
+      "subtitle": "Turning vague product goals into concrete, quantifiable engineering constraints.",
+      "insight": "Before you design anything, you need real numbers — QPS, storage growth, read/write ratio. Vague requirements produce vague architectures."
+    },
+    {
+      "number": 6,
+      "slug": "06-webhooks-vs-polling",
+      "title": "Webhooks vs. Polling: Choosing a Communication Pattern",
+      "subtitle": "How a system finds out about changes it didn't initiate.",
+      "insight": "Polling asks \"anything new?\" on a timer. Webhooks flip the model — the system tells you the moment something changes."
+    }
+  ]
+}

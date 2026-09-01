@@ -1,0 +1,29 @@
+/*
+ * Design tokens for the System Design course.
+ * These extend shadcn's CSS variables with course-specific values.
+ */
+
+:root {
+  /* Brand palette */
+  --sd-bg:       #0f1117;
+  --sd-surface:  #1a1d27;
+  --sd-surface2: #22263a;
+  --sd-border:   #2e3248;
+
+  --sd-accent:   #6c63ff;
+  --sd-teal:     #3ecfcf;
+  --sd-green:    #34d399;
+  --sd-amber:    #fbbf24;
+  --sd-red:      #f87171;
+
+  --sd-text:     #e2e8f0;
+  --sd-muted:    #7c85a2;
+
+  /* Typography */
+  --sd-font: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --sd-page-max:   900px;
+  --sd-page-pad-x: 24px;
+  --sd-page-pad-y: 48px;
+}

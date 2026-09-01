@@ -1,0 +1,41 @@
+.breadcrumb {
+  padding: 10px 40px;
+  border-bottom: 1px solid var(--sd-border);
+  background: var(--sd-surface);
+  font-size: 12px;
+  color: var(--sd-muted);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.sep {
+  margin: 0 8px;
+}
+
+.lesson {
+  color: var(--sd-text);
+}
+
+.section {
+  color: var(--sd-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.section:hover {
+  color: var(--sd-text);
+  text-decoration: underline;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+}

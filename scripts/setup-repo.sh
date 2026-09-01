@@ -11,11 +11,14 @@ gh repo edit "$repo" --enable-auto-merge
 # Require the CI build to pass before a PR can merge (auto-merge waits on this).
 gh api "repos/$repo/branches/main/protection" -X PUT \
   -H "Accept: application/vnd.github+json" \
-  -f "required_status_checks[strict]=true" \
-  -f "required_status_checks[contexts][]=build" \
-  -F "enforce_admins=false" \
-  -F "required_pull_request_reviews=null" \
-  -F "restrictions=null"
+  --input - <<'JSON'
+{
+  "required_status_checks": { "strict": true, "contexts": ["build"] },
+  "enforce_admins": false,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+JSON
 
 echo "Done. Auto-merge enabled; main protected requiring the 'build' check."
 echo "Still needed before the automation can run end to end:"

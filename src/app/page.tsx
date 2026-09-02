@@ -109,24 +109,6 @@ export default function Home() {
           </div>
         ))}
       </div>
-
-      {/* Footer */}
-      <footer style={{
-        marginTop: 56, paddingTop: 24, width: "100%", maxWidth: 480,
-        borderTop: "1px solid var(--sd-border)", textAlign: "center",
-      }}>
-        <a
-          href="https://github.com/nilbuild/developer-roadmap"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            fontSize: 12, color: "var(--sd-muted)",
-            textDecoration: "none", fontWeight: 500,
-          }}
-        >
-          developer-roadmap ↗
-        </a>
-      </footer>
     </div>
   );
 }

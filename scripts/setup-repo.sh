@@ -21,7 +21,4 @@ gh api "repos/$repo/branches/main/protection" -X PUT \
 JSON
 
 echo "Done. Auto-merge enabled; main protected requiring the 'build' check."
-echo "Still needed before the automation can run end to end:"
-echo "  gh secret set LINKEDIN_ACCESS_TOKEN"
-echo "  gh secret set LINKEDIN_AUTHOR_URN"
-echo "  gh variable set SITE_URL --body https://<your-vercel-domain>"
+echo "Still needed: gh variable set SITE_URL --body https://<your-vercel-domain>"

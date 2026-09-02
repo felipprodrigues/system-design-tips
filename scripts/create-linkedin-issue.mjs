@@ -2,7 +2,7 @@
 // Opens a GitHub issue with ready-to-paste LinkedIn post copy — no LinkedIn
 // API involved, just a reminder with the text already written.
 // Usage: node scripts/create-linkedin-issue.mjs <branch-ref>
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,7 +37,8 @@ const post = [
 
 const body = ["Copy the text below into a LinkedIn post, then close this issue.", "", "---", "", post].join("\n");
 
-execSync(
-  `gh issue create --title ${JSON.stringify(`Post to LinkedIn — Lesson ${lesson.number}: ${lesson.title}`)} --body ${JSON.stringify(body)}`,
+execFileSync(
+  "gh",
+  ["issue", "create", "--title", `Post to LinkedIn — Lesson ${lesson.number}: ${lesson.title}`, "--body", body],
   { cwd: root, stdio: "inherit" }
 );

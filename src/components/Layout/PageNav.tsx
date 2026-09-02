@@ -38,9 +38,9 @@ export default function PageNav({
           Next →
         </Link>
       ) : (
-        <button className={styles.btn} disabled>
+        <span className={styles.btn} style={{ visibility: "hidden" }} aria-hidden="true">
           Next →
-        </button>
+        </span>
       )}
     </nav>
   );

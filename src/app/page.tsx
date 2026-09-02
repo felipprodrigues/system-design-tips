@@ -1,17 +1,5 @@
 import Link from "next/link";
-
-const modules = [
-  {
-    number: "01",
-    title: "Foundations of Distributed Architecture",
-    lessons: [
-      // LESSON_ENTRIES_START
-      { slug: "01-horizontal-vs-vertical-scaling", number: 1, title: "Horizontal vs Vertical Scaling" },
-      { slug: "02-latency-throughput-availability", number: 2, title: "Latency, Throughput & Availability" },
-      // LESSON_ENTRIES_END
-    ],
-  },
-];
+import { modules } from "@/lib/lessons";
 
 export default function Home() {
   return (

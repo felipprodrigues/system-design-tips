@@ -38,15 +38,15 @@ const targetDir = join(root, "src/app/lessons", next.slug);
 mkdirSync(targetDir, { recursive: true });
 renameSync(draftPath, join(targetDir, "page.tsx"));
 
-const homepagePath = join(root, "src/app/page.tsx");
-const homepage = readFileSync(homepagePath, "utf8");
+const lessonsDataPath = join(root, "src/lib/lessons.ts");
+const lessonsData = readFileSync(lessonsDataPath, "utf8");
 const entry = `      { slug: "${next.slug}", number: ${next.number}, title: "${next.title.replace(/"/g, '\\"')}" },\n`;
 const marker = "      // LESSON_ENTRIES_END";
-if (!homepage.includes(marker)) {
-  console.error("LESSON_ENTRIES_END marker not found in src/app/page.tsx");
+if (!lessonsData.includes(marker)) {
+  console.error("LESSON_ENTRIES_END marker not found in src/lib/lessons.ts");
   process.exit(1);
 }
-writeFileSync(homepagePath, homepage.replace(marker, entry + marker));
+writeFileSync(lessonsDataPath, lessonsData.replace(marker, entry + marker));
 
 sh(`git add -A`);
 shf("git", [

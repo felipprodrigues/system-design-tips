@@ -11,6 +11,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import { getLessonNav } from "@/lib/lessons";
 
 const quizCards: QuizCard[] = [
   {
@@ -552,10 +553,7 @@ export default function Lesson05() {
       </SidePanel>
 
       <PageNav
-        lessonNumber={5}
-        totalLessons={8}
-        prevHref="/lessons/04-load-balancing"
-        nextHref="/lessons/06-webhooks-vs-polling"
+        {...getLessonNav("05-requirements-and-estimation")}
         sectionTitle="Foundations of Distributed Architectures"
       />
     </>

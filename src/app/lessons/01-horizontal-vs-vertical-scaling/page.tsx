@@ -11,6 +11,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import { getLessonNav } from "@/lib/lessons";
 
 const quizCards: QuizCard[] = [
   {
@@ -300,9 +301,7 @@ export default function Lesson01() {
       </SidePanel>
 
       <PageNav
-        lessonNumber={1}
-        totalLessons={8}
-        nextHref="/lessons/02-latency-throughput-availability"
+        {...getLessonNav("01-horizontal-vs-vertical-scaling")}
         sectionTitle="Foundations of Distributed Architectures"
       />
     </>

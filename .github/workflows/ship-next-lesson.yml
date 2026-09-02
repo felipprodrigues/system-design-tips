@@ -1,4 +1,5 @@
 name: Ship Next Lesson
+# registered
 
 on:
   schedule:

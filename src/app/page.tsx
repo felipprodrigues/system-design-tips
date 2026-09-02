@@ -34,6 +34,7 @@ const modules = [
     title: "Foundations of Distributed Architecture",
     lessons: [
       // LESSON_ENTRIES_START
+      { slug: "01-horizontal-vs-vertical-scaling", number: 1, title: "Horizontal vs Vertical Scaling" },
       // LESSON_ENTRIES_END
     ],
   },

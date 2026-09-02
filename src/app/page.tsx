@@ -35,6 +35,7 @@ const modules = [
     lessons: [
       // LESSON_ENTRIES_START
       { slug: "01-horizontal-vs-vertical-scaling", number: 1, title: "Horizontal vs Vertical Scaling" },
+      { slug: "02-latency-throughput-availability", number: 2, title: "Latency, Throughput & Availability" },
       // LESSON_ENTRIES_END
     ],
   },

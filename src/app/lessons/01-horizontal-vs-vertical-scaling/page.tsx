@@ -19,7 +19,7 @@ const quizCards: QuizCard[] = [
     answers: ["Upgrading the hardware of an existing server — more CPU cores, more RAM, faster storage."],
   },
   {
-    question: "Which of the following are benefits of horizontal scaling?",
+    question: "What are the benefits of horizontal scaling?",
     answers: ["Theoretically infinite capacity", "Built-in redundancy through multiple nodes"],
     note: "Horizontal scaling has higher operational complexity — reduced complexity and elimination of load balancers are not benefits.",
   },
@@ -32,11 +32,11 @@ const quizCards: QuizCard[] = [
     answers: ["State must be moved to an external, shared layer — such as a cache or distributed database."],
   },
   {
-    question: "Which statements describe the operational complexity of horizontal scaling?",
+    question: "What contributes to the operational complexity of horizontal scaling?",
     answers: ["Requires managing distributed state", "Requires coordination between nodes"],
   },
   {
-    question: "Which statements about availability and reliability are correct?",
+    question: "How do horizontal and vertical scaling differ in availability and reliability?",
     answers: [
       "Horizontal scaling provides high availability through redundancy",
       "Vertical scaling suffers from a single point of failure",
@@ -47,7 +47,7 @@ const quizCards: QuizCard[] = [
     answers: ["It is limited by the physical limits of hardware — there is a maximum size machine that exists."],
   },
   {
-    question: "Which cost considerations are true?",
+    question: "What are the cost considerations for horizontal vs. vertical scaling?",
     answers: [
       "Vertical scaling is expensive at high-performance tiers",
       "Horizontal scaling is cost-effective using commodity hardware",

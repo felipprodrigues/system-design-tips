@@ -27,7 +27,7 @@
 }
 
 .head:hover {
-  background: #232327;
+  background: var(--sd-border-strong);
 }
 
 .sectionTitle {

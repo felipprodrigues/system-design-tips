@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import styles from "./Breadcrumb.module.css";
 
 interface BreadcrumbProps {
@@ -19,7 +20,10 @@ export default function Breadcrumb({ section, sectionHref = "/", lesson, action 
         <span className={styles.sep}>›</span>
         <span className={styles.lesson}>{lesson}</span>
       </div>
-      {action && <div className={styles.action}>{action}</div>}
+      <div className={styles.action}>
+        {action}
+        <ThemeToggle />
+      </div>
     </nav>
   );
 }

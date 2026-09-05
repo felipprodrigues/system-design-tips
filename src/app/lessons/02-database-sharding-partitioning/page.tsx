@@ -125,7 +125,7 @@ export default function Lesson02DatabaseSharding() {
 
       <PageLayout>
         {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 2 · Data Storage and Management Strategies
         </p>
         <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
@@ -139,21 +139,21 @@ export default function Lesson02DatabaseSharding() {
         <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             Database sharding and partitioning are strategies used to{" "}
-            <strong style={{ color: "#fff" }}>decompose a single, massive dataset</strong> into smaller, manageable chunks across multiple database nodes.
+            <strong style={{ color: "var(--sd-text)" }}>decompose a single, massive dataset</strong> into smaller, manageable chunks across multiple database nodes.
           </p>
           <p>
             Vertical scaling adds more power — CPU, RAM — to a single server. Horizontal scaling via sharding instead{" "}
-            <strong style={{ color: "#fff" }}>distributes data across an entire cluster</strong>, theoretically overcoming the storage and throughput limits of one machine.
+            <strong style={{ color: "var(--sd-text)" }}>distributes data across an entire cluster</strong>, theoretically overcoming the storage and throughput limits of one machine.
           </p>
         </div>
 
         {/* Horizontal Partitioning / Sharding */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Model 01
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(108,99,255,0.15)", color: "var(--sd-accent)", marginRight: 10, verticalAlign: "middle" }}>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)", marginRight: 10, verticalAlign: "middle" }}>
               Sharding
             </span>
             Horizontal Partitioning
@@ -162,26 +162,26 @@ export default function Lesson02DatabaseSharding() {
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>
               Sharding is the process of splitting a logical dataset into horizontal fragments, where each fragment is stored on a{" "}
-              <strong style={{ color: "#fff" }}>separate physical server</strong>. Unlike partitioning — often done on a single instance to improve local query performance — sharding explicitly addresses the scaling bottlenecks of one physical database server.
+              <strong style={{ color: "var(--sd-text)" }}>separate physical server</strong>. Unlike partitioning — often done on a single instance to improve local query performance — sharding explicitly addresses the scaling bottlenecks of one physical database server.
             </p>
             <p style={{ marginTop: 10 }}>
               The core of a sharded architecture is the{" "}
-              <strong style={{ color: "#fff" }}>Shard Key</strong> — the column (or set of columns) used to determine which shard a row belongs to. Choosing this key is the most critical design decision.
+              <strong style={{ color: "var(--sd-text)" }}>Shard Key</strong> — the column (or set of columns) used to determine which shard a row belongs to. Choosing this key is the most critical design decision.
             </p>
           </div>
 
-          <div style={{ background: "rgba(248,113,113,0.07)", borderLeft: "3px solid var(--sd-red)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            A poor shard key choice leads to <strong style={{ color: "#fff" }}>&quot;hot shards&quot;</strong> — one server handling 90% of the traffic, defeating the purpose of the distribution.
+          <div style={{ background: "rgba(74, 81, 112,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            A poor shard key choice leads to <strong style={{ color: "var(--sd-text)" }}>&quot;hot shards&quot;</strong> — one server handling 90% of the traffic, defeating the purpose of the distribution.
           </div>
         </div>
 
         {/* Range-Based Sharding */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Strategy 01
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(52,211,153,0.12)", color: "var(--sd-green)", marginRight: 10, verticalAlign: "middle" }}>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(157, 176, 247,0.12)", color: "var(--sd-green)", marginRight: 10, verticalAlign: "middle" }}>
               Range
             </span>
             Range-Based Sharding
@@ -203,18 +203,18 @@ export default function Lesson02DatabaseSharding() {
             </code>
           </pre>
 
-          <div style={{ background: "rgba(248,113,113,0.07)", borderLeft: "3px solid var(--sd-red)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            This is simple to implement but leads to <strong style={{ color: "#fff" }}>uneven distribution</strong>. If your application creates many new users, the shard holding the highest range experiences significantly more write pressure than the others.
+          <div style={{ background: "rgba(74, 81, 112,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            This is simple to implement but leads to <strong style={{ color: "var(--sd-text)" }}>uneven distribution</strong>. If your application creates many new users, the shard holding the highest range experiences significantly more write pressure than the others.
           </div>
         </div>
 
         {/* Hash-Based Sharding */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Strategy 02
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(62,207,207,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(127, 147, 242,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>
               Hash
             </span>
             Hash-Based Sharding
@@ -238,11 +238,11 @@ export default function Lesson02DatabaseSharding() {
               Routing a write with a hash-based shard key
             </p>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-              <div style={{ background: "rgba(108,99,255,0.1)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, color: "var(--sd-accent)" }}>
+              <div style={{ background: "rgba(76, 110, 245,0.1)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, color: "var(--sd-accent)" }}>
                 Incoming Write Request
               </div>
               <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
-              <div style={{ background: "rgba(62,207,207,0.12)", border: "1px solid var(--sd-teal)", borderRadius: 10, padding: "12px 28px", fontSize: 13, fontWeight: 700, color: "var(--sd-teal)", textAlign: "center" }}>
+              <div style={{ background: "rgba(127, 147, 242,0.12)", border: "1px solid var(--sd-teal)", borderRadius: 10, padding: "12px 28px", fontSize: 13, fontWeight: 700, color: "var(--sd-teal)", textAlign: "center" }}>
                 Calculate Hash
                 <div style={{ fontSize: 10, fontWeight: 400, color: "var(--sd-muted)", marginTop: 2 }}>shard_id = hash % 3</div>
               </div>
@@ -262,15 +262,15 @@ export default function Lesson02DatabaseSharding() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(62,207,207,0.07)", borderLeft: "3px solid var(--sd-teal)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(127, 147, 242,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             This effectively randomizes the data distribution, preventing hot spots. But it makes range-based queries — &quot;find all users created between Monday and Friday&quot; — extremely expensive, since you must{" "}
-            <strong style={{ color: "#fff" }}>broadcast the query to every shard and aggregate the results</strong>.
+            <strong style={{ color: "var(--sd-text)" }}>broadcast the query to every shard and aggregate the results</strong>.
           </div>
         </div>
 
         {/* Strategy comparison */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Reference
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Range vs. Hash at a Glance</h2>
@@ -301,7 +301,7 @@ export default function Lesson02DatabaseSharding() {
 
         {/* Partitioning within a single node */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Single-Instance Technique
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Partitioning Strategies Within a Single Node</h2>
@@ -309,7 +309,7 @@ export default function Lesson02DatabaseSharding() {
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>
               Partitioning is often used within a single database engine to improve maintenance and query performance for massive tables{" "}
-              <strong style={{ color: "#fff" }}>without the complexity of a distributed network</strong>.
+              <strong style={{ color: "var(--sd-text)" }}>without the complexity of a distributed network</strong>.
             </p>
           </div>
 
@@ -325,7 +325,7 @@ export default function Lesson02DatabaseSharding() {
 
         {/* Shard Map implementation */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Implementation
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Implementing a Shard Map</h2>
@@ -333,7 +333,7 @@ export default function Lesson02DatabaseSharding() {
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>
               To route requests, the application or a middleware layer needs a{" "}
-              <strong style={{ color: "#fff" }}>&quot;Shard Map&quot;</strong> — a look-up table that maintains the association between the shard key range and the physical connection string of the database instance.
+              <strong style={{ color: "var(--sd-text)" }}>&quot;Shard Map&quot;</strong> — a look-up table that maintains the association between the shard key range and the physical connection string of the database instance.
             </p>
           </div>
 
@@ -361,7 +361,7 @@ export default function Lesson02DatabaseSharding() {
 
         {/* Trade-offs */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Costs
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Trade-offs and Operational Complexity</h2>
@@ -372,7 +372,7 @@ export default function Lesson02DatabaseSharding() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {tradeoffs.map((item) => (
-              <div key={item.title} style={{ background: "rgba(251,191,36,0.07)", borderLeft: "3px solid var(--sd-amber)", borderRadius: 8, padding: "12px 14px" }}>
+              <div key={item.title} style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "12px 14px" }}>
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
                 <p style={{ fontSize: 12.5, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
               </div>
@@ -382,21 +382,21 @@ export default function Lesson02DatabaseSharding() {
 
         {/* Summary */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Summary
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Data Placement, Not Data Consistency</h2>
 
-          <div style={{ background: "rgba(52,211,153,0.07)", borderLeft: "3px solid var(--sd-green)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             Sharding is a powerful technique for horizontal scaling, shifting the bottleneck from a single physical server to the logic of your partitioning strategy. Hash-based sharding gives the best load distribution but sacrifices efficient range queries — always aim for{" "}
-            <strong style={{ color: "#fff" }}>data co-location</strong> to minimize the need for cross-shard operations. Partitioning and sharding are purely about data placement; next, we&rsquo;ll explore how to keep that data{" "}
-            <strong style={{ color: "#fff" }}>consistent</strong> across those nodes.
+            <strong style={{ color: "var(--sd-text)" }}>data co-location</strong> to minimize the need for cross-shard operations. Partitioning and sharding are purely about data placement; next, we&rsquo;ll explore how to keep that data{" "}
+            <strong style={{ color: "var(--sd-text)" }}>consistent</strong> across those nodes.
           </div>
         </div>
 
         {/* Quiz */}
         <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
             Quiz Review
           </p>
           <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
@@ -433,7 +433,7 @@ export default function Lesson02DatabaseSharding() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Plain modulo hashing and consistent hashing solve the same routing problem</strong> — the difference only shows up the moment the shard count changes.
           </div>
         </PanelSection>
@@ -462,7 +462,7 @@ export default function Lesson02DatabaseSharding() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Two-phase commit buys atomicity across shards at the cost of availability during the protocol.</strong> It's the CAP theorem's trade-off showing up again, one layer down.
           </div>
         </PanelSection>
@@ -491,7 +491,7 @@ export default function Lesson02DatabaseSharding() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Co-location isn&rsquo;t a database feature — it&rsquo;s a modeling decision.</strong> You choose the shard key so the joins you actually run stay on one machine.
           </div>
         </PanelSection>
@@ -520,7 +520,7 @@ export default function Lesson02DatabaseSharding() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Start from your access patterns, not the algorithm.</strong> The shard key is a bet on what you'll query — get it wrong and you're re-sharding in production.
           </div>
         </PanelSection>

@@ -3,12 +3,14 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--sd-surface);
-  border-top: 1px solid var(--sd-border);
+  background: color-mix(in srgb, var(--sd-surface) 90%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 -16px 32px -8px rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 40px;
+  padding: 16px 40px;
   z-index: 100;
 }
 
@@ -17,19 +19,19 @@
   align-items: center;
   gap: 8px;
   background: transparent;
-  border: 1px solid var(--sd-border);
-  color: var(--sd-text);
+  border: none;
+  color: var(--sd-muted);
   border-radius: 8px;
-  padding: 9px 20px;
+  padding: 9px 16px;
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .btn:hover {
   background: var(--sd-surface2);
-  border-color: var(--sd-accent);
+  color: var(--sd-text);
 }
 
 .btn:disabled {
@@ -38,7 +40,8 @@
 }
 
 .center {
-  font-size: 12px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
   color: var(--sd-muted);
   text-align: center;
   line-height: 1.4;
@@ -46,6 +49,7 @@
 
 .center strong {
   display: block;
+  font-family: var(--sd-font-display);
   color: var(--sd-text);
   font-size: 13px;
 }

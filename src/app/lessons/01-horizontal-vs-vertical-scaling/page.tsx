@@ -69,7 +69,7 @@ const quizCards: QuizCard[] = [
 function PItem({
   num, title, body,
   numColor = "var(--sd-accent)",
-  numBg = "rgba(108,99,255,0.15)",
+  numBg = "rgba(76, 110, 245,0.15)",
 }: {
   num: string; title: string; body: string;
   numColor?: string; numBg?: string;
@@ -99,7 +99,7 @@ export default function Lesson01() {
       />
 
       <PageLayout>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 1 · Foundations
         </p>
         <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
@@ -113,14 +113,14 @@ export default function Lesson01() {
         <div style={{ marginBottom: 32, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             Every system eventually faces a growth problem: traffic increases, latency climbs, and the infrastructure that worked yesterday starts to buckle. The fundamental question becomes —{" "}
-            <strong style={{ color: "#fff" }}>how do you give the system more capacity?</strong>
+            <strong style={{ color: "var(--sd-text)" }}>how do you give the system more capacity?</strong>
           </p>
           <p>
             There are two directions you can go. You can make the existing machine{" "}
             <span style={{ color: "var(--sd-teal)" }}>bigger</span>, or you can bring in{" "}
             <span style={{ color: "var(--sd-teal)" }}>more machines</span>. The first is{" "}
-            <strong style={{ color: "#fff" }}>vertical scaling</strong> (scaling up); the second is{" "}
-            <strong style={{ color: "#fff" }}>horizontal scaling</strong> (scaling out). Both solve the same problem, but they do so with very different architectures, cost curves, and failure modes.
+            <strong style={{ color: "var(--sd-text)" }}>vertical scaling</strong> (scaling up); the second is{" "}
+            <strong style={{ color: "var(--sd-text)" }}>horizontal scaling</strong> (scaling out). Both solve the same problem, but they do so with very different architectures, cost curves, and failure modes.
           </p>
           <p>
             Most real-world systems don't pick one and ignore the other — they start vertical for simplicity, and shift horizontal as demand outgrows what a single box can handle. Understanding{" "}
@@ -133,16 +133,16 @@ export default function Lesson01() {
           {/* Vertical */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: 24 }}>
             <h2 style={{ fontSize: 17, fontWeight: 600, marginBottom: 12 }}>
-              <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: "rgba(251,191,36,0.15)", color: "var(--sd-amber)", marginRight: 10, verticalAlign: "middle" }}>Vertical</span>
+              <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: "rgba(106, 118, 163,0.15)", color: "var(--sd-amber)", marginRight: 10, verticalAlign: "middle" }}>Vertical</span>
               Scale Up
             </h2>
             <p style={{ fontSize: 14, lineHeight: 1.75, marginBottom: 10 }}>Upgrade the hardware of an existing server — more CPU cores, more RAM, faster storage.</p>
-            <p style={{ fontSize: 14, lineHeight: 1.75, marginBottom: 14 }}>Your application architecture stays <strong style={{ color: "#fff" }}>unchanged</strong>. A single node handles everything.</p>
+            <p style={{ fontSize: 14, lineHeight: 1.75, marginBottom: 14 }}>Your application architecture stays <strong style={{ color: "var(--sd-text)" }}>unchanged</strong>. A single node handles everything.</p>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { sign: "+", color: "var(--sd-green)", bg: "rgba(52,211,153,0.15)", text: <><strong style={{ color: "#fff" }}>Zero overhead</strong> — no inter-node communication, no load balancers, no distributed state.</> },
-                { sign: "−", color: "var(--sd-red)", bg: "rgba(248,113,113,0.15)", text: <><strong style={{ color: "#fff" }}>Hard ceiling</strong> — hardware has physical limits. Cost grows non-linearly at high tiers.</> },
-                { sign: "−", color: "var(--sd-red)", bg: "rgba(248,113,113,0.15)", text: <><strong style={{ color: "#fff" }}>Single point of failure</strong> — if the machine goes down, everything goes down.</> },
+                { sign: "+", color: "var(--sd-green)", bg: "rgba(157, 176, 247,0.15)", text: <><strong style={{ color: "var(--sd-text)" }}>Zero overhead</strong> — no inter-node communication, no load balancers, no distributed state.</> },
+                { sign: "−", color: "var(--sd-red)", bg: "rgba(74, 81, 112,0.15)", text: <><strong style={{ color: "var(--sd-text)" }}>Hard ceiling</strong> — hardware has physical limits. Cost grows non-linearly at high tiers.</> },
+                { sign: "−", color: "var(--sd-red)", bg: "rgba(74, 81, 112,0.15)", text: <><strong style={{ color: "var(--sd-text)" }}>Single point of failure</strong> — if the machine goes down, everything goes down.</> },
               ].map((item, i) => (
                 <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 14 }}>
                   <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, marginTop: 2, background: item.bg, color: item.color }}>{item.sign}</span>
@@ -155,7 +155,7 @@ export default function Lesson01() {
           {/* Horizontal */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: 24 }}>
             <h2 style={{ fontSize: 17, fontWeight: 600, marginBottom: 12 }}>
-              <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: "rgba(62,207,207,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>Horizontal</span>
+              <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: "rgba(127, 147, 242,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>Horizontal</span>
               Scale Out
             </h2>
             <p style={{ fontSize: 14, lineHeight: 1.75, marginBottom: 10 }}>Add more machines to your resource pool. A load balancer distributes traffic across nodes.</p>
@@ -167,9 +167,9 @@ export default function Lesson01() {
             </p>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { sign: "+", color: "var(--sd-green)", bg: "rgba(52,211,153,0.15)", text: <><strong style={{ color: "#fff" }}>Theoretically unlimited</strong> — add nodes as demand grows.</> },
-                { sign: "+", color: "var(--sd-green)", bg: "rgba(52,211,153,0.15)", text: <><strong style={{ color: "#fff" }}>Built-in redundancy</strong> — one node fails, others keep serving.</> },
-                { sign: "−", color: "var(--sd-red)", bg: "rgba(248,113,113,0.15)", text: <><strong style={{ color: "#fff" }}>Distributed complexity</strong> — state coordination, consistency, and inter-node communication.</> },
+                { sign: "+", color: "var(--sd-green)", bg: "rgba(157, 176, 247,0.15)", text: <><strong style={{ color: "var(--sd-text)" }}>Theoretically unlimited</strong> — add nodes as demand grows.</> },
+                { sign: "+", color: "var(--sd-green)", bg: "rgba(157, 176, 247,0.15)", text: <><strong style={{ color: "var(--sd-text)" }}>Built-in redundancy</strong> — one node fails, others keep serving.</> },
+                { sign: "−", color: "var(--sd-red)", bg: "rgba(74, 81, 112,0.15)", text: <><strong style={{ color: "var(--sd-text)" }}>Distributed complexity</strong> — state coordination, consistency, and inter-node communication.</> },
               ].map((item, i) => (
                 <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 14 }}>
                   <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, marginTop: 2, background: item.bg, color: item.color }}>{item.sign}</span>
@@ -232,7 +232,7 @@ export default function Lesson01() {
 
         {/* Quiz */}
         <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>Quiz Review</p>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>Quiz Review</p>
           <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
@@ -249,7 +249,7 @@ export default function Lesson01() {
             { num: "3", title: "Throughput Saturation", body: "Once your application can't handle request volume due to thread contention, lock contention, or network I/O limits of a single machine, partitioning the load across nodes becomes mandatory." },
             { num: "4", title: "Managed Service Limits", body: "Cloud providers enforce hard limits on single-instance types — disk IOPS, bandwidth caps, connection limits. When you hit these quotas, you are forced to shard or replicate horizontally." },
           ].map((item) => <PItem key={item.num} {...item} />)}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             Start vertical for simplicity. Once you're within <strong style={{ color: "var(--sd-teal)" }}>60–70% of maximum vertical capacity</strong>, begin the shift. Delaying forces a painful re-architecture under pressure.
           </div>
         </PanelSection>
@@ -263,8 +263,8 @@ export default function Lesson01() {
             { num: "B", title: "Data Partitioning (Sharding)", body: "When a database hits IOPS or storage limits, implement sharding via a partition key (user_id, region). One bottleneck becomes an aggregate of nodes that scale linearly." },
             { num: "C", title: "Read/Write Splitting & Caching", body: "Caching (Redis) absorbs read-heavy workloads. Read replicas offload reads from the primary. If writes still choke, move to CockroachDB, TiDB, or Cassandra for native multi-node writes." },
             { num: "D", title: "Asynchronous Processing", body: "Move heavy work to background workers via a message queue (Kafka, RabbitMQ). Decoupling computation from the request-response cycle reclaims CPU and RAM for primary threads." },
-          ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-teal)" numBg="rgba(62,207,207,0.12)" />)}
-          <div style={{ background: "rgba(248,113,113,0.06)", borderLeft: "3px solid var(--sd-red)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-teal)" numBg="rgba(127, 147, 242,0.12)" />)}
+          <div style={{ background: "rgba(74, 81, 112,0.06)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             Without these strategies prepared, hitting the ceiling triggers a <strong style={{ color: "var(--sd-red)" }}>"stop-the-world" emergency</strong> — forced read-replica rollouts while racing to refactor for a sharded architecture.
           </div>
         </PanelSection>
@@ -278,8 +278,8 @@ export default function Lesson01() {
             { num: "2", title: "The Shift to Statelessness", body: "Data needed to process a request must travel with it (JWTs) or be fetched from a shared external store. In-memory state synchronized across nodes makes your scaling logarithmic, not linear." },
             { num: "3", title: "Database Bottlenecks", body: "App servers scale easily. The database remains the single point of shared state. Strict global consistency demands sharding logic and global coordinators, making horizontal scaling exponentially harder." },
             { num: "4", title: "Sticky Sessions vs. Global Context", body: "Server-side sessions force sticky sessions — load balancer affinity to a single node. If that node dies, users lose state. The fix (externalizing state) just makes your cache cluster the new bottleneck." },
-          ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-amber)" numBg="rgba(251,191,36,0.12)" />)}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-amber)" numBg="rgba(106, 118, 163,0.12)" />)}
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             If you can't externalize state, your "horizontal" cluster is just a group of nodes waiting on a single shared bottleneck — <strong style={{ color: "var(--sd-teal)" }}>zero throughput gain, multiplied complexity</strong>.
           </div>
         </PanelSection>
@@ -293,8 +293,8 @@ export default function Lesson01() {
             { num: "2", title: "Linear vs. Algorithmic Scaling", body: "Hardware gives linear gains. An O(n³) algorithm makes a 10x compute increase useless against moderate input growth. Software optimization provides exponential gains." },
             { num: "3", title: "Resource Contention", body: 'Inefficient code scaled horizontally creates "noisy neighbor" effects — GC pressure, I/O thrashing — that destabilize Kubernetes and cause cascading failures across shared infrastructure.' },
             { num: "4", title: "Hidden Latency", body: "Distributed systems add network hops and serialization overhead. A slow algorithm plus cross-node coordination can make the system feel slower than the original monolith." },
-          ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-green)" numBg="rgba(52,211,153,0.12)" />)}
-          <div style={{ background: "rgba(52,211,153,0.06)", borderLeft: "3px solid var(--sd-green)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-green)" numBg="rgba(157, 176, 247,0.12)" />)}
+          <div style={{ background: "rgba(157, 176, 247,0.06)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-green)" }}>Optimize before you distribute.</strong> Profile hot paths and fix time complexity first. If hardware can't solve your latency, you have an <strong style={{ color: "var(--sd-teal)" }}>algorithmic issue, not a scaling issue</strong>.
           </div>
         </PanelSection>

@@ -1,13 +1,18 @@
 .breadcrumb {
-  padding: 10px 40px;
-  border-bottom: 1px solid var(--sd-border);
-  background: var(--sd-surface);
-  font-size: 12px;
+  padding: 14px 40px;
+  background: color-mix(in srgb, var(--sd-bg) 80%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
   color: var(--sd-muted);
   letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .left {
@@ -38,4 +43,5 @@
 .action {
   display: flex;
   align-items: center;
+  gap: 10px;
 }

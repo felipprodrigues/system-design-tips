@@ -3,20 +3,19 @@
   align-items: center;
   gap: 7px;
   background: transparent;
-  border: 1px solid var(--sd-border);
+  border: none;
   color: var(--sd-muted);
   border-radius: 6px;
   padding: 6px 13px;
   font-size: 12px;
   cursor: pointer;
   white-space: nowrap;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  transition: color 0.2s, background 0.2s;
 }
 
 .btn:hover {
   color: var(--sd-text);
-  border-color: var(--sd-accent);
-  background: rgba(108, 99, 255, 0.08);
+  background: var(--sd-accent-wash);
 }
 
 .icon {

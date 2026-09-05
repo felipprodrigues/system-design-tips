@@ -1,12 +1,10 @@
 .section {
-  border: 1px solid var(--sd-border);
   border-radius: 10px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .section.highlight {
-  border-color: var(--sd-accent);
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.18);
+  box-shadow: 0 0 0 2px var(--sd-accent);
 }
 
 .head {
@@ -29,7 +27,7 @@
 }
 
 .head:hover {
-  background: #2a2e42;
+  background: #232327;
 }
 
 .sectionTitle {

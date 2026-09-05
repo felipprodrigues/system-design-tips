@@ -4,15 +4,15 @@
 
 .card {
   background: var(--sd-surface);
-  border: 1px solid var(--sd-border);
-  border-radius: 12px;
-  padding: 28px 30px;
+  border-radius: 16px;
+  padding: 32px 34px;
   min-height: 180px;
 }
 
 .num {
+  font-family: var(--sd-font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--sd-muted);
@@ -20,8 +20,10 @@
 }
 
 .question {
-  font-size: 16px;
+  font-family: var(--sd-font-display);
+  font-size: 18px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   margin-bottom: 20px;
   line-height: 1.4;
   color: var(--sd-text);
@@ -48,7 +50,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgba(52, 211, 153, 0.15);
+  background: rgba(157, 176, 247, 0.15);
   color: var(--sd-green);
   display: flex;
   align-items: center;
@@ -63,9 +65,8 @@
   font-size: 12px;
   color: var(--sd-muted);
   background: var(--sd-surface2);
-  border-left: 3px solid var(--sd-amber);
   padding: 8px 12px;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0;
   line-height: 1.5;
 }
 
@@ -78,19 +79,19 @@
 }
 
 .btn {
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-border);
-  color: var(--sd-text);
+  background: transparent;
+  border: none;
+  color: var(--sd-muted);
   border-radius: 8px;
   padding: 8px 18px;
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .btn:hover {
   background: var(--sd-surface2);
-  border-color: var(--sd-accent);
+  color: var(--sd-text);
 }
 
 .btn:disabled {

@@ -7,11 +7,43 @@ body {
   background: var(--sd-bg);
   color: var(--sd-text);
   font-family: var(--sd-font);
-  font-size: 15px;
+  font-size: 15.5px;
   line-height: 1.7;
+  letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
 }
 
+h1, h2, h3 {
+  font-family: var(--sd-font-display);
+  letter-spacing: -0.02em;
+}
+
 code, pre {
-  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-family: var(--sd-font-mono);
+}
+
+.sd-eyebrow, .sd-mono {
+  font-family: var(--sd-font-mono);
+}
+
+::selection {
+  background: var(--sd-accent-wash);
+  color: var(--sd-text);
+}
+
+.sd-row-title {
+  transition: color 0.15s ease;
+}
+.sd-row-arrow {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.sd-row:hover .sd-row-title {
+  color: var(--sd-accent);
+}
+.sd-row:hover .sd-row-arrow {
+  opacity: 1;
+  transform: translateX(0);
 }

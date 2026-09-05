@@ -61,7 +61,7 @@ export default function Lesson02() {
       />
 
       <PageLayout>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 2 · Foundations
         </p>
         <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
@@ -75,9 +75,9 @@ export default function Lesson02() {
         <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             Before you can reason about scaling, consistency, or fault tolerance, you need a shared language for measuring system health. These three metrics are that language.{" "}
-            <strong style={{ color: "#fff" }}>Latency</strong> tells you how fast the system responds.{" "}
-            <strong style={{ color: "#fff" }}>Throughput</strong> tells you how much work it can handle.{" "}
-            <strong style={{ color: "#fff" }}>Availability</strong> tells you how often it's actually reachable.
+            <strong style={{ color: "var(--sd-text)" }}>Latency</strong> tells you how fast the system responds.{" "}
+            <strong style={{ color: "var(--sd-text)" }}>Throughput</strong> tells you how much work it can handle.{" "}
+            <strong style={{ color: "var(--sd-text)" }}>Availability</strong> tells you how often it's actually reachable.
           </p>
           <p>
             They are related but not interchangeable — and optimizing for one often creates pressure on another. Understanding their definitions, how they're measured, and where they conflict is the prerequisite to every architectural decision that follows.
@@ -86,19 +86,19 @@ export default function Lesson02() {
 
         {/* ── LATENCY ── */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 01</p>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 01</p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(108,99,255,0.15)", color: "var(--sd-accent)", marginRight: 10, verticalAlign: "middle" }}>Latency</span>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)", marginRight: 10, verticalAlign: "middle" }}>Latency</span>
             Time to complete a request
           </h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Latency is the time it takes for a single request to complete. In a distributed architecture, this is not a single number — it's a <strong style={{ color: "#fff" }}>distribution</strong>. The most common mistake is reporting latency as an arithmetic mean.</p>
+            <p>Latency is the time it takes for a single request to complete. In a distributed architecture, this is not a single number — it's a <strong style={{ color: "var(--sd-text)" }}>distribution</strong>. The most common mistake is reporting latency as an arithmetic mean.</p>
             <p style={{ marginTop: 10 }}>If 99% of requests take 10ms but 1% take 5 seconds, your average looks healthy while a real slice of users hits timeouts. The mean hides outliers entirely.</p>
           </div>
 
-          <div style={{ background: "rgba(251,191,36,0.07)", borderLeft: "3px solid var(--sd-amber)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong style={{ color: "#fff" }}>Never use the mean for latency.</strong> Use percentiles. The mean is mathematically valid but operationally misleading in skewed distributions — which is exactly what request latency produces.
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Never use the mean for latency.</strong> Use percentiles. The mean is mathematically valid but operationally misleading in skewed distributions — which is exactly what request latency produces.
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
@@ -144,23 +144,23 @@ export default function Lesson02() {
             </p>
           </div>
 
-          <div style={{ background: "rgba(108,99,255,0.07)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "#fff" }}>Jitter</strong> — a significantly higher p99 than p50 — indicates inconsistency in your system. Common causes: GC pauses, lock contention, or slow database queries.{" "}
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Jitter</strong> — a significantly higher p99 than p50 — indicates inconsistency in your system. Common causes: GC pauses, lock contention, or slow database queries.{" "}
             <span style={{ color: "var(--sd-teal)" }}>Horizontal scaling will not fix jitter.</span>
           </div>
         </div>
 
         {/* ── THROUGHPUT ── */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 02</p>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 02</p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(62,207,207,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>Throughput</span>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(127, 147, 242,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>Throughput</span>
             Rate of work processed
           </h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Throughput is the rate at which your system processes requests — measured in <strong style={{ color: "#fff" }}>Requests Per Second (RPS)</strong> or <strong style={{ color: "#fff" }}>Transactions Per Second (TPS)</strong>.</p>
-            <p style={{ marginTop: 10 }}>High throughput does <strong style={{ color: "#fff" }}>not</strong> imply low latency. A system can process 10,000 RPS while taking 2 seconds to respond to each. This happens when a system is heavily queued — work is being accepted, but users wait in line before processing begins.</p>
+            <p>Throughput is the rate at which your system processes requests — measured in <strong style={{ color: "var(--sd-text)" }}>Requests Per Second (RPS)</strong> or <strong style={{ color: "var(--sd-text)" }}>Transactions Per Second (TPS)</strong>.</p>
+            <p style={{ marginTop: 10 }}>High throughput does <strong style={{ color: "var(--sd-text)" }}>not</strong> imply low latency. A system can process 10,000 RPS while taking 2 seconds to respond to each. This happens when a system is heavily queued — work is being accepted, but users wait in line before processing begins.</p>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
@@ -175,25 +175,25 @@ export default function Lesson02() {
             ))}
           </div>
 
-          <div style={{ background: "rgba(251,191,36,0.07)", borderLeft: "3px solid var(--sd-amber)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "#fff" }}>Throughput ≠ Latency.</strong> A heavily queued system can look healthy on throughput dashboards while individual users experience degraded performance. Always monitor both together.
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Throughput ≠ Latency.</strong> A heavily queued system can look healthy on throughput dashboards while individual users experience degraded performance. Always monitor both together.
           </div>
         </div>
 
         {/* ── AVAILABILITY ── */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 03</p>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 03</p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(52,211,153,0.12)", color: "var(--sd-green)", marginRight: 10, verticalAlign: "middle" }}>Availability</span>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(157, 176, 247,0.12)", color: "var(--sd-green)", marginRight: 10, verticalAlign: "middle" }}>Availability</span>
             Percentage of time the system is reachable
           </h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Availability is the percentage of time a system is functional and reachable, expressed in <strong style={{ color: "#fff" }}>"nines"</strong>. It is calculated as:</p>
+            <p>Availability is the percentage of time a system is functional and reachable, expressed in <strong style={{ color: "var(--sd-text)" }}>"nines"</strong>. It is calculated as:</p>
             <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0" }}>
               Availability = Uptime ÷ (Uptime + Downtime)
             </p>
-            <p>In distributed systems, availability is rarely binary. A system can be "up" while returning 500 errors to 5% of users. The inverse metric is <strong style={{ color: "#fff" }}>Error Rate</strong> — Failed Requests ÷ Total Requests.</p>
+            <p>In distributed systems, availability is rarely binary. A system can be "up" while returning 500 errors to 5% of users. The inverse metric is <strong style={{ color: "var(--sd-text)" }}>Error Rate</strong> — Failed Requests ÷ Total Requests.</p>
           </div>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
@@ -225,20 +225,20 @@ export default function Lesson02() {
             </table>
           </div>
 
-          <div style={{ background: "rgba(108,99,255,0.07)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "#fff" }}>High availability ≠ fast.</strong> A system that takes 30 seconds to respond but eventually succeeds is technically "available." Availability measures uptime, not speed. You need all three metrics to describe system health accurately.
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            <strong style={{ color: "var(--sd-text)" }}>High availability ≠ fast.</strong> A system that takes 30 seconds to respond but eventually succeeds is technically "available." Availability measures uptime, not speed. You need all three metrics to describe system health accurately.
           </div>
         </div>
 
         {/* ── TENSION ── */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Putting it together</p>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Putting it together</p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Tension Between Metrics</h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>These metrics don't exist in isolation — optimizing for one creates pressure on the others.</p>
             <p style={{ marginTop: 10 }}>
-              To improve <strong style={{ color: "#fff" }}>latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong style={{ color: "#fff" }}>availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong style={{ color: "#fff" }}>throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous lesson.
+              To improve <strong style={{ color: "var(--sd-text)" }}>latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong style={{ color: "var(--sd-text)" }}>availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong style={{ color: "var(--sd-text)" }}>throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous lesson.
             </p>
           </div>
 
@@ -256,14 +256,14 @@ export default function Lesson02() {
             ))}
           </div>
 
-          <div style={{ background: "rgba(52,211,153,0.07)", borderLeft: "3px solid var(--sd-green)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            These metrics form the foundation for evaluating every architectural trade-off ahead — starting with the <strong style={{ color: "#fff" }}>CAP Theorem</strong>, which formalizes exactly this tension between consistency and availability in distributed systems.
+          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            These metrics form the foundation for evaluating every architectural trade-off ahead — starting with the <strong style={{ color: "var(--sd-text)" }}>CAP Theorem</strong>, which formalizes exactly this tension between consistency and availability in distributed systems.
           </div>
         </div>
 
         {/* Quiz */}
         <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>Quiz Review</p>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>Quiz Review</p>
           <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
@@ -285,7 +285,7 @@ export default function Lesson02() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             Poor latency occurs when the system is <strong style={{ color: "var(--sd-teal)" }}>congested</strong> — processing at capacity while requests wait in buffers. The "pipes" are full so throughput is high, but the transit time for any specific request is sacrificed.
           </div>
         </PanelSection>
@@ -305,7 +305,7 @@ export default function Lesson02() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             Horizontal scaling provides <strong style={{ color: "var(--sd-teal)" }}>capacity</strong>, not necessarily <strong style={{ color: "var(--sd-teal)" }}>availability</strong>. True availability requires combining scaling with partitioning, redundancy, and isolation.
           </div>
         </PanelSection>
@@ -323,7 +323,7 @@ export default function Lesson02() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             Always distinguish <strong style={{ color: "var(--sd-teal)" }}>Service Availability</strong> (infrastructure uptime) from <strong style={{ color: "var(--sd-teal)" }}>User-Perceived Availability</strong> (individual request success rate).
           </div>
         </PanelSection>

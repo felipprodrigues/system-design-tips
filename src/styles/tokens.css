@@ -4,26 +4,49 @@
  */
 
 :root {
-  /* Brand palette */
-  --sd-bg:       #0f1117;
-  --sd-surface:  #1a1d27;
-  --sd-surface2: #22263a;
-  --sd-border:   #2e3248;
+  /* Brand palette — neutral near-black; borders read as hairlines */
+  --sd-bg:       #0a0a0b;
+  --sd-surface:  #141415;
+  --sd-surface2: #1c1c1e;
+  --sd-border:   rgba(255, 255, 255, 0.07);
+  --sd-border-strong: rgba(255, 255, 255, 0.14);
 
-  --sd-accent:   #6c63ff;
-  --sd-teal:     #3ecfcf;
-  --sd-green:    #34d399;
-  --sd-amber:    #fbbf24;
-  --sd-red:      #f87171;
+  --sd-accent:   #4c6ef5;
+  --sd-accent-wash: rgba(76, 110, 245, 0.12);
+  --sd-teal:     #7f93f2;
+  --sd-green:    #9db0f7;
+  --sd-amber:    #6a76a3;
+  --sd-red:      #4a5170;
 
-  --sd-text:     #e2e8f0;
-  --sd-muted:    #7c85a2;
+  --sd-text:     #e9e9ea;
+  --sd-muted:    #8a8a8f;
 
   /* Typography */
-  --sd-font: 'Inter', system-ui, -apple-system, sans-serif;
+  --sd-font: var(--font-body), system-ui, -apple-system, sans-serif;
+  --sd-font-display: var(--font-display), var(--sd-font);
+  --sd-font-mono: var(--font-mono), 'SF Mono', 'Fira Code', monospace;
 
   /* Spacing */
   --sd-page-max:   900px;
   --sd-page-pad-x: 24px;
-  --sd-page-pad-y: 48px;
+  --sd-page-pad-y: 56px;
+}
+
+/* Light mode — soft neutral gray, never stark white */
+:root[data-theme="light"] {
+  --sd-bg:       #eeeeef;
+  --sd-surface:  #f6f6f6;
+  --sd-surface2: #e6e6e8;
+  --sd-border:   rgba(0, 0, 0, 0.08);
+  --sd-border-strong: rgba(0, 0, 0, 0.16);
+
+  --sd-accent:   #4c6ef5;
+  --sd-accent-wash: rgba(76, 110, 245, 0.1);
+  --sd-teal:     #3f4f9e;
+  --sd-green:    #2b4fe0;
+  --sd-amber:    #5c6480;
+  --sd-red:      #262b47;
+
+  --sd-text:     #17181c;
+  --sd-muted:    #6b6c72;
 }

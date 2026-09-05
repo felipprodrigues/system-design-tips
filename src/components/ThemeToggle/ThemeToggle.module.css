@@ -1,0 +1,19 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  background: var(--sd-surface2);
+  border: none;
+  border-radius: 8px;
+  color: var(--sd-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.btn:hover {
+  color: var(--sd-text);
+  background: var(--sd-border-strong);
+}

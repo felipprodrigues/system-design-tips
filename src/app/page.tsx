@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { modules } from "@/lib/lessons";
+import { ThemeToggle } from "@/components";
 
 export default function Home() {
   return (
@@ -8,94 +9,74 @@ export default function Home() {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      padding: "60px 24px 80px",
+      padding: "96px 24px 96px",
+      position: "relative",
     }}>
-      <p style={{
-        fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
-        textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 8,
-      }}>
-        Course
-      </p>
-      <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8, textAlign: "center" }}>
-        Foundations of Distributed Architectures
-      </h1>
-      <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 48, textAlign: "center" }}>
-        A structured guide to system design fundamentals.
-      </p>
+      <div style={{ position: "fixed", top: 16, right: 16, zIndex: 300 }}>
+        <ThemeToggle />
+      </div>
+      <div style={{ width: "100%", maxWidth: 640 }}>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gap: 16,
-        width: "100%",
-        maxWidth: 480,
-      }}>
+        <p style={{
+          fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", fontFamily: "var(--sd-font-mono)",
+          textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 20,
+        }}>
+          Course
+        </p>
+
+        <h1 style={{ fontSize: 44, fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 20 }}>
+          Foundations of Distributed Architecture
+        </h1>
+
+        <p style={{ color: "var(--sd-muted)", fontSize: 16, lineHeight: 1.6, marginBottom: 72, maxWidth: 440 }}>
+          A structured guide to system design fundamentals.
+        </p>
+
         {modules.map((mod) => (
-          <div
-            key={mod.number}
-            style={{
-              background: "var(--sd-surface)",
-              border: "1px solid var(--sd-border)",
-              borderRadius: 14,
-              overflow: "hidden",
-            }}
-          >
-            {/* Module header */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              padding: "16px 20px",
-              borderBottom: "1px solid var(--sd-border)",
-            }}>
-              <span style={{
-                flexShrink: 0, width: 32, height: 32, borderRadius: 8,
-                background: "rgba(108,99,255,0.15)", color: "var(--sd-accent)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 12, fontWeight: 700,
-              }}>
-                {mod.number}
-              </span>
-              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--sd-text)", lineHeight: 1.3 }}>
+          <div key={mod.number} style={{ marginBottom: 24 }}>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 4 }}>
+              <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)" }}>
                 {mod.title}
               </span>
-              <span style={{ marginLeft: "auto", flexShrink: 0, fontSize: 11, color: "var(--sd-muted)", fontWeight: 500 }}>
-                {mod.lessons.length} lessons
+              <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, color: "var(--sd-muted)", border: "1px solid var(--sd-border)", borderRadius: 5, padding: "3px 8px" }}>
+                MOD · {mod.number}
               </span>
             </div>
 
-            {/* Lesson list */}
             <div style={{ display: "flex", flexDirection: "column" }}>
-              {mod.lessons.map((l, i) => (
+              {mod.lessons.map((l) => (
                 <Link
                   key={l.slug}
                   href={`/lessons/${l.slug}`}
                   style={{
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: "48px 1fr 20px",
                     alignItems: "center",
-                    gap: 14,
-                    padding: "12px 20px",
+                    gap: 20,
+                    padding: "22px 4px",
                     textDecoration: "none",
                     color: "var(--sd-text)",
-                    borderTop: i === 0 ? "none" : "1px solid var(--sd-border)",
+                    borderTop: "1px solid var(--sd-border)",
                   }}
+                  className="sd-row"
                 >
                   <span style={{
-                    flexShrink: 0,
-                    fontSize: 11, fontWeight: 600,
-                    color: "var(--sd-muted)",
-                    width: 20,
-                    textAlign: "right",
+                    fontFamily: "var(--sd-font-mono)",
+                    fontSize: 12, color: "var(--sd-muted)",
                   }}>
                     {String(l.number).padStart(2, "0")}
                   </span>
-                  <span style={{ fontSize: 13, fontWeight: 500 }}>{l.title}</span>
-                  <span style={{ marginLeft: "auto", color: "var(--sd-muted)", fontSize: 13 }}>→</span>
+                  <span className="sd-row-title" style={{ fontFamily: "var(--sd-font-display)", fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                    {l.title}
+                  </span>
+                  <span className="sd-row-arrow" style={{ color: "var(--sd-accent)", fontSize: 13, fontFamily: "var(--sd-font-mono)" }}>→</span>
                 </Link>
               ))}
+              <div style={{ borderTop: "1px solid var(--sd-border)" }} />
             </div>
           </div>
         ))}
+
       </div>
     </div>
   );

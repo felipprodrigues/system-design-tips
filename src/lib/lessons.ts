@@ -21,6 +21,7 @@ export const modules: CourseModule[] = [
       { slug: "01-horizontal-vs-vertical-scaling", number: 1, title: "Horizontal vs Vertical Scaling" },
       { slug: "02-latency-throughput-availability", number: 2, title: "Latency, Throughput & Availability" },
       { slug: "03-cap-theorem", number: 3, title: "CAP Theorem & Trade-offs" },
+      { slug: "04-load-balancing", number: 4, title: "Core Concepts of Load Balancing" },
       // LESSON_ENTRIES_END
     ],
   },

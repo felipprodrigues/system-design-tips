@@ -73,28 +73,28 @@ const algorithms = [
     name: "Round Robin",
     tag: "Simple",
     tagColor: "var(--sd-accent)",
-    tagBg: "rgba(108,99,255,0.15)",
+    tagBg: "rgba(76, 110, 245,0.15)",
     body: "Requests are distributed sequentially across available servers. Works well when all servers have identical hardware and request processing times are uniform. Breaks down when requests have variable processing costs.",
   },
   {
     name: "Least Connections",
     tag: "Adaptive",
     tagColor: "var(--sd-teal)",
-    tagBg: "rgba(62,207,207,0.12)",
+    tagBg: "rgba(127, 147, 242,0.12)",
     body: "The balancer tracks active connections and sends new requests to the server with the fewest. Superior for long-lived connections (WebSockets, streaming) or scenarios where request processing times vary significantly.",
   },
   {
     name: "IP Hash",
     tag: "Sticky",
     tagColor: "var(--sd-amber)",
-    tagBg: "rgba(251,191,36,0.1)",
+    tagBg: "rgba(106, 118, 163,0.1)",
     body: "The client's IP address is hashed to deterministically map it to a specific server. Ensures session stickiness — useful if the server caches user-specific data in memory. Can cause uneven load if a small number of IPs drive disproportionate traffic.",
   },
   {
     name: "Weighted",
     tag: "Capacity-aware",
     tagColor: "var(--sd-green)",
-    tagBg: "rgba(52,211,153,0.12)",
+    tagBg: "rgba(157, 176, 247,0.12)",
     body: "Each server is assigned a weight proportional to its capacity. A server with twice the RAM and CPU might receive weight 2, getting twice the traffic. Use when your server fleet is heterogeneous.",
   },
 ];
@@ -121,7 +121,7 @@ export default function Lesson04() {
 
       <PageLayout>
         {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 4 · Foundations
         </p>
         <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
@@ -135,7 +135,7 @@ export default function Lesson04() {
         <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             Load balancing is the process of{" "}
-            <strong style={{ color: "#fff" }}>distributing incoming network traffic across a group of backend servers</strong>{" "}
+            <strong style={{ color: "var(--sd-text)" }}>distributing incoming network traffic across a group of backend servers</strong>{" "}
             to ensure no single server bears too much demand. By acting as a reverse proxy, the load balancer prevents bottlenecks, eliminates single points of failure, and allows for the seamless addition or removal of resources — directly supporting the horizontal scaling patterns discussed in lesson one.
           </p>
           <p>
@@ -149,7 +149,7 @@ export default function Lesson04() {
 
         {/* The Pattern */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             The Big Picture
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Basic Shape of Every Web App</h2>
@@ -158,7 +158,7 @@ export default function Lesson04() {
             <p>Clients make requests. Servers handle them. Put a load balancer in front and that traffic spreads across many identical servers, so one box going down doesn't take the whole app down with it.</p>
             <p style={{ marginTop: 10 }}>
               Pretty much every design question you'll ever see — from a chat app like WhatsApp to a live streaming platform like Twitch — starts with some version of this pattern. The more detail you layer on top, the more specialized the design gets, but{" "}
-              <strong style={{ color: "#fff" }}>the skeleton stays the same</strong>.
+              <strong style={{ color: "var(--sd-text)" }}>the skeleton stays the same</strong>.
             </p>
           </div>
 
@@ -168,14 +168,14 @@ export default function Lesson04() {
               The skeleton every design starts from
             </p>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-              <div style={{ background: "rgba(108,99,255,0.1)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, color: "var(--sd-accent)" }}>
+              <div style={{ background: "rgba(76, 110, 245,0.1)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, color: "var(--sd-accent)" }}>
                 Client
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
                 <div style={{ fontSize: 10, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Single address</div>
                 <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
               </div>
-              <div style={{ background: "rgba(108,99,255,0.12)", border: "1px solid var(--sd-accent)", borderRadius: 10, padding: "12px 28px", fontSize: 13, fontWeight: 700, color: "var(--sd-accent)", textAlign: "center" }}>
+              <div style={{ background: "rgba(76, 110, 245,0.12)", border: "1px solid var(--sd-accent)", borderRadius: 10, padding: "12px 28px", fontSize: 13, fontWeight: 700, color: "var(--sd-accent)", textAlign: "center" }}>
                 Load Balancer
                 <div style={{ fontSize: 10, fontWeight: 400, color: "var(--sd-muted)", marginTop: 2 }}>Routes each request</div>
               </div>
@@ -190,19 +190,19 @@ export default function Lesson04() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(108,99,255,0.07)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             The client doesn't care how many servers exist. It talks to a single address and trusts the load balancer to route things.{" "}
-            <strong style={{ color: "#fff" }}>That abstraction is the entire point.</strong>
+            <strong style={{ color: "var(--sd-text)" }}>That abstraction is the entire point.</strong>
           </div>
         </div>
 
         {/* Algorithms */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Distribution Logic
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, marginRight: 10, verticalAlign: "middle", background: "rgba(108,99,255,0.15)", color: "var(--sd-accent)" }}>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, marginRight: 10, verticalAlign: "middle", background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)" }}>
               Algorithms
             </span>
             Traffic Distribution Strategies
@@ -244,7 +244,7 @@ export default function Lesson04() {
                   <div key={i} style={{ fontSize: 14, color: "var(--sd-muted)" }}>{a}</div>
                 ))}
               </div>
-              <div style={{ background: "rgba(108,99,255,0.12)", border: "1px solid var(--sd-accent)", borderRadius: 10, padding: "14px 20px", fontSize: 13, fontWeight: 700, color: "var(--sd-accent)", textAlign: "center" }}>
+              <div style={{ background: "rgba(76, 110, 245,0.12)", border: "1px solid var(--sd-accent)", borderRadius: 10, padding: "14px 20px", fontSize: 13, fontWeight: 700, color: "var(--sd-accent)", textAlign: "center" }}>
                 Load Balancer
                 <div style={{ fontSize: 10, fontWeight: 400, color: "var(--sd-muted)", marginTop: 3 }}>Algorithm routes each request</div>
               </div>
@@ -266,7 +266,7 @@ export default function Lesson04() {
 
         {/* Layer 4 vs 7 */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             OSI Model
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Layer 4 vs. Layer 7 Balancing</h2>
@@ -280,14 +280,14 @@ export default function Lesson04() {
               {
                 label: "Layer 4 · Transport",
                 color: "var(--sd-teal)",
-                headerBg: "rgba(62,207,207,0.1)",
+                headerBg: "rgba(127, 147, 242,0.1)",
                 body: "Routes traffic based on network-level data: IP addresses and TCP/UDP ports. The balancer does not inspect packet contents. Minimal processing means extremely high throughput and low latency.",
                 example: "Route all traffic on port 80 to a cluster of web servers — regardless of URL path or HTTP headers.",
               },
               {
                 label: "Layer 7 · Application",
                 color: "var(--sd-green)",
-                headerBg: "rgba(52,211,153,0.1)",
+                headerBg: "rgba(157, 176, 247,0.1)",
                 body: "Inspects the actual content of the request: HTTP headers, cookies, URL paths, or even the request body. Enables content-based routing to different backend pools.",
                 example: "Route /images to a media server cluster, while /billing routes to a PCI-compliant payment service.",
               },
@@ -306,14 +306,14 @@ export default function Lesson04() {
             ))}
           </div>
 
-          <div style={{ background: "rgba(108,99,255,0.07)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 0 }}>
-            <strong style={{ color: "#fff" }}>Layer 7 introduces higher latency</strong> because the load balancer must fully parse the HTTP request before making a routing decision. The trade-off is worth it for microservices architectures where different services require specialized infrastructure.
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 0 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Layer 7 introduces higher latency</strong> because the load balancer must fully parse the HTTP request before making a routing decision. The trade-off is worth it for microservices architectures where different services require specialized infrastructure.
           </div>
         </div>
 
         {/* Health checks */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Fault Tolerance
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Health Checking and Failover</h2>
@@ -321,26 +321,26 @@ export default function Lesson04() {
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>
               A load balancer is only useful if it knows which servers are actually alive. It performs continuous{" "}
-              <strong style={{ color: "#fff" }}>health checks</strong> — periodically sending a probe request (typically an HTTP <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>HEAD</code> or <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>GET</code> to a <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>/health</code> endpoint) to every backend server.
+              <strong style={{ color: "var(--sd-text)" }}>health checks</strong> — periodically sending a probe request (typically an HTTP <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>HEAD</code> or <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>GET</code> to a <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>/health</code> endpoint) to every backend server.
             </p>
             <p style={{ marginTop: 10 }}>
               If a server fails to respond or returns a 5xx error, the balancer marks it as{" "}
-              <strong style={{ color: "#fff" }}>unhealthy</strong> and stops routing traffic to it. Once it passes health checks again, it's automatically reinstated. This mechanism is the bedrock of system availability.
+              <strong style={{ color: "var(--sd-text)" }}>unhealthy</strong> and stops routing traffic to it. Once it passes health checks again, it's automatically reinstated. This mechanism is the bedrock of system availability.
             </p>
           </div>
 
-          <div style={{ background: "rgba(251,191,36,0.07)", borderLeft: "3px solid var(--sd-amber)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
-            <strong style={{ color: "#fff" }}>If your design requires high availability, you must assume servers will fail.</strong> The load balancer's job is to hide that failure from the end-user by redirecting traffic in real-time — before the user notices anything is wrong.
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
+            <strong style={{ color: "var(--sd-text)" }}>If your design requires high availability, you must assume servers will fail.</strong> The load balancer's job is to hide that failure from the end-user by redirecting traffic in real-time — before the user notices anything is wrong.
           </div>
 
-          <div style={{ background: "rgba(52,211,153,0.07)", borderLeft: "3px solid var(--sd-green)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             Health checks also enable <span style={{ color: "var(--sd-teal)" }}>zero-downtime deployments</span>: drain a server, deploy, wait for it to pass health checks, then bring it back into rotation. No traffic is ever sent to a server that isn't ready.
           </div>
         </div>
 
         {/* Comparison table */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Reference
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Comparison of Balancing Strategies</h2>
@@ -371,7 +371,7 @@ export default function Lesson04() {
 
         {/* Quiz */}
         <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
             Quiz Review
           </p>
           <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
@@ -409,7 +409,7 @@ export default function Lesson04() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Redundancy must exist at every layer.</strong> Scaling your backend to 100 servers is meaningless if a single load balancer instance is the entry point for all of them.
           </div>
         </PanelSection>
@@ -442,7 +442,7 @@ export default function Lesson04() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             IP Hash is a <strong style={{ color: "var(--sd-teal)" }}>workaround for a stateful architecture</strong>. If your system requires it, that's a signal to invest in externalizing session state rather than tightening the load balancer constraint.
           </div>
         </PanelSection>
@@ -471,7 +471,7 @@ export default function Lesson04() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             These patterns are why <strong style={{ color: "var(--sd-teal)" }}>the load balancer is a deployment primitive</strong>, not just a traffic router. Kubernetes Ingress controllers, AWS ALB, and Nginx all expose these capabilities as first-class features.
           </div>
         </PanelSection>
@@ -498,7 +498,7 @@ export default function Lesson04() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Any server can handle any request.</strong> That single property is what makes the rest of horizontal scaling, fault tolerance, and deployment strategy straightforward.
           </div>
         </PanelSection>
@@ -526,7 +526,7 @@ export default function Lesson04() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>The trade-off is explicit:</strong> you accept a latency cost on every request in exchange for the ability to scale, recover, and deploy without coordination between servers.
           </div>
         </PanelSection>

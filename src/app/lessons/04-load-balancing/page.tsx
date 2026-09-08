@@ -385,6 +385,45 @@ export default function Lesson04() {
           A load balancer routes requests across servers and uses health checks to skip dead ones. It does not store data or render responses.
         </p>
 
+        <PanelSection title="How is an API Gateway different from a Load Balancer?">
+          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+            They get grouped together because both sit in the request path before your services do, but they answer different questions.{" "}
+            <strong style={{ color: "var(--sd-text)" }}>A Load Balancer decides where a request goes. An API Gateway decides how it should be handled.</strong>
+          </p>
+          {[
+            {
+              title: "What a Load Balancer Handles",
+              body: "Distributes incoming traffic across multiple servers or service instances so no single one becomes a bottleneck. Its job is availability, resilience, and making better use of the capacity you already have — not the meaning of the request.",
+            },
+            {
+              title: "What an API Gateway Handles",
+              body: "Acts as a single entry point between clients and backend services, managing API-level concerns: request routing by endpoint, authentication and authorization, rate limiting, request validation, protocol translation, service discovery, and circuit breaking. It gives microservices clients a consistent way to talk to many services.",
+            },
+            {
+              title: "Which Layer They Operate At",
+              body: "API Gateways typically operate at Layer 7, since routing by endpoint or header requires reading the request. Load Balancers can operate at Layer 4 or Layer 7 depending on the technology — the same split covered earlier in this lesson.",
+            },
+            {
+              title: "How They Compose in Practice",
+              body: "You rarely pick one over the other. A common path looks like Client → Load Balancer → API Gateway → Microservices: the Load Balancer spreads traffic and keeps the gateway itself available, then the Gateway routes each request to the right service and enforces API-level policy.",
+            },
+          ].map((item) => (
+            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
+              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            </div>
+          ))}
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+            <strong style={{ color: "var(--sd-teal)" }}>The simple rule:</strong>
+            <br />
+            Need to spread traffic across servers? <strong style={{ color: "var(--sd-teal)" }}>Load Balancer.</strong>
+            <br />
+            Need centralized API management — auth, rate limits, routing by endpoint? <strong style={{ color: "var(--sd-teal)" }}>API Gateway.</strong>
+            <br /><br />
+            Building microservices at any real scale, you'll likely run both, each solving a different half of the problem.
+          </div>
+        </PanelSection>
+
         <PanelSection title="What happens when the load balancer itself is the single point of failure?">
           <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
             The load balancer solves the SPOF problem for your backend — but it introduces its own SPOF. A single load balancer going down takes down your entire system.{" "}

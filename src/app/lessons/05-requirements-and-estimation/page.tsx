@@ -73,21 +73,21 @@ const nfrLevers = [
     name: "Traffic Patterns",
     tag: "Shape",
     tagColor: "var(--sd-accent)",
-    tagBg: "rgba(108,99,255,0.15)",
+    tagBg: "rgba(76, 110, 245,0.15)",
     body: "Is the load read-heavy, like a news feed serving far more views than posts, or write-heavy, like a logging or telemetry pipeline? This determines whether you optimize for caching and read replicas or for write throughput and ingestion buffering.",
   },
   {
     name: "Data Retention",
     tag: "Volume",
     tagColor: "var(--sd-teal)",
-    tagBg: "rgba(62,207,207,0.12)",
+    tagBg: "rgba(127, 147, 242,0.12)",
     body: "How much data must be stored, and for how long? A chat app retaining messages forever has fundamentally different storage economics than one that purges after 30 days.",
   },
   {
     name: "Availability Targets",
     tag: "Uptime",
     tagColor: "var(--sd-green)",
-    tagBg: "rgba(52,211,153,0.12)",
+    tagBg: "rgba(157, 176, 247,0.12)",
     body: "What is the maximum acceptable downtime? A target of 99.9% versus 99.99% changes your redundancy strategy, deployment process, and infrastructure cost by orders of magnitude.",
   },
 ];
@@ -121,7 +121,7 @@ export default function Lesson05() {
 
       <PageLayout>
         {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 5 · Foundations
         </p>
         <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
@@ -135,19 +135,19 @@ export default function Lesson05() {
         <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             System design begins with translating vague product goals into{" "}
-            <strong style={{ color: "#fff" }}>numerical boundaries</strong>. You cannot design for &quot;high scale&quot; or &quot;low latency&quot; until those terms are defined as concrete targets — a specific RPS figure, a specific latency percentile, a specific number of nines.
+            <strong style={{ color: "var(--sd-text)" }}>numerical boundaries</strong>. You cannot design for &quot;high scale&quot; or &quot;low latency&quot; until those terms are defined as concrete targets — a specific RPS figure, a specific latency percentile, a specific number of nines.
           </p>
           <p>
             This lesson covers two things: how to split requirements into{" "}
             <span style={{ color: "var(--sd-teal)" }}>functional</span> and{" "}
             <span style={{ color: "var(--sd-teal)" }}>non-functional</span> buckets, and how to turn a handful of business projections into{" "}
-            <strong style={{ color: "#fff" }}>Back-of-the-Envelope (BOTE)</strong> numbers for throughput, storage, and bandwidth — the numbers that tell you whether your architecture is even feasible.
+            <strong style={{ color: "var(--sd-text)" }}>Back-of-the-Envelope (BOTE)</strong> numbers for throughput, storage, and bandwidth — the numbers that tell you whether your architecture is even feasible.
           </p>
         </div>
 
         {/* Functional vs Non-Functional */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Defining Requirements
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Functional vs. Non-Functional</h2>
@@ -161,14 +161,14 @@ export default function Lesson05() {
               {
                 label: "Functional",
                 color: "var(--sd-accent)",
-                headerBg: "rgba(108,99,255,0.1)",
+                headerBg: "rgba(76, 110, 245,0.1)",
                 body: "Defines what the system does — the features and capabilities visible to the user or another service.",
                 example: "\"Users can upload photos.\" \"Users can search for a driver nearby.\"",
               },
               {
                 label: "Non-Functional (NFR)",
                 color: "var(--sd-teal)",
-                headerBg: "rgba(62,207,207,0.1)",
+                headerBg: "rgba(127, 147, 242,0.1)",
                 body: "Defines how the system performs — the quality attributes that determine whether the functional behavior holds up under real-world conditions.",
                 example: "\"Photo retrieval must occur within 200ms at the 99th percentile.\"",
               },
@@ -187,18 +187,18 @@ export default function Lesson05() {
             ))}
           </div>
 
-          <div style={{ background: "rgba(108,99,255,0.07)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            When establishing NFRs, focus on three specific levers: <strong style={{ color: "#fff" }}>traffic patterns</strong>, <strong style={{ color: "#fff" }}>data retention</strong>, and <strong style={{ color: "#fff" }}>availability targets</strong>.
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            When establishing NFRs, focus on three specific levers: <strong style={{ color: "var(--sd-text)" }}>traffic patterns</strong>, <strong style={{ color: "var(--sd-text)" }}>data retention</strong>, and <strong style={{ color: "var(--sd-text)" }}>availability targets</strong>.
           </div>
         </div>
 
         {/* NFR Levers */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Three Levers
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
-            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, marginRight: 10, verticalAlign: "middle", background: "rgba(108,99,255,0.15)", color: "var(--sd-accent)" }}>
+            <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, marginRight: 10, verticalAlign: "middle", background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)" }}>
               NFRs
             </span>
             What to Interrogate First
@@ -221,7 +221,7 @@ export default function Lesson05() {
 
         {/* Rule of 86,400 */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Back-of-the-Envelope
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Rule of 86,400</h2>
@@ -229,7 +229,7 @@ export default function Lesson05() {
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>
               There are 86,400 seconds in a day. Divide total daily requests by that constant and you get{" "}
-              <strong style={{ color: "#fff" }}>average requests per second</strong> — the starting point for every capacity estimate.
+              <strong style={{ color: "var(--sd-text)" }}>average requests per second</strong> — the starting point for every capacity estimate.
             </p>
           </div>
 
@@ -253,15 +253,15 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(251,191,36,0.07)", borderLeft: "3px solid var(--sd-amber)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "#fff" }}>Always design for peak load, not average.</strong> Diurnal traffic patterns commonly push peak to 3-5x the average — so the ~11,574 average RPS above should translate to provisioning for roughly{" "}
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Always design for peak load, not average.</strong> Diurnal traffic patterns commonly push peak to 3-5x the average — so the ~11,574 average RPS above should translate to provisioning for roughly{" "}
             <strong style={{ color: "var(--sd-amber)" }}>~40,000 RPS</strong> at the top of the curve.
           </div>
         </div>
 
         {/* Storage */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Back-of-the-Envelope
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Storage Capacity Projection</h2>
@@ -289,15 +289,15 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(62,207,207,0.07)", borderLeft: "3px solid var(--sd-teal)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(127, 147, 242,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             This magnitude instantly informs the design.{" "}
-            <strong style={{ color: "#fff" }}>~1.8PB of growth per year</strong> dictates that you cannot store everything on a single server — you will need a distributed storage strategy and a partitioning plan.
+            <strong style={{ color: "var(--sd-text)" }}>~1.8PB of growth per year</strong> dictates that you cannot store everything on a single server — you will need a distributed storage strategy and a partitioning plan.
           </div>
         </div>
 
         {/* Overhead */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Trade-offs
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Raw Size Is Never Final Size</h2>
@@ -305,15 +305,15 @@ export default function Lesson05() {
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>
               When estimating, you must account for overhead. Indexing, replication, and metadata add{" "}
-              <strong style={{ color: "#fff" }}>20% to 50%</strong> on top of raw data size. A 1.8PB/year projection can realistically land closer to{" "}
-              <strong style={{ color: "#fff" }}>2.2-2.7PB/year</strong> once these are factored in — and that gap is exactly the kind of number that changes a budget conversation.
+              <strong style={{ color: "var(--sd-text)" }}>20% to 50%</strong> on top of raw data size. A 1.8PB/year projection can realistically land closer to{" "}
+              <strong style={{ color: "var(--sd-text)" }}>2.2-2.7PB/year</strong> once these are factored in — and that gap is exactly the kind of number that changes a budget conversation.
             </p>
           </div>
         </div>
 
         {/* Flow diagram */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Putting It Together
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>From Product Goal to Architecture Decision</h2>
@@ -326,7 +326,7 @@ export default function Lesson05() {
                 { text: "Establish NFRs — Latency, Availability, Throughput", color: "var(--sd-accent)" },
               ].map((step) => (
                 <div key={step.text} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-                  <div style={{ background: "rgba(108,99,255,0.1)", border: `1px solid ${step.color}`, borderRadius: 8, padding: "10px 20px", fontSize: 13, fontWeight: 600, color: step.color, textAlign: "center" }}>
+                  <div style={{ background: "rgba(76, 110, 245,0.1)", border: `1px solid ${step.color}`, borderRadius: 8, padding: "10px 20px", fontSize: 13, fontWeight: 600, color: step.color, textAlign: "center" }}>
                     {step.text}
                   </div>
                   <div style={{ fontSize: 16, color: "var(--sd-muted)" }}>↓</div>
@@ -345,7 +345,7 @@ export default function Lesson05() {
                     Load &gt; single instance?
                   </div>
                   <div style={{ fontSize: 11, color: "var(--sd-amber)" }}>Yes ↓</div>
-                  <div style={{ background: "rgba(52,211,153,0.12)", border: "1px solid var(--sd-green)", borderRadius: 8, padding: "9px 16px", fontSize: 12, fontWeight: 700, color: "var(--sd-green)", textAlign: "center" }}>
+                  <div style={{ background: "rgba(157, 176, 247,0.12)", border: "1px solid var(--sd-green)", borderRadius: 8, padding: "9px 16px", fontSize: 12, fontWeight: 700, color: "var(--sd-green)", textAlign: "center" }}>
                     Plan Horizontal Scaling
                   </div>
                 </div>
@@ -360,7 +360,7 @@ export default function Lesson05() {
                     Data &gt; single disk/node?
                   </div>
                   <div style={{ fontSize: 11, color: "var(--sd-amber)" }}>Yes ↓</div>
-                  <div style={{ background: "rgba(52,211,153,0.12)", border: "1px solid var(--sd-green)", borderRadius: 8, padding: "9px 16px", fontSize: 12, fontWeight: 700, color: "var(--sd-green)", textAlign: "center" }}>
+                  <div style={{ background: "rgba(157, 176, 247,0.12)", border: "1px solid var(--sd-green)", borderRadius: 8, padding: "9px 16px", fontSize: 12, fontWeight: 700, color: "var(--sd-green)", textAlign: "center" }}>
                     Plan Partitioning Strategy
                   </div>
                 </div>
@@ -368,14 +368,14 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(108,99,255,0.07)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             Every design decision downstream — <span style={{ color: "var(--sd-teal)" }}>horizontal scaling</span>, <span style={{ color: "var(--sd-teal)" }}>partitioning</span>, <span style={{ color: "var(--sd-teal)" }}>caching</span> — traces back to whether these BOTE numbers exceed what a single instance or single node can handle.
           </div>
         </div>
 
         {/* Bandwidth */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Back-of-the-Envelope
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Bandwidth: The Hidden Bottleneck</h2>
@@ -399,9 +399,9 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(251,191,36,0.07)", borderLeft: "3px solid var(--sd-amber)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             At 4GB/s of required throughput, you&rsquo;d need at least{" "}
-            <strong style={{ color: "#fff" }}>four 10Gbps links saturated at 80%</strong> just to serve this traffic — before accounting for inter-service communication. When these numbers exceed your constraints, the fix is architectural: push toward{" "}
+            <strong style={{ color: "var(--sd-text)" }}>four 10Gbps links saturated at 80%</strong> just to serve this traffic — before accounting for inter-service communication. When these numbers exceed your constraints, the fix is architectural: push toward{" "}
             <span style={{ color: "var(--sd-teal)" }}>caching</span> and{" "}
             <span style={{ color: "var(--sd-teal)" }}>edge computing</span> rather than scaling raw network capacity linearly.
           </div>
@@ -409,21 +409,21 @@ export default function Lesson05() {
 
         {/* Summary */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Summary
           </p>
           <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Numbers Define the Boundaries</h2>
 
-          <div style={{ background: "rgba(52,211,153,0.07)", borderLeft: "3px solid var(--sd-green)", borderRadius: 10, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             Resource estimation transforms vague ambitions into architectural requirements. By calculating peak RPS, storage volume, and bandwidth consumption, you define the physical boundaries your system must overcome — boundaries that will directly guide your decisions on{" "}
-            <strong style={{ color: "#fff" }}>data partitioning</strong> and{" "}
-            <strong style={{ color: "#fff" }}>communication protocols</strong> in the lessons ahead.
+            <strong style={{ color: "var(--sd-text)" }}>data partitioning</strong> and{" "}
+            <strong style={{ color: "var(--sd-text)" }}>communication protocols</strong> in the lessons ahead.
           </div>
         </div>
 
         {/* Quiz */}
         <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
             Quiz Review
           </p>
           <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
@@ -460,7 +460,7 @@ export default function Lesson05() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Use 3-5x as a default assumption, not a law.</strong> Real traffic graphs from analytics tooling should always override a rule-of-thumb multiplier once they&rsquo;re available.
           </div>
         </PanelSection>
@@ -488,7 +488,7 @@ export default function Lesson05() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>BOTE tells you what to build; load testing tells you if it works.</strong> Skipping straight from BOTE math to production is how &quot;the numbers said we&rsquo;d be fine&quot; outages happen.
           </div>
         </PanelSection>
@@ -517,7 +517,7 @@ export default function Lesson05() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>Replication factor and overhead percentage compound, they don&rsquo;t add.</strong> Always multiply them in sequence against the raw figure.
           </div>
         </PanelSection>
@@ -546,7 +546,7 @@ export default function Lesson05() {
               <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(108,99,255,0.08)", borderLeft: "3px solid var(--sd-accent)", borderRadius: 8, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             <strong style={{ color: "var(--sd-teal)" }}>The magnitude of the number, not its precision, is the signal.</strong> BOTE math doesn&rsquo;t need to be exact — it needs to be right within an order of magnitude to steer the architecture correctly.
           </div>
         </PanelSection>

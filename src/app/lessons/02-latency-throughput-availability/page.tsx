@@ -28,6 +28,19 @@ const quizCards: QuizCard[] = [
     note: "Horizontal scaling will not fix jitter. The root cause must be addressed at the code or query level.",
   },
   {
+    question: "What are the three additive components of total latency?",
+    answers: ["Network transit (physics and routing hops), queue wait time (time spent waiting for a free worker), and execution time (CPU and I/O)."],
+    note: "Queue wait time is the only dynamic component. As a system approaches saturation it dominates the other two.",
+  },
+  {
+    question: "Why is throughput not simply 1 / latency?",
+    answers: ["That identity only holds for a single synchronous worker processing one request at a time. Real systems multiply capacity through concurrency across threads, event loops, cores, and nodes."],
+  },
+  {
+    question: "What does Little's Law tell you about a saturating system?",
+    answers: ["L = λ × W. Concurrency equals throughput times latency, so if latency rises while arrival rate stays flat, the number of in-flight requests grows until the worker pool is exhausted."],
+  },
+  {
     question: "Can a system have high throughput and high latency at the same time?",
     answers: ["Yes — a heavily queued system can process many requests per second while individual users wait a long time in the queue before being served."],
   },
@@ -41,7 +54,15 @@ const quizCards: QuizCard[] = [
   },
   {
     question: "How much downtime per year does 99.9% availability allow?",
-    answers: ["~8.76 hours per year (~10.1 minutes per week)."],
+    answers: ["~8.76 hours per year (~43.8 minutes per month)."],
+  },
+  {
+    question: "Why does five nines require removing humans from the recovery path?",
+    answers: ["Five nines allows 5.26 minutes of downtime per year. A human takes 15 to 30 minutes just to acknowledge a page and open a terminal, so any manual step blows the budget on its own."],
+  },
+  {
+    question: "How does availability compound across a request path?",
+    answers: ["Dependencies in series multiply: five services at 99.9% each give 0.999^5 ≈ 99.5%. Redundant replicas in parallel invert the failure probability: 1 - (1 - 0.99)² = 99.99%."],
   },
   {
     question: "Does high availability guarantee a fast system?",
@@ -81,6 +102,9 @@ export default function Lesson02() {
           </p>
           <p>
             They are related but not interchangeable — and optimizing for one often creates pressure on another. Understanding their definitions, how they're measured, and where they conflict is the prerequisite to every architectural decision that follows.
+          </p>
+          <p>
+            When an architecture buckles under load or degrades in production, it is almost never because of an obscure syntax bug. It fails because someone miscalculated the relationship between how fast an operation completes, how many operations can run concurrently, and what proportion of them succeed over time. Treat these three as <strong style={{ color: "var(--sd-text)" }}>mathematical constraints that push against one another</strong>, not as isolated target numbers on a dashboard.
           </p>
         </div>
 
@@ -144,6 +168,32 @@ export default function Lesson02() {
             </p>
           </div>
 
+          {/* Latency anatomy */}
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+            <p>Latency is often confused with <strong style={{ color: "var(--sd-text)" }}>response time</strong>. Response time is the total elapsed time the client experiences. Latency is the portion of it introduced by network transit, queuing, and compute along the path. Those three pieces are additive:</p>
+            <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0", fontFamily: "var(--sd-font-mono)" }}>
+              Total Latency = Network Transit + Queue Wait + Execution
+            </p>
+            <p>Knowing which term dominates tells you which fix is worth attempting. Adding a CDN does nothing for a request stuck in a connection pool, and a faster query does nothing for a client three continents away.</p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+            {[
+              { title: "Network Transit", color: "var(--sd-accent)", body: "Bounded by physics. Light travels roughly 200 km per millisecond through fiber, and every routing hop adds more. You cannot optimize this away, you can only move the data closer." },
+              { title: "Queue Wait", color: "var(--sd-amber)", body: "Time spent sitting in thread pools, TCP buffers, and database connection pools waiting for a free worker. The only dynamic term, and it dominates as the system approaches saturation." },
+              { title: "Execution", color: "var(--sd-teal)", body: "Raw CPU and I/O: parsing payloads, running business logic, reading from storage engines. This is what profilers measure and what most engineers instinctively try to fix first." },
+            ].map((c) => (
+              <div key={c.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: c.color, marginBottom: 8 }}>{c.title}</div>
+                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6 }}>{c.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
+            <strong style={{ color: "var(--sd-text)" }}>A healthy system spends its latency on execution.</strong> When queue wait becomes the largest term, you are no longer looking at a slow service, you are looking at an under-provisioned one. The fix is capacity or shedding, not micro-optimization.
+          </div>
+
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             <strong style={{ color: "var(--sd-text)" }}>Jitter</strong> — a significantly higher p99 than p50 — indicates inconsistency in your system. Common causes: GC pauses, lock contention, or slow database queries.{" "}
             <span style={{ color: "var(--sd-teal)" }}>Horizontal scaling will not fix jitter.</span>
@@ -160,7 +210,21 @@ export default function Lesson02() {
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
             <p>Throughput is the rate at which your system processes requests — measured in <strong style={{ color: "var(--sd-text)" }}>Requests Per Second (RPS)</strong> or <strong style={{ color: "var(--sd-text)" }}>Transactions Per Second (TPS)</strong>.</p>
+            <p style={{ marginTop: 10 }}>Units follow the workload. Web services report RPS or <strong style={{ color: "var(--sd-text)" }}>QPS</strong> (queries per second), while data pipelines report records per second or MB/s. The unit changes, the reasoning does not.</p>
             <p style={{ marginTop: 10 }}>High throughput does <strong style={{ color: "var(--sd-text)" }}>not</strong> imply low latency. A system can process 10,000 RPS while taking 2 seconds to respond to each. This happens when a system is heavily queued — work is being accepted, but users wait in line before processing begins.</p>
+          </div>
+
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 12, fontFamily: "var(--sd-font-mono)" }}>Common mistake</p>
+            <p>Engineers often assume throughput is simply the inverse of latency. That identity holds for exactly one case: a strictly synchronous, single-threaded worker handling one request at a time. At 50ms per request:</p>
+            <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0", fontFamily: "var(--sd-font-mono)" }}>
+              1 request ÷ 0.05s = 20 RPS
+            </p>
+            <p>Real architectures break that ceiling with concurrency: multiple threads, event loops, CPU cores, and distributed nodes. A 50ms endpoint on 64 concurrent workers serves 1,280 RPS without getting a single millisecond faster.</p>
+          </div>
+
+          <div style={{ background: "rgba(127, 147, 242,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Little's Law</strong> ties the two together: <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>L = λW</span>, where concurrency (L) equals arrival rate (λ) times latency (W). Hold arrival rate steady and double latency, and the number of in-flight requests doubles. That is why rising latency silently drains a worker pool until the pool itself becomes the outage.
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
@@ -200,29 +264,47 @@ export default function Lesson02() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr>
-                  {["Availability", "Downtime / year", "Downtime / week"].map((h) => (
+                  {["Availability", "Downtime / year", "Downtime / month", "Typical architecture required"].map((h) => (
                     <th key={h} style={{ padding: "11px 16px", textAlign: "left", background: "var(--sd-surface2)", color: "var(--sd-muted)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "1px solid var(--sd-border)" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {[
-                  { nines: "99%", label: "2 nines", color: "var(--sd-red)", year: "~3.65 days", week: "~1.68 hours" },
-                  { nines: "99.9%", label: "3 nines", color: "var(--sd-amber)", year: "~8.76 hours", week: "~10.1 minutes" },
-                  { nines: "99.99%", label: "4 nines", color: "var(--sd-teal)", year: "~52.6 minutes", week: "~1 minute" },
-                  { nines: "99.999%", label: "5 nines", color: "var(--sd-green)", year: "~5.26 minutes", week: "~6 seconds" },
+                  { nines: "99%", label: "2 nines", color: "var(--sd-red)", year: "~3.65 days", month: "~43.8 hours", arch: "Single server with manual recovery" },
+                  { nines: "99.9%", label: "3 nines", color: "var(--sd-amber)", year: "~8.76 hours", month: "~43.8 minutes", arch: "Redundant app servers, managed database failover" },
+                  { nines: "99.99%", label: "4 nines", color: "var(--sd-teal)", year: "~52.6 minutes", month: "~4.38 minutes", arch: "Multi-zone redundancy, automated health checks, zero-downtime deploys" },
+                  { nines: "99.999%", label: "5 nines", color: "var(--sd-green)", year: "~5.26 minutes", month: "~26.3 seconds", arch: "Multi-region active-active, automated chaos engineering" },
                 ].map((row, i, arr) => (
                   <tr key={row.nines}>
                     <td style={{ padding: "11px 16px", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>
                       <span style={{ fontWeight: 700, color: row.color }}>{row.nines}</span>{" "}
                       <span style={{ color: "var(--sd-muted)", fontSize: 12 }}>{row.label}</span>
                     </td>
-                    <td style={{ padding: "11px 16px", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{row.year}</td>
-                    <td style={{ padding: "11px 16px", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{row.week}</td>
+                    <td style={{ padding: "11px 16px", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none", whiteSpace: "nowrap" }}>{row.year}</td>
+                    <td style={{ padding: "11px 16px", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none", whiteSpace: "nowrap" }}>{row.month}</td>
+                    <td style={{ padding: "11px 16px", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none", color: "var(--sd-muted)", fontSize: 13 }}>{row.arch}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
+            Each additional nine is an <strong style={{ color: "var(--sd-text)" }}>order of magnitude</strong> less allowable downtime, not an incremental improvement. Five nines means eliminating every manual operational step, because a human takes 15 to 30 minutes just to acknowledge a page and open a terminal. That alone is six years of a five-nines budget.
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            {[
+              { title: "In series, availability multiplies", color: "var(--sd-red)", formula: "0.999⁵ ≈ 99.5%", body: "A request that must touch five services, each at 99.9%, succeeds only 99.5% of the time. Every hard dependency you add subtracts uptime, which is why deep synchronous call chains are so expensive." },
+              { title: "In parallel, failure multiplies", color: "var(--sd-green)", formula: "1 − (1 − 0.99)² = 99.99%", body: "Two redundant 99% replicas fail together only 0.01% of the time. Redundancy is the only structural move that buys nines, and it only works if the replicas do not share a failure domain." },
+            ].map((c) => (
+              <div key={c.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: c.color, marginBottom: 8 }}>{c.title}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, fontFamily: "var(--sd-font-mono)", color: "var(--sd-text)", marginBottom: 8 }}>{c.formula}</div>
+                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6 }}>{c.body}</p>
+              </div>
+            ))}
           </div>
 
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
@@ -254,6 +336,26 @@ export default function Lesson02() {
                 <div style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.5 }}>{c.desc}</div>
               </div>
             ))}
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
+            {[
+              { pair: "Throughput vs Latency", mech: "Batching & queues", color: "var(--sd-teal)", body: "Grouping 1,000 individual inserts into one bulk write collapses connection and disk sync overhead, so database throughput climbs sharply. Each individual record pays for it by waiting in a memory buffer until the batch window closes." },
+              { pair: "Availability vs Latency", mech: "Multi-region replication", color: "var(--sd-green)", body: "Writing synchronously to two regions means a total loss of Region A costs zero data. It also adds a cross-region round trip of 50ms to 150ms to every single write, forever, including the 99.99% of days nothing fails." },
+              { pair: "Availability vs Throughput", mech: "Retries & load shedding", color: "var(--sd-accent)", body: "Aggressive client retries mask transient blips and improve perceived availability. Under sustained saturation those same retries become a thundering herd that multiplies load against an already struggling system, turning a partial slowdown into a full outage." },
+            ].map((c) => (
+              <div key={c.pair} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: c.color }}>{c.pair}</span>
+                  <span style={{ fontSize: 11, color: "var(--sd-muted)", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{c.mech}</span>
+                </div>
+                <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{c.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Recap.</strong> Latency is governed by network physics, execution cycles, and queuing, with percentiles exposing the tail the mean hides. Throughput is bounded by concurrency under Little's Law, where rising latency quietly drains the worker pool. Availability is decided by topology, since dependencies in series multiply risk while redundancy in parallel absorbs it. Every architecture ahead is a negotiation between these three.
           </div>
 
           <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>

@@ -10,6 +10,14 @@ export interface CourseModule {
   lessons: LessonEntry[];
 }
 
+// A single standalone lesson shown above MOD · 01 — the on-ramp before the
+// module structure starts. Not part of any module's lesson count.
+export const prologue: LessonEntry = {
+  slug: "07-request-lifecycle",
+  number: 0,
+  title: "The Lifecycle of a Software Request",
+};
+
 // Kept in sync with what's actually live under src/app/lessons — the
 // ship-next-lesson workflow appends an entry here the moment a lesson ships.
 export const modules: CourseModule[] = [

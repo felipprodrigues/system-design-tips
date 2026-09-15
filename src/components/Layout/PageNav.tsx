@@ -7,6 +7,7 @@ interface PageNavProps {
   prevHref?: string;
   nextHref?: string;
   sectionTitle: string;
+  label?: string;
 }
 
 export default function PageNav({
@@ -15,6 +16,7 @@ export default function PageNav({
   prevHref,
   nextHref,
   sectionTitle,
+  label,
 }: PageNavProps) {
   return (
     <nav className={styles.nav}>
@@ -29,7 +31,7 @@ export default function PageNav({
       )}
 
       <div className={styles.center}>
-        <strong>Lesson {lessonNumber} of {totalLessons}</strong>
+        <strong>{label ?? `Lesson ${lessonNumber} of ${totalLessons}`}</strong>
         {sectionTitle}
       </div>
 

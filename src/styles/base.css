@@ -47,3 +47,56 @@ code, pre {
   opacity: 1;
   transform: translateX(0);
 }
+
+.sd-term {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  color: var(--sd-teal);
+  border-bottom: 1px dashed var(--sd-teal);
+  cursor: help;
+}
+.sd-term-icon {
+  font-size: 0.7em;
+  opacity: 0.75;
+}
+.sd-term-card {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 9px);
+  transform: translate(-50%, 4px);
+  width: 240px;
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.55;
+  color: var(--sd-text);
+  text-align: left;
+  white-space: normal;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 20;
+}
+.sd-term-card::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--sd-border);
+}
+.sd-term:hover .sd-term-card,
+.sd-term:focus-visible .sd-term-card {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}

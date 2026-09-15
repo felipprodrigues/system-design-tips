@@ -7,3 +7,4 @@ export { default as PanelSection } from "./SidePanel/PanelSection";
 export { default as QuizCarousel } from "./Carousel/QuizCarousel";
 export type { QuizCard } from "./Carousel/QuizCarousel";
 export { default as ThemeToggle } from "./ThemeToggle/ThemeToggle";
+export { default as Term } from "./Term/Term";

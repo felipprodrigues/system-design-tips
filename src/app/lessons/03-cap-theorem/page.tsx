@@ -42,6 +42,14 @@ const quizCards: QuizCard[] = [
   },
   {
     question:
+      "A 3-node CP datastore (etcd) is partitioned so that Node 1 is completely isolated from Nodes 2 and 3. A client sends a write directly to Node 1. What happens?",
+    answers: [
+      "Node 1 rejects or blocks the write. It can only reach itself, 1 of 3 nodes, which is short of the majority of 2 required to commit. Refusing is what prevents split-brain.",
+    ],
+    note: "Nodes 2 and 3 do hold a majority, so that side of the partition elects a leader and keeps serving normally.",
+  },
+  {
+    question:
       "A banking system must prevent a user from withdrawing more money than they have, even across two data centers. Which CAP trade-off should it implement?",
     answers: [
       "CP — the system should return an error rather than risk allowing the same balance to be withdrawn twice. Data integrity is non-negotiable for financial state.",
@@ -121,7 +129,7 @@ export default function Lesson03() {
                 name: "Consistency",
                 color: "var(--sd-accent)",
                 bg: "rgba(76, 110, 245,0.15)",
-                desc: "Every read receives the most recent write or an error. The system acts as if there is only one copy of the data — even if replicated across nodes.",
+                desc: "Every read receives the most recent write or an error. The system acts as if there is only one copy of the data — even if replicated across nodes. C here means linearizability, not the C in ACID.",
               },
               {
                 letter: "A",
@@ -246,6 +254,95 @@ export default function Lesson03() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Quorum & split-brain */}
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+            Under the Hood
+          </p>
+          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Quorum: How a Node Knows to Say No</h2>
+
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+            <p>
+              A partitioned node cannot tell whether the other side is dead or merely unreachable, so it never tries to guess. Consensus protocols such as{" "}
+              <strong style={{ color: "var(--sd-text)" }}>Raft</strong> and{" "}
+              <strong style={{ color: "var(--sd-text)" }}>Paxos</strong> require a strict majority of the cluster,{" "}
+              <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>⌊N/2⌋ + 1</span>{" "}
+              out of N nodes, to agree before a write is committed. A node that cannot reach that many peers refuses to act.
+            </p>
+            <p style={{ marginTop: 10 }}>
+              This is what prevents <strong style={{ color: "var(--sd-text)" }}>split-brain</strong>, the failure mode where two disconnected halves of a cluster both believe they are in charge, both accept writes, and diverge into two irreconcilable versions of the truth. Since only one side of a partition can hold a majority, only one side is ever allowed to make progress.
+            </p>
+          </div>
+
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "24px 24px 22px", marginBottom: 16 }}>
+            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 8, textAlign: "center" }}>
+              A 5-node cluster split across two data centers
+            </p>
+            <p style={{ fontSize: 12.5, color: "var(--sd-muted)", textAlign: "center", marginBottom: 22, lineHeight: 1.6 }}>
+              Quorum is ⌊5/2⌋ + 1 = 3 nodes. The link between the two sites goes down.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              {[
+                {
+                  dc: "DC East",
+                  nodes: ["N1", "N2", "N3"],
+                  color: "var(--sd-accent)",
+                  count: "3 of 5 nodes",
+                  verdict: "Majority reached",
+                  body: "Elects a leader and keeps serving reads and writes. This side holds the authoritative state.",
+                  active: true,
+                },
+                {
+                  dc: "DC West",
+                  nodes: ["N4", "N5"],
+                  color: "var(--sd-amber)",
+                  count: "2 of 5 nodes",
+                  verdict: "No quorum",
+                  body: "Every write and every linearizable read sent to N4 or N5 is rejected or blocked until the partition heals.",
+                  active: false,
+                },
+              ].map((s) => (
+                <div key={s.dc} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: s.color, marginBottom: 12 }}>
+                    {s.dc}
+                  </div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+                    {s.nodes.map((n) => (
+                      <div
+                        key={n}
+                        style={{
+                          width: 34,
+                          height: 34,
+                          borderRadius: "50%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          fontFamily: "var(--sd-font-mono)",
+                          color: s.color,
+                          border: `1px solid ${s.color}`,
+                          background: s.active ? "rgba(76, 110, 245,0.1)" : "transparent",
+                          opacity: s.active ? 1 : 0.65,
+                        }}
+                      >
+                        {n}
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ fontSize: 11, fontFamily: "var(--sd-font-mono)", color: "var(--sd-muted)", marginBottom: 4 }}>{s.count}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: s.color, marginBottom: 8 }}>{s.verdict}</div>
+                  <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{s.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Pitfall: always deploy an odd number of voting nodes.</strong> With an even cluster, say 4 nodes partitioned 2 and 2, neither side holds a strict majority. Both halves stop accepting writes and the cluster goes fully unavailable, even though every single node is healthy.
           </div>
         </div>
 
@@ -385,7 +482,7 @@ export default function Lesson03() {
           </p>
           {[
             {
-              title: "CP: HBase, ZooKeeper, etcd",
+              title: "CP: etcd, ZooKeeper, Consul, CockroachDB",
               body: "These systems use consensus protocols (Raft, Paxos, or ZAB) that require a majority quorum to confirm a write before acknowledging it. If quorum cannot be reached, writes are rejected. Used for distributed coordination, leader election, and configuration management.",
             },
             {

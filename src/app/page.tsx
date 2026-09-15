@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { modules } from "@/lib/lessons";
+import { modules, prologue } from "@/lib/lessons";
 import { ThemeToggle } from "@/components";
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
       <div style={{ position: "fixed", top: 16, right: 16, zIndex: 300 }}>
         <ThemeToggle />
       </div>
-      <div style={{ width: "100%", maxWidth: 640 }}>
+      <div style={{ width: "100%", maxWidth: 960 }}>
 
         <p style={{
           fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", fontFamily: "var(--sd-font-mono)",
@@ -32,8 +32,42 @@ export default function Home() {
           A structured guide to system design fundamentals.
         </p>
 
+        <div style={{ marginBottom: 40 }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end", marginBottom: 4 }}>
+            <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, color: "var(--sd-muted)", border: "1px solid var(--sd-border)", borderRadius: 5, padding: "3px 8px" }}>
+              PROLOGUE
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Link
+              href={`/lessons/${prologue.slug}`}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "48px 1fr 20px",
+                alignItems: "center",
+                gap: 20,
+                padding: "22px 4px",
+                textDecoration: "none",
+                color: "var(--sd-text)",
+                borderTop: "1px solid var(--sd-border)",
+                borderBottom: "1px solid var(--sd-border)",
+              }}
+              className="sd-row"
+            >
+              <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: "var(--sd-muted)" }}>
+                ·
+              </span>
+              <span className="sd-row-title" style={{ fontFamily: "var(--sd-font-display)", fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                {prologue.title}
+              </span>
+              <span className="sd-row-arrow" style={{ color: "var(--sd-accent)", fontSize: 13, fontFamily: "var(--sd-font-mono)" }}>→</span>
+            </Link>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 40 }}>
         {modules.map((mod) => (
-          <div key={mod.number} style={{ marginBottom: 24 }}>
+          <div key={mod.number} style={{ flex: "1 1 50%", minWidth: 0, marginBottom: 24 }}>
             <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 4 }}>
               <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)" }}>
                 {mod.title}
@@ -66,7 +100,7 @@ export default function Home() {
                   }}>
                     {String(l.number).padStart(2, "0")}
                   </span>
-                  <span className="sd-row-title" style={{ fontFamily: "var(--sd-font-display)", fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                  <span className="sd-row-title" style={{ fontFamily: "var(--sd-font-display)", fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em" }}>
                     {l.title}
                   </span>
                   <span className="sd-row-arrow" style={{ color: "var(--sd-accent)", fontSize: 13, fontFamily: "var(--sd-font-mono)" }}>→</span>
@@ -76,6 +110,7 @@ export default function Home() {
             </div>
           </div>
         ))}
+        </div>
 
       </div>
     </div>

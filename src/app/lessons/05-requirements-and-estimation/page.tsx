@@ -124,39 +124,39 @@ export default function Lesson05() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 5 · Foundations
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+        <h1 className="sd-h1">
           Design Requirements &amp; Estimating Resource Needs
         </h1>
-        <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
+        <p className="sd-lede">
           Turning vague product goals into concrete, quantifiable engineering constraints.
         </p>
 
         {/* Intro */}
-        <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
+        <div className="sd-intro">
           <p>
             System design begins with translating vague product goals into{" "}
-            <strong style={{ color: "var(--sd-text)" }}>numerical boundaries</strong>. You cannot design for &quot;high scale&quot; or &quot;low latency&quot; until those terms are defined as concrete targets — a specific RPS figure, a specific latency percentile, a specific number of nines.
+            <strong className="sd-strong">numerical boundaries</strong>. You cannot design for &quot;high scale&quot; or &quot;low latency&quot; until those terms are defined as concrete targets — a specific RPS figure, a specific latency percentile, a specific number of nines.
           </p>
           <p>
             This lesson covers two things: how to split requirements into{" "}
-            <span style={{ color: "var(--sd-teal)" }}>functional</span> and{" "}
-            <span style={{ color: "var(--sd-teal)" }}>non-functional</span> buckets, and how to turn a handful of business projections into{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Back-of-the-Envelope (BOTE)</strong> numbers for throughput, storage, and bandwidth — the numbers that tell you whether your architecture is even feasible.
+            <span className="sd-hl">functional</span> and{" "}
+            <span className="sd-hl">non-functional</span> buckets, and how to turn a handful of business projections into{" "}
+            <strong className="sd-strong">Back-of-the-Envelope (BOTE)</strong> numbers for throughput, storage, and bandwidth — the numbers that tell you whether your architecture is even feasible.
           </p>
         </div>
 
         {/* Functional vs Non-Functional */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Defining Requirements
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Functional vs. Non-Functional</h2>
+          <h2 className="sd-h2">Functional vs. Non-Functional</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>Every requirement you gather falls into one of two buckets. Confusing the two is a common source of designs that satisfy the product spec but fail under real load.</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               {
                 label: "Functional",
@@ -180,24 +180,24 @@ export default function Lesson05() {
                 <div style={{ padding: "14px 16px" }}>
                   <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65, marginBottom: 10 }}>{l.body}</p>
                   <div style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 6, padding: "10px 12px", fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.5 }}>
-                    <strong style={{ color: "var(--sd-teal)" }}>Example:</strong> {l.example}
+                    <strong className="sd-hl">Example:</strong> {l.example}
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            When establishing NFRs, focus on three specific levers: <strong style={{ color: "var(--sd-text)" }}>traffic patterns</strong>, <strong style={{ color: "var(--sd-text)" }}>data retention</strong>, and <strong style={{ color: "var(--sd-text)" }}>availability targets</strong>.
+          <div className="sd-callout sd-callout-accent">
+            When establishing NFRs, focus on three specific levers: <strong className="sd-strong">traffic patterns</strong>, <strong className="sd-strong">data retention</strong>, and <strong className="sd-strong">availability targets</strong>.
           </div>
         </div>
 
         {/* NFR Levers */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Three Levers
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, marginRight: 10, verticalAlign: "middle", background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)" }}>
               NFRs
             </span>
@@ -206,30 +206,30 @@ export default function Lesson05() {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
             {nfrLevers.map((l) => (
-              <div key={l.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+              <div key={l.name} className="sd-card">
                 <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-text)", marginBottom: 6, display: "flex", alignItems: "center", gap: 8 }}>
                   {l.name}
                   <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 7px", borderRadius: 4, background: l.tagBg, color: l.tagColor }}>
                     {l.tag}
                   </span>
                 </div>
-                <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{l.body}</p>
+                <p className="sd-text-sm-tight">{l.body}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Rule of 86,400 */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Back-of-the-Envelope
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Rule of 86,400</h2>
+          <h2 className="sd-h2">The Rule of 86,400</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               There are 86,400 seconds in a day. Divide total daily requests by that constant and you get{" "}
-              <strong style={{ color: "var(--sd-text)" }}>average requests per second</strong> — the starting point for every capacity estimate.
+              <strong className="sd-strong">average requests per second</strong> — the starting point for every capacity estimate.
             </p>
           </div>
 
@@ -253,20 +253,20 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Always design for peak load, not average.</strong> Diurnal traffic patterns commonly push peak to 3-5x the average — so the ~11,574 average RPS above should translate to provisioning for roughly{" "}
-            <strong style={{ color: "var(--sd-amber)" }}>~40,000 RPS</strong> at the top of the curve.
+          <div className="sd-callout">
+            <strong className="sd-strong">Always design for peak load, not average.</strong> Diurnal traffic patterns commonly push peak to 3-5x the average — so the ~11,574 average RPS above should translate to provisioning for roughly{" "}
+            <strong className="sd-hl-amber">~40,000 RPS</strong> at the top of the curve.
           </div>
         </div>
 
         {/* Storage */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Back-of-the-Envelope
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Storage Capacity Projection</h2>
+          <h2 className="sd-h2">Storage Capacity Projection</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>Storage calculations rely on the size of a single record multiplied by the frequency of creation. If a user creates one 50KB post daily, the numbers compound fast.</p>
           </div>
 
@@ -291,56 +291,56 @@ export default function Lesson05() {
 
           <div style={{ background: "rgba(127, 147, 242,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             This magnitude instantly informs the design.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>~1.8PB of growth per year</strong> dictates that you cannot store everything on a single server — you will need a distributed storage strategy and a partitioning plan.
+            <strong className="sd-strong">~1.8PB of growth per year</strong> dictates that you cannot store everything on a single server — you will need a distributed storage strategy and a partitioning plan.
           </div>
         </div>
 
         {/* Overhead */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Trade-offs
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Raw Size Is Never Final Size</h2>
+          <h2 className="sd-h2">Raw Size Is Never Final Size</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               When estimating, you must account for overhead. Indexing, replication, and metadata add{" "}
-              <strong style={{ color: "var(--sd-text)" }}>20% to 50%</strong> on top of raw data size. A 1.8PB/year projection can realistically land closer to{" "}
-              <strong style={{ color: "var(--sd-text)" }}>2.2-2.7PB/year</strong> once these are factored in — and that gap is exactly the kind of number that changes a budget conversation.
+              <strong className="sd-strong">20% to 50%</strong> on top of raw data size. A 1.8PB/year projection can realistically land closer to{" "}
+              <strong className="sd-strong">2.2-2.7PB/year</strong> once these are factored in — and that gap is exactly the kind of number that changes a budget conversation.
             </p>
           </div>
         </div>
 
         {/* Flow diagram */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Putting It Together
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>From Product Goal to Architecture Decision</h2>
+          <h2 className="sd-h2">From Product Goal to Architecture Decision</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 24px", marginBottom: 16 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+          <div className="sd-figure">
+            <div className="sd-stack-center">
               {[
                 { text: "Define Product Goal", color: "var(--sd-accent)" },
                 { text: "Identify Functional Requirements", color: "var(--sd-accent)" },
                 { text: "Establish NFRs — Latency, Availability, Throughput", color: "var(--sd-accent)" },
               ].map((step) => (
-                <div key={step.text} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div key={step.text} className="sd-stack-center">
                   <div style={{ background: "rgba(76, 110, 245,0.1)", border: `1px solid ${step.color}`, borderRadius: 8, padding: "10px 20px", fontSize: 13, fontWeight: 600, color: step.color, textAlign: "center" }}>
                     {step.text}
                   </div>
-                  <div style={{ fontSize: 16, color: "var(--sd-muted)" }}>↓</div>
+                  <div className="sd-arrow-sm">↓</div>
                 </div>
               ))}
 
               {/* Branch: calculate */}
               <div style={{ display: "flex", gap: 24, marginBottom: 8 }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div className="sd-stack-center">
                   <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-teal)", borderRadius: 8, padding: "10px 16px", fontSize: 12, fontWeight: 600, color: "var(--sd-teal)", textAlign: "center" }}>
                     Calculate Throughput
                     <div style={{ fontSize: 10, fontWeight: 400, color: "var(--sd-muted)", marginTop: 2 }}>Peak RPS</div>
                   </div>
-                  <div style={{ fontSize: 16, color: "var(--sd-muted)" }}>↓</div>
+                  <div className="sd-arrow-sm">↓</div>
                   <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "var(--sd-text)", textAlign: "center" }}>
                     Load &gt; single instance?
                   </div>
@@ -350,12 +350,12 @@ export default function Lesson05() {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div className="sd-stack-center">
                   <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-teal)", borderRadius: 8, padding: "10px 16px", fontSize: 12, fontWeight: 600, color: "var(--sd-teal)", textAlign: "center" }}>
                     Calculate Storage
                     <div style={{ fontSize: 10, fontWeight: 400, color: "var(--sd-muted)", marginTop: 2 }}>Growth Rate</div>
                   </div>
-                  <div style={{ fontSize: 16, color: "var(--sd-muted)" }}>↓</div>
+                  <div className="sd-arrow-sm">↓</div>
                   <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "var(--sd-text)", textAlign: "center" }}>
                     Data &gt; single disk/node?
                   </div>
@@ -368,25 +368,25 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            Every design decision downstream — <span style={{ color: "var(--sd-teal)" }}>horizontal scaling</span>, <span style={{ color: "var(--sd-teal)" }}>partitioning</span>, <span style={{ color: "var(--sd-teal)" }}>caching</span> — traces back to whether these BOTE numbers exceed what a single instance or single node can handle.
+          <div className="sd-callout sd-callout-accent">
+            Every design decision downstream — <span className="sd-hl">horizontal scaling</span>, <span className="sd-hl">partitioning</span>, <span className="sd-hl">caching</span> — traces back to whether these BOTE numbers exceed what a single instance or single node can handle.
           </div>
         </div>
 
         {/* Bandwidth */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Back-of-the-Envelope
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Bandwidth: The Hidden Bottleneck</h2>
+          <h2 className="sd-h2">Bandwidth: The Hidden Bottleneck</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               Beyond raw CPU and storage, bandwidth is often overlooked. Response payloads must physically move across the network, and that cost scales linearly with both request rate and payload size.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 16, textAlign: "center" }}>
               <div style={{ fontSize: 11, color: "var(--sd-muted)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Required bandwidth</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: "var(--sd-amber)", marginBottom: 4 }}>40,000 RPS × 100KB</div>
@@ -399,34 +399,34 @@ export default function Lesson05() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout">
             At 4GB/s of required throughput, you&rsquo;d need at least{" "}
-            <strong style={{ color: "var(--sd-text)" }}>four 10Gbps links saturated at 80%</strong> just to serve this traffic — before accounting for inter-service communication. When these numbers exceed your constraints, the fix is architectural: push toward{" "}
-            <span style={{ color: "var(--sd-teal)" }}>caching</span> and{" "}
-            <span style={{ color: "var(--sd-teal)" }}>edge computing</span> rather than scaling raw network capacity linearly.
+            <strong className="sd-strong">four 10Gbps links saturated at 80%</strong> just to serve this traffic — before accounting for inter-service communication. When these numbers exceed your constraints, the fix is architectural: push toward{" "}
+            <span className="sd-hl">caching</span> and{" "}
+            <span className="sd-hl">edge computing</span> rather than scaling raw network capacity linearly.
           </div>
         </div>
 
         {/* Summary */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Summary
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Numbers Define the Boundaries</h2>
+          <h2 className="sd-h2">Numbers Define the Boundaries</h2>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout sd-callout-green">
             Resource estimation transforms vague ambitions into architectural requirements. By calculating peak RPS, storage volume, and bandwidth consumption, you define the physical boundaries your system must overcome — boundaries that will directly guide your decisions on{" "}
-            <strong style={{ color: "var(--sd-text)" }}>data partitioning</strong> and{" "}
-            <strong style={{ color: "var(--sd-text)" }}>communication protocols</strong> in the lessons ahead.
+            <strong className="sd-strong">data partitioning</strong> and{" "}
+            <strong className="sd-strong">communication protocols</strong> in the lessons ahead.
           </div>
         </div>
 
         {/* Quiz */}
-        <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+        <div className="sd-quiz">
+          <p className="sd-eyebrow-accent">
             Quiz Review
           </p>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
+          <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
       </PageLayout>
@@ -438,8 +438,8 @@ export default function Lesson05() {
         </p>
 
         <PanelSection title="Why is the peak-to-average ratio (3-5x) not a fixed constant?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
-            The peak factor depends entirely on <strong style={{ color: "var(--sd-text)" }}>how concentrated your traffic actually is</strong> — treating 3-5x as a universal rule is itself an estimate that needs validating against real usage.
+          <p className="sd-text-sm">
+            The peak factor depends entirely on <strong className="sd-strong">how concentrated your traffic actually is</strong> — treating 3-5x as a universal rule is itself an estimate that needs validating against real usage.
           </p>
           {[
             {
@@ -455,19 +455,19 @@ export default function Lesson05() {
               body: "Flash sales, viral moments, or scheduled events (a product launch, a live sports final) can produce peaks 10-50x average — far beyond what a diurnal multiplier captures. These require dedicated spike-handling strategies, not just a bigger baseline.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Use 3-5x as a default assumption, not a law.</strong> Real traffic graphs from analytics tooling should always override a rule-of-thumb multiplier once they&rsquo;re available.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Use 3-5x as a default assumption, not a law.</strong> Real traffic graphs from analytics tooling should always override a rule-of-thumb multiplier once they&rsquo;re available.
           </div>
         </PanelSection>
 
         <PanelSection title="How do BOTE estimates relate to actual load testing?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
-            BOTE numbers and load tests answer <strong style={{ color: "var(--sd-text)" }}>different questions at different stages</strong> — confusing them leads either to over-engineering too early or under-provisioning too late.
+          <p className="sd-text-sm">
+            BOTE numbers and load tests answer <strong className="sd-strong">different questions at different stages</strong> — confusing them leads either to over-engineering too early or under-provisioning too late.
           </p>
           {[
             {
@@ -483,20 +483,20 @@ export default function Lesson05() {
               body: "A BOTE estimate assumes linear, uniform behavior. Real systems have non-linear failure modes near saturation. Treat BOTE numbers as the floor for your load test targets, not as a substitute for running the test.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>BOTE tells you what to build; load testing tells you if it works.</strong> Skipping straight from BOTE math to production is how &quot;the numbers said we&rsquo;d be fine&quot; outages happen.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">BOTE tells you what to build; load testing tells you if it works.</strong> Skipping straight from BOTE math to production is how &quot;the numbers said we&rsquo;d be fine&quot; outages happen.
           </div>
         </PanelSection>
 
         <PanelSection title="How does replication interact with the storage overhead calculation?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             The 20-50% overhead figure covers indexing and metadata on a single copy of the data. Replication is a{" "}
-            <strong style={{ color: "var(--sd-text)" }}>separate multiplier stacked on top</strong>, and it&rsquo;s easy to forget when sizing a cluster.
+            <strong className="sd-strong">separate multiplier stacked on top</strong>, and it&rsquo;s easy to forget when sizing a cluster.
           </p>
           {[
             {
@@ -512,20 +512,20 @@ export default function Lesson05() {
               body: "Raw size → add indexing/metadata overhead (20-50%) → multiply by replication factor. Doing this in the wrong order, or forgetting a step, is the single most common cause of a storage budget being off by 3-5x.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Replication factor and overhead percentage compound, they don&rsquo;t add.</strong> Always multiply them in sequence against the raw figure.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Replication factor and overhead percentage compound, they don&rsquo;t add.</strong> Always multiply them in sequence against the raw figure.
           </div>
         </PanelSection>
 
         <PanelSection title="When do BOTE numbers say 'don't build this yet'?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             The real value of resource estimation is catching infeasible designs{" "}
-            <strong style={{ color: "var(--sd-text)" }}>before</strong> engineering time is spent on them.
+            <strong className="sd-strong">before</strong> engineering time is spent on them.
           </p>
           {[
             {
@@ -541,13 +541,13 @@ export default function Lesson05() {
               body: "If peak load requires thousands of stateful application servers because each one can only hold a few hundred connections, that's a sign the architecture needs to move toward a different connection model, not just \"add more servers.\"",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>The magnitude of the number, not its precision, is the signal.</strong> BOTE math doesn&rsquo;t need to be exact — it needs to be right within an order of magnitude to steer the architecture correctly.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">The magnitude of the number, not its precision, is the signal.</strong> BOTE math doesn&rsquo;t need to be exact — it needs to be right within an order of magnitude to steer the architecture correctly.
           </div>
         </PanelSection>
       </SidePanel>

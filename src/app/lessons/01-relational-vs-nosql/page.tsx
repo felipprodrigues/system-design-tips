@@ -133,42 +133,42 @@ export default function Lesson01Module02() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 1 · Data Storage and Management Strategies
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+        <h1 className="sd-h1">
           Selecting Relational vs NoSQL Database Models
         </h1>
-        <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
+        <p className="sd-lede">
           Two philosophies for storing data — integrity-first structure versus flexible, horizontally scalable performance.
         </p>
 
         {/* Intro */}
-        <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
+        <div className="sd-intro">
           <p>
             Relational databases (RDBMS) are built on the mathematical foundation of{" "}
-            <strong style={{ color: "var(--sd-text)" }}>set theory and the relational model</strong>, prioritizing data integrity and consistency through strict schema enforcement.
+            <strong className="sd-strong">set theory and the relational model</strong>, prioritizing data integrity and consistency through strict schema enforcement.
           </p>
           <p>
-            NoSQL databases (<span style={{ color: "var(--sd-teal)" }}>Not Only SQL</span>) trade off that rigid consistency for{" "}
-            <strong style={{ color: "var(--sd-text)" }}>horizontal scale, flexible data structures</strong>, and optimized read/write performance for specific data access patterns.
+            NoSQL databases (<span className="sd-hl">Not Only SQL</span>) trade off that rigid consistency for{" "}
+            <strong className="sd-strong">horizontal scale, flexible data structures</strong>, and optimized read/write performance for specific data access patterns.
           </p>
         </div>
 
         {/* Relational Model */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Model 01
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)", marginRight: 10, verticalAlign: "middle" }}>
               Relational
             </span>
             Integrity First
           </h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               Relational databases like PostgreSQL or MySQL rely on a{" "}
-              <strong style={{ color: "var(--sd-text)" }}>predefined schema</strong>. Every row in a table must adhere to the same structure, and relationships between tables are enforced via{" "}
-              <strong style={{ color: "var(--sd-text)" }}>Foreign Keys</strong>. This structure is ideal for transactional integrity ({" "}
+              <strong className="sd-strong">predefined schema</strong>. Every row in a table must adhere to the same structure, and relationships between tables are enforced via{" "}
+              <strong className="sd-strong">Foreign Keys</strong>. This structure is ideal for transactional integrity ({" "}
               <button
                 type="button"
                 onClick={() => openPanelSection("acid-compliance")}
@@ -193,37 +193,37 @@ export default function Lesson01Module02() {
           </div>
 
           <pre style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px", marginBottom: 16, overflowX: "auto", fontSize: 12.5, lineHeight: 1.7 }}>
-            <code style={{ color: "var(--sd-text)" }}>
-              <span style={{ color: "var(--sd-accent)" }}>BEGIN TRANSACTION</span>;{"\n"}
-              <span style={{ color: "var(--sd-teal)" }}>UPDATE</span> accounts <span style={{ color: "var(--sd-teal)" }}>SET</span> balance = balance - 100 <span style={{ color: "var(--sd-teal)" }}>WHERE</span> id = 1;{"\n"}
-              <span style={{ color: "var(--sd-teal)" }}>UPDATE</span> accounts <span style={{ color: "var(--sd-teal)" }}>SET</span> balance = balance + 100 <span style={{ color: "var(--sd-teal)" }}>WHERE</span> id = 2;{"\n"}
-              <span style={{ color: "var(--sd-accent)" }}>COMMIT</span>;
+            <code className="sd-strong">
+              <span className="sd-hl-accent">BEGIN TRANSACTION</span>;{"\n"}
+              <span className="sd-hl">UPDATE</span> accounts <span className="sd-hl">SET</span> balance = balance - 100 <span className="sd-hl">WHERE</span> id = 1;{"\n"}
+              <span className="sd-hl">UPDATE</span> accounts <span className="sd-hl">SET</span> balance = balance + 100 <span className="sd-hl">WHERE</span> id = 2;{"\n"}
+              <span className="sd-hl-accent">COMMIT</span>;
             </code>
           </pre>
 
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
             If the system crashes halfway through, the database engine uses the{" "}
-            <strong style={{ color: "var(--sd-text)" }}>transaction log</strong> to roll back the changes, ensuring no money vanishes into thin air.
+            <strong className="sd-strong">transaction log</strong> to roll back the changes, ensuring no money vanishes into thin air.
           </div>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            Use RDBMS when your data has <strong style={{ color: "var(--sd-text)" }}>clear, predictable relationships</strong> and your primary requirement is avoiding anomalies.
+          <div className="sd-callout sd-callout-green">
+            Use RDBMS when your data has <strong className="sd-strong">clear, predictable relationships</strong> and your primary requirement is avoiding anomalies.
           </div>
         </div>
 
         {/* NoSQL Model */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Model 02
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(127, 147, 242,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>
               NoSQL
             </span>
             Scaling and Performance
           </h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               NoSQL databases — such as MongoDB (Document), Cassandra (Wide-Column), or DynamoDB (Key-Value) — are designed for scenarios where the &quot;one size fits all&quot; schema of an RDBMS becomes a bottleneck. By relaxing the requirement for complex joins and strict cross-table constraints, these systems can distribute data across many nodes more easily.
             </p>
@@ -233,15 +233,15 @@ export default function Lesson01Module02() {
           </div>
 
           <pre style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px", marginBottom: 16, overflowX: "auto", fontSize: 12.5, lineHeight: 1.7 }}>
-            <code style={{ color: "var(--sd-text)" }}>
-              <span style={{ color: "var(--sd-muted)" }}>{"// User Profile Document"}</span>{"\n"}
+            <code className="sd-strong">
+              <span className="sd-hl-muted">{"// User Profile Document"}</span>{"\n"}
               {"{\n"}
-              {"  "}<span style={{ color: "var(--sd-teal)" }}>&quot;user_id&quot;</span>: <span style={{ color: "var(--sd-amber)" }}>&quot;u123&quot;</span>,{"\n"}
-              {"  "}<span style={{ color: "var(--sd-teal)" }}>&quot;preferences&quot;</span>: {"{\n"}
-              {"    "}<span style={{ color: "var(--sd-teal)" }}>&quot;theme&quot;</span>: <span style={{ color: "var(--sd-amber)" }}>&quot;dark&quot;</span>,{"\n"}
-              {"    "}<span style={{ color: "var(--sd-teal)" }}>&quot;notifications&quot;</span>: [<span style={{ color: "var(--sd-amber)" }}>&quot;email&quot;</span>, <span style={{ color: "var(--sd-amber)" }}>&quot;push&quot;</span>]{"\n"}
+              {"  "}<span className="sd-hl">&quot;user_id&quot;</span>: <span className="sd-hl-amber">&quot;u123&quot;</span>,{"\n"}
+              {"  "}<span className="sd-hl">&quot;preferences&quot;</span>: {"{\n"}
+              {"    "}<span className="sd-hl">&quot;theme&quot;</span>: <span className="sd-hl-amber">&quot;dark&quot;</span>,{"\n"}
+              {"    "}<span className="sd-hl">&quot;notifications&quot;</span>: [<span className="sd-hl-amber">&quot;email&quot;</span>, <span className="sd-hl-amber">&quot;push&quot;</span>]{"\n"}
               {"  },\n"}
-              {"  "}<span style={{ color: "var(--sd-teal)" }}>&quot;last_login&quot;</span>: <span style={{ color: "var(--sd-amber)" }}>&quot;2023-10-27T10:00:00Z&quot;</span>{"\n"}
+              {"  "}<span className="sd-hl">&quot;last_login&quot;</span>: <span className="sd-hl-amber">&quot;2023-10-27T10:00:00Z&quot;</span>{"\n"}
               {"}"}
             </code>
           </pre>
@@ -255,13 +255,13 @@ export default function Lesson01Module02() {
         </div>
 
         {/* Decision Matrix */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Reference
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Deciding Between Models</h2>
+          <h2 className="sd-h2">Deciding Between Models</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>The choice is rarely about &quot;which technology is better&quot; and always about &quot;what constraints are you trying to satisfy.&quot;</p>
           </div>
 
@@ -290,11 +290,11 @@ export default function Lesson01Module02() {
         </div>
 
         {/* Decision Flow */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Putting It Together
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Evaluate Your Storage Needs</h2>
+          <h2 className="sd-h2">Evaluate Your Storage Needs</h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "24px", marginBottom: 16 }}>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -334,19 +334,19 @@ export default function Lesson01Module02() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout">
             When data grows beyond a single instance, your choice of database dictates how you handle future complexity. In upcoming modules, we&rsquo;ll examine how to apply{" "}
-            <span style={{ color: "var(--sd-teal)" }}>partitioning</span> and{" "}
-            <span style={{ color: "var(--sd-teal)" }}>sharding</span> to these models to manage massive datasets.
+            <span className="sd-hl">partitioning</span> and{" "}
+            <span className="sd-hl">sharding</span> to these models to manage massive datasets.
           </div>
         </div>
 
         {/* Exercises */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Practice
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Exercises</h2>
+          <h2 className="sd-h2">Exercises</h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {exercises.map((ex) => (
@@ -365,7 +365,7 @@ export default function Lesson01Module02() {
                 </div>
                 <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7, marginBottom: 10 }}>{ex.prompt}</p>
                 <div style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 6, padding: "10px 12px", fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6, marginBottom: 10 }}>
-                  <strong style={{ color: "var(--sd-teal)" }}>Think about:</strong> {ex.hint}
+                  <strong className="sd-hl">Think about:</strong> {ex.hint}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "var(--sd-accent)" }}>
                   See the walkthrough <span aria-hidden>→</span>
@@ -385,24 +385,24 @@ export default function Lesson01Module02() {
         </div>
 
         {/* Summary */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Summary
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Structure vs. Flexibility</h2>
+          <h2 className="sd-h2">Structure vs. Flexibility</h2>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout sd-callout-green">
             Relational databases prioritize the correctness of complex data relationships, while NoSQL databases prioritize performance and flexibility for specific, high-velocity use cases. Choosing between them requires a clear understanding of your read/write patterns and the degree of consistency your system demands. We&rsquo;ll build on this by exploring how to{" "}
-            <strong style={{ color: "var(--sd-text)" }}>distribute these datasets effectively</strong> in the next lesson.
+            <strong className="sd-strong">distribute these datasets effectively</strong> in the next lesson.
           </div>
         </div>
 
         {/* Quiz */}
-        <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+        <div className="sd-quiz">
+          <p className="sd-eyebrow-accent">
             Quiz Review
           </p>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
+          <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
       </PageLayout>
@@ -418,7 +418,7 @@ export default function Lesson01Module02() {
           activeId={activePanelSection}
           title="What does ACID compliance actually guarantee?"
         >
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             ACID is four separate guarantees a relational transaction makes, all at once. Each one closes off a specific way the banking transfer above could go wrong.
           </p>
           {[
@@ -439,13 +439,13 @@ export default function Lesson01Module02() {
               body: "The instant COMMIT returns, the change is guaranteed to persist even if the server loses power a millisecond later. This is what the write-ahead transaction log is for: the change is flushed to disk before the engine acknowledges the commit.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>ACID is what makes the BEGIN…COMMIT block above trustworthy.</strong> Drop any one of the four guarantees and the transfer example stops being safe — most NoSQL systems deliberately relax one or more of them to buy back horizontal scale.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">ACID is what makes the BEGIN…COMMIT block above trustworthy.</strong> Drop any one of the four guarantees and the transfer example stops being safe — most NoSQL systems deliberately relax one or more of them to buy back horizontal scale.
           </div>
         </PanelSection>
 
@@ -454,9 +454,9 @@ export default function Lesson01Module02() {
           activeId={activePanelSection}
           title="Should the shopping cart live in a relational database or a key-value store?"
         >
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             Most production e-commerce systems answer this by{" "}
-            <strong style={{ color: "var(--sd-text)" }}>splitting the lifecycle in two</strong>, rather than picking one store for the whole flow.
+            <strong className="sd-strong">splitting the lifecycle in two</strong>, rather than picking one store for the whole flow.
           </p>
           {[
             {
@@ -472,13 +472,13 @@ export default function Lesson01Module02() {
               body: "Ephemeral, high-frequency, low-stakes state → fast key-value store. Permanent, low-frequency, high-stakes state → relational database. This split, using different databases for different parts of one system, is called polyglot persistence.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>The cart and the order are different data, with different guarantees</strong> — even though they look like &quot;the same feature&quot; from a product perspective.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">The cart and the order are different data, with different guarantees</strong> — even though they look like &quot;the same feature&quot; from a product perspective.
           </div>
         </PanelSection>
 
@@ -487,9 +487,9 @@ export default function Lesson01Module02() {
           activeId={activePanelSection}
           title="Why does a document store win for retrieving a full comment thread?"
         >
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             The answer comes down to{" "}
-            <strong style={{ color: "var(--sd-text)" }}>how many round-trips it takes to reconstruct the shape you&rsquo;re actually going to render</strong>.
+            <strong className="sd-strong">how many round-trips it takes to reconstruct the shape you&rsquo;re actually going to render</strong>.
           </p>
           {[
             {
@@ -505,20 +505,20 @@ export default function Lesson01Module02() {
               body: "Embedding makes reads cheap but makes updates to a single deeply-nested reply more awkward, and duplicates data if the same comment needs to appear in more than one context. It's a bet that reads (viewing threads) vastly outnumber writes (posting a reply) — usually true for social platforms.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Model data around how it&rsquo;s read, not just how it&rsquo;s created.</strong> The document store isn&rsquo;t &quot;better&quot; here — it&rsquo;s shaped to match the access pattern.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Model data around how it&rsquo;s read, not just how it&rsquo;s created.</strong> The document store isn&rsquo;t &quot;better&quot; here — it&rsquo;s shaped to match the access pattern.
           </div>
         </PanelSection>
 
         <PanelSection title={'What does "eventual consistency" actually cost you in practice?'}>
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             It&rsquo;s not free flexibility — it&rsquo;s a real, user-visible trade-off, and it&rsquo;s the same tension formalized by the{" "}
-            <strong style={{ color: "var(--sd-text)" }}>CAP theorem</strong> from earlier in this course.
+            <strong className="sd-strong">CAP theorem</strong> from earlier in this course.
           </p>
           {[
             {
@@ -534,20 +534,20 @@ export default function Lesson01Module02() {
               body: "Session data, view counts, activity feeds — cases where a slightly stale read causes no real harm. Where it's not acceptable: account balances, inventory counts, anything with a financial or safety consequence.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Eventual consistency shifts risk from the database to your application code.</strong> Someone still has to handle the stale read or the write conflict — it just isn&rsquo;t the database anymore.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Eventual consistency shifts risk from the database to your application code.</strong> Someone still has to handle the stale read or the write conflict — it just isn&rsquo;t the database anymore.
           </div>
         </PanelSection>
 
         <PanelSection title="If NoSQL scales better, why doesn't everyone just use it for everything?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             Because scale is only one axis. Relational databases give up scale-out simplicity in exchange for guarantees that{" "}
-            <strong style={{ color: "var(--sd-text)" }}>most NoSQL systems can&rsquo;t cheaply replicate</strong>.
+            <strong className="sd-strong">most NoSQL systems can&rsquo;t cheaply replicate</strong>.
           </p>
           {[
             {
@@ -563,13 +563,13 @@ export default function Lesson01Module02() {
               body: "A typical production architecture uses an RDBMS for orders/billing/auth, a document store for flexible content, a key-value store for sessions/carts, and a wide-column store for time-series or logs — each chosen for the access pattern it serves, not as a single default.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>&quot;Scales better&quot; is not the same as &quot;better.&quot;</strong> It&rsquo;s better at the specific thing it optimizes for, at the cost of the thing an RDBMS optimizes for.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">&quot;Scales better&quot; is not the same as &quot;better.&quot;</strong> It&rsquo;s better at the specific thing it optimizes for, at the cost of the thing an RDBMS optimizes for.
           </div>
         </PanelSection>
       </SidePanel>

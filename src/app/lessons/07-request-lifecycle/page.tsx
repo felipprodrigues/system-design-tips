@@ -105,33 +105,33 @@ export default function Lesson07() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Prologue
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+        <h1 className="sd-h1">
           The Lifecycle of a Software Request
         </h1>
-        <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
+        <p className="sd-lede">
           Tracing an HTTP request from client click to rendered response — and every hand-off in between.
         </p>
 
         {/* Intro */}
-        <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
+        <div className="sd-intro">
           <p>
             A software request begins the moment a user interacts with an interface and ends when that user{" "}
-            <strong style={{ color: "var(--sd-text)" }}>perceives the result</strong>. At its core, this journey is a series of hand-offs between specialized components, each responsible for transforming, routing, or retrieving information.
+            <strong className="sd-strong">perceives the result</strong>. At its core, this journey is a series of hand-offs between specialized components, each responsible for transforming, routing, or retrieving information.
           </p>
           <p>
             When a user clicks &quot;Search&quot; or &quot;Login,&quot; they are triggering an{" "}
-            <span style={{ color: "var(--sd-teal)" }}>HTTP request</span>. This signal moves from the client — a browser or mobile app — through several layers before a response is returned.
+            <span className="sd-hl">HTTP request</span>. This signal moves from the client — a browser or mobile app — through several layers before a response is returned.
           </p>
         </div>
 
         {/* The Request Lifecycle */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             End to End
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Request Lifecycle</h2>
+          <h2 className="sd-h2">The Request Lifecycle</h2>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="sd-stack">
             {lifecycleSteps.map((step, i) => (
               <div key={step.name} style={{ display: "flex", gap: 14, alignItems: "flex-start", background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "14px 16px" }}>
                 <div style={{ flexShrink: 0, width: 24, height: 24, borderRadius: "50%", background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)", fontFamily: "var(--sd-font-mono)", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -139,7 +139,7 @@ export default function Lesson07() {
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-text)", marginBottom: 3 }}>{step.name}</div>
-                  <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{step.body}</p>
+                  <p className="sd-text-sm-tight">{step.body}</p>
                 </div>
               </div>
             ))}
@@ -147,11 +147,11 @@ export default function Lesson07() {
         </div>
 
         {/* Diagram */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Request / Response
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Two Trips Through the Same Stack</h2>
+          <h2 className="sd-h2">Two Trips Through the Same Stack</h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "24px 20px", marginBottom: 16 }}>
             <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 16, textAlign: "center" }}>
@@ -166,7 +166,7 @@ export default function Lesson07() {
                   {i < requestPath.length - 1 && (
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 8px" }}>
                       <span style={{ fontSize: 10, color: "var(--sd-muted)", whiteSpace: "nowrap", marginBottom: 2 }}>{requestPath[i].value}</span>
-                      <span style={{ fontSize: 16, color: "var(--sd-muted)" }}>→</span>
+                      <span className="sd-arrow-sm">→</span>
                     </div>
                   )}
                 </div>
@@ -185,7 +185,7 @@ export default function Lesson07() {
                   {i < responsePath.length - 1 && (
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 8px" }}>
                       <span style={{ fontSize: 10, color: "var(--sd-muted)", whiteSpace: "nowrap", marginBottom: 2 }}>{responsePath[i + 1].value}</span>
-                      <span style={{ fontSize: 16, color: "var(--sd-muted)" }}>→</span>
+                      <span className="sd-arrow-sm">→</span>
                     </div>
                   )}
                 </div>
@@ -193,48 +193,48 @@ export default function Lesson07() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout sd-callout-accent">
             Every hop on the way out has a matching hop on the way back. The load balancer that forwarded the request is the same one that relays the response — the client never talks to the app server or database directly.
           </div>
         </div>
 
         {/* Anatomy of a Request Path */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Worked Example
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Anatomy of a Request Path</h2>
+          <h2 className="sd-h2">The Anatomy of a Request Path</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               Consider a user searching for a product on an e-commerce site. The lifecycle isn&rsquo;t just a straight line — it is a series of transformations.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="sd-stack">
             {anatomySteps.map((step) => (
               <div key={step.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "14px 16px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-teal)", marginBottom: 5 }}>{step.name}</div>
-                <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{step.body}</p>
+                <p className="sd-text-sm-tight">{step.body}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Limitations and Bottlenecks */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Trade-offs
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Limitations and Bottlenecks</h2>
+          <h2 className="sd-h2">Limitations and Bottlenecks</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
-              A request is only as fast as its slowest component — often called the <strong style={{ color: "var(--sd-text)" }}>critical path</strong>. If the database is locked during a write operation, the application server hangs, which causes the load balancer to keep the connection open, which eventually leaves the user staring at a loading spinner.
+              A request is only as fast as its slowest component — often called the <strong className="sd-strong">critical path</strong>. If the database is locked during a write operation, the application server hangs, which causes the load balancer to keep the connection open, which eventually leaves the user staring at a loading spinner.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               {
                 label: "Head-of-Line Blocking",
@@ -254,37 +254,37 @@ export default function Lesson07() {
                   {l.label}
                 </div>
                 <div style={{ padding: "14px 16px" }}>
-                  <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{l.body}</p>
+                  <p className="sd-text-sm-tight">{l.body}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            A well-designed system minimizes the number of <strong style={{ color: "var(--sd-text)" }}>synchronous</strong> hops in a request. If a request requires three different database queries to complete, the system is at the mercy of the cumulative latency of all three.
+          <div className="sd-callout">
+            A well-designed system minimizes the number of <strong className="sd-strong">synchronous</strong> hops in a request. If a request requires three different database queries to complete, the system is at the mercy of the cumulative latency of all three.
           </div>
         </div>
 
         {/* Summary */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Summary
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Map Before the Scale</h2>
+          <h2 className="sd-h2">The Map Before the Scale</h2>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout sd-callout-green">
             The lifecycle of a request is the fundamental flow that every system designer must map out to identify potential points of failure. Understanding this flow is the prerequisite for designing systems that handle scale, which we will address next by analyzing{" "}
-            <strong style={{ color: "var(--sd-text)" }}>how we measure system performance</strong> and{" "}
-            <strong style={{ color: "var(--sd-text)" }}>distribute load</strong>.
+            <strong className="sd-strong">how we measure system performance</strong> and{" "}
+            <strong className="sd-strong">distribute load</strong>.
           </div>
         </div>
 
         {/* Quiz */}
-        <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+        <div className="sd-quiz">
+          <p className="sd-eyebrow-accent">
             Quiz Review
           </p>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
+          <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
       </PageLayout>
@@ -296,13 +296,13 @@ export default function Lesson07() {
         </p>
 
         <PanelSection title="Why does TLS add extra round trips, and how is that cost reduced in practice?" defaultOpen>
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             A request first opens a{" "}
             <Term label="TCP">{tcpDefinition}</Term>{" "}
             connection, then layers{" "}
             <Term label="TLS">{tlsDefinition}</Term>{" "}
             on top of it. Encryption isn&rsquo;t free — negotiating it costs{" "}
-            <strong style={{ color: "var(--sd-text)" }}>round trips before any application data moves</strong>, and shaving those off is a recurring theme in web performance work.
+            <strong className="sd-strong">round trips before any application data moves</strong>, and shaving those off is a recurring theme in web performance work.
           </p>
           {[
             {
@@ -318,19 +318,19 @@ export default function Lesson07() {
               body: "HTTP/2 and HTTP/3 multiplex many requests over one already-negotiated connection, so the handshake cost is paid once per session instead of once per request.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>The handshake is a fixed tax paid once per connection.</strong> Keeping connections alive is what keeps you from paying it on every request.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">The handshake is a fixed tax paid once per connection.</strong> Keeping connections alive is what keeps you from paying it on every request.
           </div>
         </PanelSection>
 
         <PanelSection title="How does the application server's threading model change how head-of-line blocking shows up?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
-            &quot;Limited worker threads&quot; means something <strong style={{ color: "var(--sd-text)" }}>different depending on the concurrency model</strong> the server was built on.
+          <p className="sd-text-sm">
+            &quot;Limited worker threads&quot; means something <strong className="sd-strong">different depending on the concurrency model</strong> the server was built on.
           </p>
           {[
             {
@@ -346,20 +346,20 @@ export default function Lesson07() {
               body: "Decouples \"waiting on the database\" from \"occupying a thread,\" raising the ceiling before blocking appears — but the database itself can still be the bottleneck underneath.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>The model changes the ceiling, not the physics.</strong> A slow enough database defeats any threading strategy eventually.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">The model changes the ceiling, not the physics.</strong> A slow enough database defeats any threading strategy eventually.
           </div>
         </PanelSection>
 
         <PanelSection title="What replaces a synchronous database round trip when it's too slow to do inline?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             Minimizing synchronous hops doesn&rsquo;t mean the work disappears — it means{" "}
-            <strong style={{ color: "var(--sd-text)" }}>moving it off the request's critical path</strong>.
+            <strong className="sd-strong">moving it off the request's critical path</strong>.
           </p>
           {[
             {
@@ -375,13 +375,13 @@ export default function Lesson07() {
               body: "Spreading reads across replicas and reusing pooled connections reduces contention, so individual queries stop queuing behind each other on the same connection.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Caching, queues, and replicas are the same idea three ways:</strong> keep the slow thing off the path the user is waiting on.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Caching, queues, and replicas are the same idea three ways:</strong> keep the slow thing off the path the user is waiting on.
           </div>
         </PanelSection>
       </SidePanel>

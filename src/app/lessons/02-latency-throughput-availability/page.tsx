@@ -85,47 +85,47 @@ export default function Lesson02() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 2 · Foundations
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+        <h1 className="sd-h1">
           Latency, Throughput &amp; Availability
         </h1>
-        <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
+        <p className="sd-lede">
           The three pillars of system observability — if you can't measure these, you can't operate.
         </p>
 
         {/* Intro */}
-        <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
+        <div className="sd-intro">
           <p>
             Before you can reason about scaling, consistency, or fault tolerance, you need a shared language for measuring system health. These three metrics are that language.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Latency</strong> tells you how fast the system responds.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Throughput</strong> tells you how much work it can handle.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Availability</strong> tells you how often it's actually reachable.
+            <strong className="sd-strong">Latency</strong> tells you how fast the system responds.{" "}
+            <strong className="sd-strong">Throughput</strong> tells you how much work it can handle.{" "}
+            <strong className="sd-strong">Availability</strong> tells you how often it's actually reachable.
           </p>
           <p>
             They are related but not interchangeable — and optimizing for one often creates pressure on another. Understanding their definitions, how they're measured, and where they conflict is the prerequisite to every architectural decision that follows.
           </p>
           <p>
-            When an architecture buckles under load or degrades in production, it is almost never because of an obscure syntax bug. It fails because someone miscalculated the relationship between how fast an operation completes, how many operations can run concurrently, and what proportion of them succeed over time. Treat these three as <strong style={{ color: "var(--sd-text)" }}>mathematical constraints that push against one another</strong>, not as isolated target numbers on a dashboard.
+            When an architecture buckles under load or degrades in production, it is almost never because of an obscure syntax bug. It fails because someone miscalculated the relationship between how fast an operation completes, how many operations can run concurrently, and what proportion of them succeed over time. Treat these three as <strong className="sd-strong">mathematical constraints that push against one another</strong>, not as isolated target numbers on a dashboard.
           </p>
         </div>
 
         {/* ── LATENCY ── */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 01</p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">Metric 01</p>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)", marginRight: 10, verticalAlign: "middle" }}>Latency</span>
             Time to complete a request
           </h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Latency is the time it takes for a single request to complete. In a distributed architecture, this is not a single number — it's a <strong style={{ color: "var(--sd-text)" }}>distribution</strong>. The most common mistake is reporting latency as an arithmetic mean.</p>
+          <div className="sd-prose">
+            <p>Latency is the time it takes for a single request to complete. In a distributed architecture, this is not a single number — it's a <strong className="sd-strong">distribution</strong>. The most common mistake is reporting latency as an arithmetic mean.</p>
             <p style={{ marginTop: 10 }}>If 99% of requests take 10ms but 1% take 5 seconds, your average looks healthy while a real slice of users hits timeouts. The mean hides outliers entirely.</p>
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Never use the mean for latency.</strong> Use percentiles. The mean is mathematically valid but operationally misleading in skewed distributions — which is exactly what request latency produces.
+            <strong className="sd-strong">Never use the mean for latency.</strong> Use percentiles. The mean is mathematically valid but operationally misleading in skewed distributions — which is exactly what request latency produces.
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-3">
             {[
               { label: "p50", name: "Median", color: "var(--sd-green)", desc: "Half your users experience this or better. Your \"typical\" user's experience." },
               { label: "p95", name: "95th Percentile", color: "var(--sd-amber)", desc: "The slowest 5% of requests. Start of the \"bad day\" zone for users." },
@@ -164,26 +164,26 @@ export default function Lesson02() {
               )}
             </div>
             <p style={{ marginTop: 18, textAlign: "center", fontSize: 12, color: "var(--sd-muted)" }}>
-              <strong style={{ color: "var(--sd-accent)" }}>Latency</strong> = time from client sends request → client receives response
+              <strong className="sd-hl-accent">Latency</strong> = time from client sends request → client receives response
             </p>
           </div>
 
           {/* Latency anatomy */}
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Latency is often confused with <strong style={{ color: "var(--sd-text)" }}>response time</strong>. Response time is the total elapsed time the client experiences. Latency is the portion of it introduced by network transit, queuing, and compute along the path. Those three pieces are additive:</p>
+          <div className="sd-prose">
+            <p>Latency is often confused with <strong className="sd-strong">response time</strong>. Response time is the total elapsed time the client experiences. Latency is the portion of it introduced by network transit, queuing, and compute along the path. Those three pieces are additive:</p>
             <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0", fontFamily: "var(--sd-font-mono)" }}>
               Total Latency = Network Transit + Queue Wait + Execution
             </p>
             <p>Knowing which term dominates tells you which fix is worth attempting. Adding a CDN does nothing for a request stuck in a connection pool, and a faster query does nothing for a client three continents away.</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-3">
             {[
               { title: "Network Transit", color: "var(--sd-accent)", body: "Bounded by physics. Light travels roughly 200 km per millisecond through fiber, and every routing hop adds more. You cannot optimize this away, you can only move the data closer." },
               { title: "Queue Wait", color: "var(--sd-amber)", body: "Time spent sitting in thread pools, TCP buffers, and database connection pools waiting for a free worker. The only dynamic term, and it dominates as the system approaches saturation." },
               { title: "Execution", color: "var(--sd-teal)", body: "Raw CPU and I/O: parsing payloads, running business logic, reading from storage engines. This is what profilers measure and what most engineers instinctively try to fix first." },
             ].map((c) => (
-              <div key={c.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+              <div key={c.title} className="sd-card">
                 <div style={{ fontSize: 13, fontWeight: 700, color: c.color, marginBottom: 8 }}>{c.title}</div>
                 <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6 }}>{c.body}</p>
               </div>
@@ -191,30 +191,30 @@ export default function Lesson02() {
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong style={{ color: "var(--sd-text)" }}>A healthy system spends its latency on execution.</strong> When queue wait becomes the largest term, you are no longer looking at a slow service, you are looking at an under-provisioned one. The fix is capacity or shedding, not micro-optimization.
+            <strong className="sd-strong">A healthy system spends its latency on execution.</strong> When queue wait becomes the largest term, you are no longer looking at a slow service, you are looking at an under-provisioned one. The fix is capacity or shedding, not micro-optimization.
           </div>
 
-          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Jitter</strong> — a significantly higher p99 than p50 — indicates inconsistency in your system. Common causes: GC pauses, lock contention, or slow database queries.{" "}
-            <span style={{ color: "var(--sd-teal)" }}>Horizontal scaling will not fix jitter.</span>
+          <div className="sd-callout sd-callout-accent">
+            <strong className="sd-strong">Jitter</strong> — a significantly higher p99 than p50 — indicates inconsistency in your system. Common causes: GC pauses, lock contention, or slow database queries.{" "}
+            <span className="sd-hl">Horizontal scaling will not fix jitter.</span>
           </div>
         </div>
 
         {/* ── THROUGHPUT ── */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 02</p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">Metric 02</p>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(127, 147, 242,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>Throughput</span>
             Rate of work processed
           </h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Throughput is the rate at which your system processes requests — measured in <strong style={{ color: "var(--sd-text)" }}>Requests Per Second (RPS)</strong> or <strong style={{ color: "var(--sd-text)" }}>Transactions Per Second (TPS)</strong>.</p>
-            <p style={{ marginTop: 10 }}>Units follow the workload. Web services report RPS or <strong style={{ color: "var(--sd-text)" }}>QPS</strong> (queries per second), while data pipelines report records per second or MB/s. The unit changes, the reasoning does not.</p>
-            <p style={{ marginTop: 10 }}>High throughput does <strong style={{ color: "var(--sd-text)" }}>not</strong> imply low latency. A system can process 10,000 RPS while taking 2 seconds to respond to each. This happens when a system is heavily queued — work is being accepted, but users wait in line before processing begins.</p>
+          <div className="sd-prose">
+            <p>Throughput is the rate at which your system processes requests — measured in <strong className="sd-strong">Requests Per Second (RPS)</strong> or <strong className="sd-strong">Transactions Per Second (TPS)</strong>.</p>
+            <p style={{ marginTop: 10 }}>Units follow the workload. Web services report RPS or <strong className="sd-strong">QPS</strong> (queries per second), while data pipelines report records per second or MB/s. The unit changes, the reasoning does not.</p>
+            <p style={{ marginTop: 10 }}>High throughput does <strong className="sd-strong">not</strong> imply low latency. A system can process 10,000 RPS while taking 2 seconds to respond to each. This happens when a system is heavily queued — work is being accepted, but users wait in line before processing begins.</p>
           </div>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 12, fontFamily: "var(--sd-font-mono)" }}>Common mistake</p>
             <p>Engineers often assume throughput is simply the inverse of latency. That identity holds for exactly one case: a strictly synchronous, single-threaded worker handling one request at a time. At 50ms per request:</p>
             <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0", fontFamily: "var(--sd-font-mono)" }}>
@@ -224,40 +224,40 @@ export default function Lesson02() {
           </div>
 
           <div style={{ background: "rgba(127, 147, 242,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Little's Law</strong> ties the two together: <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>L = λW</span>, where concurrency (L) equals arrival rate (λ) times latency (W). Hold arrival rate steady and double latency, and the number of in-flight requests doubles. That is why rising latency silently drains a worker pool until the pool itself becomes the outage.
+            <strong className="sd-strong">Little's Law</strong> ties the two together: <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>L = λW</span>, where concurrency (L) equals arrival rate (λ) times latency (W). Hold arrival rate steady and double latency, and the number of in-flight requests doubles. That is why rising latency silently drains a worker pool until the pool itself becomes the outage.
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               { title: "Identify the Bottleneck", body: "Is the system CPU-bound (compute exhausted), memory-bound (heap pressure / GC), or I/O-bound (disk or network saturated)? Each bottleneck type demands a different fix." },
               { title: "Saturation Point", body: "The point at which throughput plateaus. Beyond it, adding more load causes exponential latency spikes rather than more processed requests. This is your effective capacity ceiling." },
             ].map((c) => (
-              <div key={c.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+              <div key={c.title} className="sd-card">
                 <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-text)", marginBottom: 8 }}>{c.title}</div>
-                <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{c.body}</p>
+                <p className="sd-text-sm-tight">{c.body}</p>
               </div>
             ))}
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Throughput ≠ Latency.</strong> A heavily queued system can look healthy on throughput dashboards while individual users experience degraded performance. Always monitor both together.
+          <div className="sd-callout">
+            <strong className="sd-strong">Throughput ≠ Latency.</strong> A heavily queued system can look healthy on throughput dashboards while individual users experience degraded performance. Always monitor both together.
           </div>
         </div>
 
         {/* ── AVAILABILITY ── */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Metric 03</p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">Metric 03</p>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, background: "rgba(157, 176, 247,0.12)", color: "var(--sd-green)", marginRight: 10, verticalAlign: "middle" }}>Availability</span>
             Percentage of time the system is reachable
           </h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
-            <p>Availability is the percentage of time a system is functional and reachable, expressed in <strong style={{ color: "var(--sd-text)" }}>"nines"</strong>. It is calculated as:</p>
+          <div className="sd-prose">
+            <p>Availability is the percentage of time a system is functional and reachable, expressed in <strong className="sd-strong">"nines"</strong>. It is calculated as:</p>
             <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0" }}>
               Availability = Uptime ÷ (Uptime + Downtime)
             </p>
-            <p>In distributed systems, availability is rarely binary. A system can be "up" while returning 500 errors to 5% of users. The inverse metric is <strong style={{ color: "var(--sd-text)" }}>Error Rate</strong> — Failed Requests ÷ Total Requests.</p>
+            <p>In distributed systems, availability is rarely binary. A system can be "up" while returning 500 errors to 5% of users. The inverse metric is <strong className="sd-strong">Error Rate</strong> — Failed Requests ÷ Total Requests.</p>
           </div>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
@@ -291,15 +291,15 @@ export default function Lesson02() {
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            Each additional nine is an <strong style={{ color: "var(--sd-text)" }}>order of magnitude</strong> less allowable downtime, not an incremental improvement. Five nines means eliminating every manual operational step, because a human takes 15 to 30 minutes just to acknowledge a page and open a terminal. That alone is six years of a five-nines budget.
+            Each additional nine is an <strong className="sd-strong">order of magnitude</strong> less allowable downtime, not an incremental improvement. Five nines means eliminating every manual operational step, because a human takes 15 to 30 minutes just to acknowledge a page and open a terminal. That alone is six years of a five-nines budget.
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               { title: "In series, availability multiplies", color: "var(--sd-red)", formula: "0.999⁵ ≈ 99.5%", body: "A request that must touch five services, each at 99.9%, succeeds only 99.5% of the time. Every hard dependency you add subtracts uptime, which is why deep synchronous call chains are so expensive." },
               { title: "In parallel, failure multiplies", color: "var(--sd-green)", formula: "1 − (1 − 0.99)² = 99.99%", body: "Two redundant 99% replicas fail together only 0.01% of the time. Redundancy is the only structural move that buys nines, and it only works if the replicas do not share a failure domain." },
             ].map((c) => (
-              <div key={c.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+              <div key={c.title} className="sd-card">
                 <div style={{ fontSize: 13, fontWeight: 700, color: c.color, marginBottom: 8 }}>{c.title}</div>
                 <div style={{ fontSize: 13, fontWeight: 600, fontFamily: "var(--sd-font-mono)", color: "var(--sd-text)", marginBottom: 8 }}>{c.formula}</div>
                 <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6 }}>{c.body}</p>
@@ -307,24 +307,24 @@ export default function Lesson02() {
             ))}
           </div>
 
-          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>High availability ≠ fast.</strong> A system that takes 30 seconds to respond but eventually succeeds is technically "available." Availability measures uptime, not speed. You need all three metrics to describe system health accurately.
+          <div className="sd-callout sd-callout-accent">
+            <strong className="sd-strong">High availability ≠ fast.</strong> A system that takes 30 seconds to respond but eventually succeeds is technically "available." Availability measures uptime, not speed. You need all three metrics to describe system health accurately.
           </div>
         </div>
 
         {/* ── TENSION ── */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>Putting it together</p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Tension Between Metrics</h2>
+        <div className="sd-section">
+          <p className="sd-eyebrow">Putting it together</p>
+          <h2 className="sd-h2">The Tension Between Metrics</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>These metrics don't exist in isolation — optimizing for one creates pressure on the others.</p>
             <p style={{ marginTop: 10 }}>
-              To improve <strong style={{ color: "var(--sd-text)" }}>latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong style={{ color: "var(--sd-text)" }}>availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong style={{ color: "var(--sd-text)" }}>throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous lesson.
+              To improve <strong className="sd-strong">latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong className="sd-strong">availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong className="sd-strong">throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous lesson.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-3">
             {[
               { icon: "⚡", name: "Latency", color: "var(--sd-accent)", desc: "Improve via caching. Trade-off: memory pressure and consistency risk." },
               { icon: "⇌", name: "Throughput", color: "var(--sd-teal)", desc: "Improve via horizontal scaling. Trade-off: distributed state complexity." },
@@ -344,37 +344,37 @@ export default function Lesson02() {
               { pair: "Availability vs Latency", mech: "Multi-region replication", color: "var(--sd-green)", body: "Writing synchronously to two regions means a total loss of Region A costs zero data. It also adds a cross-region round trip of 50ms to 150ms to every single write, forever, including the 99.99% of days nothing fails." },
               { pair: "Availability vs Throughput", mech: "Retries & load shedding", color: "var(--sd-accent)", body: "Aggressive client retries mask transient blips and improve perceived availability. Under sustained saturation those same retries become a thundering herd that multiplies load against an already struggling system, turning a partial slowdown into a full outage." },
             ].map((c) => (
-              <div key={c.pair} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+              <div key={c.pair} className="sd-card">
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: c.color }}>{c.pair}</span>
                   <span style={{ fontSize: 11, color: "var(--sd-muted)", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{c.mech}</span>
                 </div>
-                <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{c.body}</p>
+                <p className="sd-text-sm-tight">{c.body}</p>
               </div>
             ))}
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Recap.</strong> Latency is governed by network physics, execution cycles, and queuing, with percentiles exposing the tail the mean hides. Throughput is bounded by concurrency under Little's Law, where rising latency quietly drains the worker pool. Availability is decided by topology, since dependencies in series multiply risk while redundancy in parallel absorbs it. Every architecture ahead is a negotiation between these three.
+            <strong className="sd-strong">Recap.</strong> Latency is governed by network physics, execution cycles, and queuing, with percentiles exposing the tail the mean hides. Throughput is bounded by concurrency under Little's Law, where rising latency quietly drains the worker pool. Availability is decided by topology, since dependencies in series multiply risk while redundancy in parallel absorbs it. Every architecture ahead is a negotiation between these three.
           </div>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            These metrics form the foundation for evaluating every architectural trade-off ahead — starting with the <strong style={{ color: "var(--sd-text)" }}>CAP Theorem</strong>, which formalizes exactly this tension between consistency and availability in distributed systems.
+          <div className="sd-callout sd-callout-green">
+            These metrics form the foundation for evaluating every architectural trade-off ahead — starting with the <strong className="sd-strong">CAP Theorem</strong>, which formalizes exactly this tension between consistency and availability in distributed systems.
           </div>
         </div>
 
         {/* Quiz */}
-        <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>Quiz Review</p>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
+        <div className="sd-quiz">
+          <p className="sd-eyebrow-accent">Quiz Review</p>
+          <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
       </PageLayout>
 
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="How can a system have high throughput but poor latency?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
-            High throughput with poor latency is the hallmark of a system optimized for <strong style={{ color: "var(--sd-text)" }}>batch processing or deep pipelining</strong> rather than request-response responsiveness.
+          <p className="sd-text-sm">
+            High throughput with poor latency is the hallmark of a system optimized for <strong className="sd-strong">batch processing or deep pipelining</strong> rather than request-response responsiveness.
           </p>
           {[
             { title: "Massive Parallelism", body: "Even if every individual task takes 5 seconds (high latency), running 1,000 concurrently yields a throughput of 200 tasks/sec. Concurrency compensates for slow individual responses." },
@@ -382,19 +382,19 @@ export default function Lesson02() {
             { title: "Heavy Resource Utilization", body: "Processes queue waiting for CPU or database locks. The system completes all work (throughput intact) but individual requests sit in queues, extending round-trip time." },
             { title: "Deep Pipelining", body: "Architectures like MapReduce or ETL pipelines are throughput-oriented — they accept significant latency in exchange for the ability to process massive datasets in the background." },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            Poor latency occurs when the system is <strong style={{ color: "var(--sd-teal)" }}>congested</strong> — processing at capacity while requests wait in buffers. The "pipes" are full so throughput is high, but the transit time for any specific request is sacrificed.
+          <div className="sd-panel-note">
+            Poor latency occurs when the system is <strong className="sd-hl">congested</strong> — processing at capacity while requests wait in buffers. The "pipes" are full so throughput is high, but the transit time for any specific request is sacrificed.
           </div>
         </PanelSection>
 
         <PanelSection title="Does adding more hardware always improve availability?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
-            Horizontal scaling improves availability <strong style={{ color: "var(--sd-text)" }}>only if the architecture is fault-tolerant and stateless</strong>. Simply adding nodes creates a false sense of security.
+          <p className="sd-text-sm">
+            Horizontal scaling improves availability <strong className="sd-strong">only if the architecture is fault-tolerant and stateless</strong>. Simply adding nodes creates a false sense of security.
           </p>
           {[
             { title: "Shared Bottlenecks", body: "If scaling is gated by a single unscaled resource — a primary database, a global lock, a single gateway — that resource is a SPOF. More app nodes just increase contention on it, potentially accelerating a system-wide crash." },
@@ -402,31 +402,31 @@ export default function Lesson02() {
             { title: "Complexity & Blast Radius", body: "Each additional node is a new potential failure point. A propagated configuration error at scale means a larger portion of infrastructure fails simultaneously." },
             { title: "Load Balancer Reliability", body: "If the load balancer is a single instance, scaling the backend is moot. Redundancy must exist at every layer — DNS round-robin, Anycast, or redundant LBs." },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            Horizontal scaling provides <strong style={{ color: "var(--sd-teal)" }}>capacity</strong>, not necessarily <strong style={{ color: "var(--sd-teal)" }}>availability</strong>. True availability requires combining scaling with partitioning, redundancy, and isolation.
+          <div className="sd-panel-note">
+            Horizontal scaling provides <strong className="sd-hl">capacity</strong>, not necessarily <strong className="sd-hl">availability</strong>. True availability requires combining scaling with partitioning, redundancy, and isolation.
           </div>
         </PanelSection>
 
         <PanelSection title="Does 99.9% availability mean every user gets 99.9% uptime?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>No.</strong> Availability metrics represent system-level uptime, not individual user experience.
+          <p className="sd-text-sm">
+            <strong className="sd-strong">No.</strong> Availability metrics represent system-level uptime, not individual user experience.
           </p>
           {[
             { title: "Individual vs. Aggregate", body: "A user who only interacts with the system during the 0.1% downtime window experiences 0% availability. A user whose usage never overlaps with an outage experiences 100%. The reported figure is an aggregate." },
             { title: "Compounded Microservice Availability", body: "If a user's request touches five microservices each at 99.9%, the probability of full success is 0.999^5 ≈ 99.5%. Availability compounds multiplicatively across the request path." },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            Always distinguish <strong style={{ color: "var(--sd-teal)" }}>Service Availability</strong> (infrastructure uptime) from <strong style={{ color: "var(--sd-teal)" }}>User-Perceived Availability</strong> (individual request success rate).
+          <div className="sd-panel-note">
+            Always distinguish <strong className="sd-hl">Service Availability</strong> (infrastructure uptime) from <strong className="sd-hl">User-Perceived Availability</strong> (individual request success rate).
           </div>
         </PanelSection>
       </SidePanel>

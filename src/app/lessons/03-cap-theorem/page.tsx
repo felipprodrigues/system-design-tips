@@ -132,35 +132,35 @@ export default function Lesson03() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 3 · Foundations
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+        <h1 className="sd-h1">
           CAP Theorem &amp; Trade-offs
         </h1>
-        <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
+        <p className="sd-lede">
           When the network fails, you must choose — and there is no middle ground.
         </p>
 
         {/* Intro */}
-        <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
+        <div className="sd-intro">
           <p>
             The CAP theorem states that in the presence of a network partition, a distributed system can only provide either{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Consistency</strong> or{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Availability</strong> — but not both. It defines the constraints every distributed data store must accept by forcing a choice about how the system behaves when its components cannot communicate.
+            <strong className="sd-strong">Consistency</strong> or{" "}
+            <strong className="sd-strong">Availability</strong> — but not both. It defines the constraints every distributed data store must accept by forcing a choice about how the system behaves when its components cannot communicate.
           </p>
           <p>
             This is the first theorem in distributed systems that architects internalize as a hard constraint, not a preference. Understanding it doesn't give you a recipe — it gives you a{" "}
-            <span style={{ color: "var(--sd-teal)" }}>lens for evaluating trade-offs</span>{" "}
+            <span className="sd-hl">lens for evaluating trade-offs</span>{" "}
             every time you choose a data store or design a failure mode.
           </p>
         </div>
 
         {/* Three pillars */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             The Framework
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Defining the Three Pillars</h2>
+          <h2 className="sd-h2">Defining the Three Pillars</h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-3">
             {[
               {
                 letter: "C",
@@ -202,32 +202,32 @@ export default function Lesson03() {
             ))}
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Partition Tolerance (P) is non-negotiable.</strong> Networks are unreliable — packets drop, cables get cut, hardware fails. Because you cannot prevent partitions, the real choice is between{" "}
-            <span style={{ color: "var(--sd-teal)" }}>C</span> and{" "}
-            <span style={{ color: "var(--sd-teal)" }}>A</span> when a partition occurs.
+          <div className="sd-callout">
+            <strong className="sd-strong">Partition Tolerance (P) is non-negotiable.</strong> Networks are unreliable — packets drop, cables get cut, hardware fails. Because you cannot prevent partitions, the real choice is between{" "}
+            <span className="sd-hl">C</span> and{" "}
+            <span className="sd-hl">A</span> when a partition occurs.
           </div>
         </div>
 
         {/* CP vs AP */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             The Trade-off
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>CP vs. AP — Choosing Your Failure Mode</h2>
+          <h2 className="sd-h2">CP vs. AP — Choosing Your Failure Mode</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               When a network partition splits your nodes into isolated groups, they can no longer coordinate. At that point, you must decide: does the system{" "}
-              <strong style={{ color: "var(--sd-text)" }}>stop serving requests</strong> to avoid returning incorrect data, or does it{" "}
-              <strong style={{ color: "var(--sd-text)" }}>continue serving requests</strong> with whatever data it currently holds?
+              <strong className="sd-strong">stop serving requests</strong> to avoid returning incorrect data, or does it{" "}
+              <strong className="sd-strong">continue serving requests</strong> with whatever data it currently holds?
             </p>
             <p style={{ marginTop: 10 }}>
               This is not an engineering oversight — it is a fundamental constraint of distributed computing. The choice you make defines your system's behavior under failure.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               {
                 badge: "CP",
@@ -264,7 +264,7 @@ export default function Lesson03() {
 
           {/* Decision diagram */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 22px", marginBottom: 16 }}>
-            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24, textAlign: "center" }}>
+            <p className="sd-figure-caption">
               Decision tree during a network partition
             </p>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -283,7 +283,7 @@ export default function Lesson03() {
                 ].map((b) => (
                   <div key={b.badge} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                     <div style={{ fontSize: 11, color: "var(--sd-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{b.label}</div>
-                    <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+                    <div className="sd-arrow">↓</div>
                     <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "var(--sd-muted)", textAlign: "center", lineHeight: 1.5, width: "100%" }}>
                       <strong style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 4, color: b.color }}>{b.badge}</strong>
                       {b.desc}
@@ -296,27 +296,27 @@ export default function Lesson03() {
         </div>
 
         {/* Consistency spectrum */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Refining the C
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Spectrum of Consistency Models</h2>
+          <h2 className="sd-h2">The Spectrum of Consistency Models</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               CP and AP describe a decision made at the moment a partition hits. But{" "}
-              <strong style={{ color: "var(--sd-text)" }}>consistency itself is not a single property</strong>. It is the contract between a data store and its clients about the ordering and visibility of writes, and that contract comes in degrees.
+              <strong className="sd-strong">consistency itself is not a single property</strong>. It is the contract between a data store and its clients about the ordering and visibility of writes, and that contract comes in degrees.
             </p>
             <p style={{ marginTop: 10 }}>
               The C in CAP names the strictest point on that gradient. Real systems rarely apply one point across an entire application — they run{" "}
-              <span style={{ color: "var(--sd-teal)" }}>different guarantees for different workflows</span>, paying for strictness only where the business actually needs it.
+              <span className="sd-hl">different guarantees for different workflows</span>, paying for strictness only where the business actually needs it.
             </p>
           </div>
 
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+          <p className="sd-eyebrow-sub">
             The strict end
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               {
                 name: "Linearizability",
@@ -331,30 +331,30 @@ export default function Lesson03() {
             ].map((m) => (
               <div key={m.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: m.color, marginBottom: 8 }}>{m.name}</div>
-                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{m.body}</p>
+                <p className="sd-text-xs">{m.body}</p>
               </div>
             ))}
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Both models force the CP choice.</strong> To hold either one during a network failure, a node cut off from the coordinator has to reject reads and writes rather than answer from state it cannot verify. That refusal is exactly what prevents split-brain.
+            <strong className="sd-strong">Both models force the CP choice.</strong> To hold either one during a network failure, a node cut off from the coordinator has to reject reads and writes rather than answer from state it cannot verify. That refusal is exactly what prevents split-brain.
           </div>
 
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+          <p className="sd-eyebrow-sub">
             The loose end
           </p>
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               Eventual consistency guarantees only that{" "}
-              <strong style={{ color: "var(--sd-text)" }}>if writes stop, all replicas converge</strong> on the same value. Until then, concurrent reads sent to different nodes can return stale data, mutations out of order, or values that flatly contradict each other.
+              <strong className="sd-strong">if writes stop, all replicas converge</strong> on the same value. Until then, concurrent reads sent to different nodes can return stale data, mutations out of order, or values that flatly contradict each other.
             </p>
             <p style={{ marginTop: 10 }}>
               Between full linearizability and raw eventual convergence sit the{" "}
-              <strong style={{ color: "var(--sd-text)" }}>client-centric guarantees</strong>. Each is far cheaper than linearizability, and each buys one specific property that users actually notice when it is missing.
+              <strong className="sd-strong">client-centric guarantees</strong>. Each is far cheaper than linearizability, and each buys one specific property that users actually notice when it is missing.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-3">
             {[
               {
                 name: "Read-Your-Own-Writes",
@@ -374,14 +374,14 @@ export default function Lesson03() {
             ].map((g) => (
               <div key={g.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18 }}>
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: g.color, marginBottom: 8 }}>{g.name}</div>
-                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{g.body}</p>
+                <p className="sd-text-xs">{g.body}</p>
               </div>
             ))}
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
-            <strong style={{ color: "var(--sd-text)" }}>These three are independent, not synonyms.</strong> A store can give you read-your-own-writes and still walk time backwards on the next query. Bundling all three and scoping them to a single client is what most databases label{" "}
-            <span style={{ color: "var(--sd-teal)" }}>session consistency</span>.
+            <strong className="sd-strong">These three are independent, not synonyms.</strong> A store can give you read-your-own-writes and still walk time backwards on the next query. Bundling all three and scoping them to a single client is what most databases label{" "}
+            <span className="sd-hl">session consistency</span>.
           </div>
 
           {/* Comparison table */}
@@ -416,7 +416,7 @@ export default function Lesson03() {
 
           {/* Replication behavior diagram */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 22px" }}>
-            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24, textAlign: "center" }}>
+            <p className="sd-figure-caption">
               Replication behavior under network partition
             </p>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -456,13 +456,13 @@ export default function Lesson03() {
                       paddingLeft: i === 1 ? 20 : 0,
                     }}
                   >
-                    <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+                    <div className="sd-arrow">↓</div>
                     <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "10px 14px", textAlign: "center", width: "100%" }}>
                       <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--sd-text)" }}>{s.node}</div>
                       <div style={{ fontSize: 11.5, fontFamily: "var(--sd-font-mono)", color: "var(--sd-muted)", marginTop: 3 }}>current state: balance = 100</div>
                     </div>
                     <div style={{ fontSize: 11, color: s.color, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 4 }}>{s.mode}</div>
-                    <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+                    <div className="sd-arrow">↓</div>
                     <div style={{ background: "var(--sd-surface2)", border: `1px solid ${s.color}`, borderRadius: 8, padding: "10px 14px", textAlign: "center", width: "100%" }}>
                       <div style={{ fontSize: 12.5, fontWeight: 700, color: s.color }}>{s.outcome}</div>
                       <div style={{ fontSize: 11.5, color: "var(--sd-muted)", marginTop: 3, lineHeight: 1.5 }}>{s.detail}</div>
@@ -475,22 +475,22 @@ export default function Lesson03() {
         </div>
 
         {/* Quorum & split-brain */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Under the Hood
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Quorum: How a Node Knows to Say No</h2>
+          <h2 className="sd-h2">Quorum: How a Node Knows to Say No</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               A partitioned node cannot tell whether the other side is dead or merely unreachable, so it never tries to guess. Consensus protocols such as{" "}
-              <strong style={{ color: "var(--sd-text)" }}>Raft</strong> and{" "}
-              <strong style={{ color: "var(--sd-text)" }}>Paxos</strong> require a strict majority of the cluster,{" "}
+              <strong className="sd-strong">Raft</strong> and{" "}
+              <strong className="sd-strong">Paxos</strong> require a strict majority of the cluster,{" "}
               <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>⌊N/2⌋ + 1</span>{" "}
               out of N nodes, to agree before a write is committed. A node that cannot reach that many peers refuses to act.
             </p>
             <p style={{ marginTop: 10 }}>
-              This is what prevents <strong style={{ color: "var(--sd-text)" }}>split-brain</strong>, the failure mode where two disconnected halves of a cluster both believe they are in charge, both accept writes, and diverge into two irreconcilable versions of the truth. Since only one side of a partition can hold a majority, only one side is ever allowed to make progress.
+              This is what prevents <strong className="sd-strong">split-brain</strong>, the failure mode where two disconnected halves of a cluster both believe they are in charge, both accept writes, and diverge into two irreconcilable versions of the truth. Since only one side of a partition can hold a majority, only one side is ever allowed to make progress.
             </p>
           </div>
 
@@ -552,31 +552,31 @@ export default function Lesson03() {
                   </div>
                   <div style={{ fontSize: 11, fontFamily: "var(--sd-font-mono)", color: "var(--sd-muted)", marginBottom: 4 }}>{s.count}</div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: s.color, marginBottom: 8 }}>{s.verdict}</div>
-                  <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{s.body}</p>
+                  <p className="sd-text-xs">{s.body}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Pitfall: always deploy an odd number of voting nodes.</strong> With an even cluster, say 4 nodes partitioned 2 and 2, neither side holds a strict majority. Both halves stop accepting writes and the cluster goes fully unavailable, even though every single node is healthy.
+          <div className="sd-callout">
+            <strong className="sd-strong">Pitfall: always deploy an odd number of voting nodes.</strong> With an even cluster, say 4 nodes partitioned 2 and 2, neither side holds a strict majority. Both halves stop accepting writes and the cluster goes fully unavailable, even though every single node is healthy.
           </div>
         </div>
 
         {/* Real-world example */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Real-World Example
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>A Banking Application Under Partition</h2>
+          <h2 className="sd-h2">A Banking Application Under Partition</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
-              A user has <strong style={{ color: "var(--sd-text)" }}>$100</strong> in their account. The system replicates this balance across two data centers. A network partition cuts off communication between them. The user attempts a withdrawal.
+              A user has <strong className="sd-strong">$100</strong> in their account. The system replicates this balance across two data centers. A network partition cuts off communication between them. The user attempts a withdrawal.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               {
                 label: "CP — Consistency chosen",
@@ -584,7 +584,7 @@ export default function Lesson03() {
                 headerBg: "rgba(76, 110, 245,0.1)",
                 body: (
                   <>
-                    The system <strong style={{ color: "var(--sd-text)" }}>stops accepting withdrawals</strong>. It cannot guarantee the user hasn't already withdrawn $100 from the other data center, so it errors out to ensure the balance remains correct.
+                    The system <strong className="sd-strong">stops accepting withdrawals</strong>. It cannot guarantee the user hasn't already withdrawn $100 from the other data center, so it errors out to ensure the balance remains correct.
                     <br /><br />
                     The user sees a "Service Unavailable" message — but the data remains accurate.
                   </>
@@ -596,7 +596,7 @@ export default function Lesson03() {
                 headerBg: "rgba(127, 147, 242,0.1)",
                 body: (
                   <>
-                    The system <strong style={{ color: "var(--sd-text)" }}>allows the withdrawal at both data centers simultaneously</strong>. It prioritizes the user's ability to complete the task, even though internal state is now inconsistent — the user effectively withdrew $200 from a $100 balance.
+                    The system <strong className="sd-strong">allows the withdrawal at both data centers simultaneously</strong>. It prioritizes the user's ability to complete the task, even though internal state is now inconsistent — the user effectively withdrew $200 from a $100 balance.
                     <br /><br />
                     A reconciliation process must resolve this once the partition heals.
                   </>
@@ -613,66 +613,66 @@ export default function Lesson03() {
           </div>
 
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
-            <strong style={{ color: "var(--sd-text)" }}>CAP is a framework for failure, not normal operation.</strong> During normal operation — when there is no partition — systems can generally provide both high consistency and high availability. The trade-off only forces your hand when the network degrades.
+            <strong className="sd-strong">CAP is a framework for failure, not normal operation.</strong> During normal operation — when there is no partition — systems can generally provide both high consistency and high availability. The trade-off only forces your hand when the network degrades.
           </div>
         </div>
 
         {/* Conflict resolution */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             The AP Side
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Conflict Resolution When Replicas Diverge</h2>
+          <h2 className="sd-h2">Conflict Resolution When Replicas Diverge</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               Choosing AP is not the end of a decision — it is the start of a second one. Node B accepted the write while it was isolated, so once the link comes back there are{" "}
-              <strong style={{ color: "var(--sd-text)" }}>two versions of the same record and no node that witnessed both</strong>.
+              <strong className="sd-strong">two versions of the same record and no node that witnessed both</strong>.
             </p>
             <p style={{ marginTop: 10 }}>
               Every highly available store therefore ships a reconciliation strategy. Which one it picks decides whether divergence costs you{" "}
-              <span style={{ color: "var(--sd-teal)" }}>data</span> or merely costs you{" "}
-              <span style={{ color: "var(--sd-teal)" }}>code</span>.
+              <span className="sd-hl">data</span> or merely costs you{" "}
+              <span className="sd-hl">code</span>.
             </p>
           </div>
 
           {/* LWW */}
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+          <p className="sd-eyebrow-sub">
             Approach 1 — Last-Write-Wins
           </p>
           <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18, marginBottom: 12, fontSize: 13, lineHeight: 1.7, color: "var(--sd-muted)" }}>
             The database stamps every write with a physical wall-clock timestamp. When two conflicting versions meet during reconciliation, the higher timestamp overwrites the lower one. It is simple, deterministic, and adds almost no storage overhead — one timestamp per record.
           </div>
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
-            <strong style={{ color: "var(--sd-amber)" }}>The cost is silent data loss.</strong> LWW trusts physical clocks, and physical clocks drift even under NTP. A node running a few milliseconds fast stamps its write with a higher timestamp and quietly discards a genuinely newer write made elsewhere. Nothing errors and nothing logs — the write is simply gone.
+            <strong className="sd-hl-amber">The cost is silent data loss.</strong> LWW trusts physical clocks, and physical clocks drift even under NTP. A node running a few milliseconds fast stamps its write with a higher timestamp and quietly discards a genuinely newer write made elsewhere. Nothing errors and nothing logs — the write is simply gone.
           </div>
 
           {/* Vector clocks */}
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+          <p className="sd-eyebrow-sub">
             Approach 2 — Vector Clocks and Version Vectors
           </p>
           <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18, marginBottom: 12, fontSize: 13, lineHeight: 1.7, color: "var(--sd-muted)" }}>
             Rather than trusting wall clocks, vector clocks record causal history. A vector clock is a set of logical counters, one per node, where each entry counts the operations that node has applied. Comparing two vectors answers a question a timestamp cannot: did one version actually descend from the other, or did they happen independently?
           </div>
           <pre style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px", marginBottom: 12, overflowX: "auto", fontSize: 12.5, lineHeight: 1.8 }}>
-            <code style={{ color: "var(--sd-text)" }}>
-              <span style={{ color: "var(--sd-muted)" }}>{"// One version descends from the other"}</span>{"\n"}
-              V1 = [ a:<span style={{ color: "var(--sd-amber)" }}>1</span>, b:<span style={{ color: "var(--sd-amber)" }}>1</span> ]{"   "}V2 = [ a:<span style={{ color: "var(--sd-amber)" }}>2</span>, b:<span style={{ color: "var(--sd-amber)" }}>1</span> ]{"\n"}
+            <code className="sd-strong">
+              <span className="sd-hl-muted">{"// One version descends from the other"}</span>{"\n"}
+              V1 = [ a:<span className="sd-hl-amber">1</span>, b:<span className="sd-hl-amber">1</span> ]{"   "}V2 = [ a:<span className="sd-hl-amber">2</span>, b:<span className="sd-hl-amber">1</span> ]{"\n"}
               {"  "}every entry in V1 is ≤ V2, and one is strictly less{"\n"}
-              {"  "}→ <span style={{ color: "var(--sd-teal)" }}>V1 happened before V2</span>, so V2 wins and V1 is safe to drop{"\n\n"}
-              <span style={{ color: "var(--sd-muted)" }}>{"// Neither descends from the other"}</span>{"\n"}
-              V1 = [ a:<span style={{ color: "var(--sd-amber)" }}>2</span>, b:<span style={{ color: "var(--sd-amber)" }}>1</span> ]{"   "}V2 = [ a:<span style={{ color: "var(--sd-amber)" }}>1</span>, b:<span style={{ color: "var(--sd-amber)" }}>2</span> ]{"\n"}
+              {"  "}→ <span className="sd-hl">V1 happened before V2</span>, so V2 wins and V1 is safe to drop{"\n\n"}
+              <span className="sd-hl-muted">{"// Neither descends from the other"}</span>{"\n"}
+              V1 = [ a:<span className="sd-hl-amber">2</span>, b:<span className="sd-hl-amber">1</span> ]{"   "}V2 = [ a:<span className="sd-hl-amber">1</span>, b:<span className="sd-hl-amber">2</span> ]{"\n"}
               {"  "}neither vector dominates the other{"\n"}
-              {"  "}→ <span style={{ color: "var(--sd-accent)" }}>concurrent write</span>, unresolvable without domain knowledge{"\n"}
+              {"  "}→ <span className="sd-hl-accent">concurrent write</span>, unresolvable without domain knowledge{"\n"}
               {"  "}→ both versions surface to the application as siblings
             </code>
           </pre>
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Vector clocks never lose a write, but they never decide for you either.</strong> They convert silent data loss into an explicit conflict that the application layer has to resolve — strictly more work, and strictly safer.
+            <strong className="sd-strong">Vector clocks never lose a write, but they never decide for you either.</strong> They convert silent data loss into an explicit conflict that the application layer has to resolve — strictly more work, and strictly safer.
           </div>
 
           {/* CRDTs */}
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+          <p className="sd-eyebrow-sub">
             Approach 3 — Conflict-Free Replicated Data Types
           </p>
           <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18, marginBottom: 12, fontSize: 13, lineHeight: 1.7, color: "var(--sd-muted)" }}>
@@ -695,7 +695,7 @@ export default function Lesson03() {
 
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
             Those three properties are precisely what make{" "}
-            <strong style={{ color: "var(--sd-text)" }}>reordering, regrouping, and duplicate delivery</strong> harmless — which is exactly the list of things an unreliable network does to your messages.
+            <strong className="sd-strong">reordering, regrouping, and duplicate delivery</strong> harmless — which is exactly the list of things an unreliable network does to your messages.
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
@@ -712,20 +712,20 @@ export default function Lesson03() {
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Choosing between them is a question about the field, not the database.</strong> Use LWW where the last edit genuinely should win and losing one is survivable, such as a display name. Use vector clocks where no write may be lost and something can arbitrate, such as a shopping cart. Use a CRDT where convergence must happen with no arbitration at all, such as a like counter or a collaborative document.
+            <strong className="sd-strong">Choosing between them is a question about the field, not the database.</strong> Use LWW where the last edit genuinely should win and losing one is survivable, such as a display name. Use vector clocks where no write may be lost and something can arbitrate, such as a shopping cart. Use a CRDT where convergence must happen with no arbitration at all, such as a like counter or a collaborative document.
           </div>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout sd-callout-green">
             These constraints form the basis for understanding database replication strategies and distributed transaction patterns — topics covered in the lessons ahead.
           </div>
         </div>
 
         {/* Quiz */}
-        <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+        <div className="sd-quiz">
+          <p className="sd-eyebrow-accent">
             Quiz Review
           </p>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
+          <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
       </PageLayout>
@@ -733,9 +733,9 @@ export default function Lesson03() {
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="Why is Partition Tolerance truly non-negotiable?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             The theorem's name implies a three-way choice, but Partition Tolerance is{" "}
-            <strong style={{ color: "var(--sd-text)" }}>not actually optional</strong>. Abandoning it would mean assuming a perfectly reliable network — which does not exist at any scale.
+            <strong className="sd-strong">not actually optional</strong>. Abandoning it would mean assuming a perfectly reliable network — which does not exist at any scale.
           </p>
           {[
             {
@@ -751,20 +751,20 @@ export default function Lesson03() {
               body: "In distributed systems, partial failures — where some nodes are reachable and others are not — are far more common than total failures. Your system must be designed to handle asymmetric reachability.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            The practical restatement of CAP: <strong style={{ color: "var(--sd-teal)" }}>when a partition occurs, does your system choose to stop serving requests (CP) or serve potentially stale data (AP)?</strong> There is no third option.
+          <div className="sd-panel-note">
+            The practical restatement of CAP: <strong className="sd-hl">when a partition occurs, does your system choose to stop serving requests (CP) or serve potentially stale data (AP)?</strong> There is no third option.
           </div>
         </PanelSection>
 
         <PanelSection title='What does "eventual consistency" actually mean in AP systems?'>
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             AP systems are typically described as "eventually consistent" — meaning all nodes will eventually converge to the same value,{" "}
-            <strong style={{ color: "var(--sd-text)" }}>given enough time and no new writes</strong>. But "eventually" is often misunderstood.
+            <strong className="sd-strong">given enough time and no new writes</strong>. But "eventually" is often misunderstood.
           </p>
           {[
             {
@@ -780,20 +780,20 @@ export default function Lesson03() {
               body: "Eventual consistency shifts the burden from the database to the application and operations team. You must reason about read-your-own-writes consistency, monotonic reads, and what happens when a user sees a write disappear after a page refresh.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Eventual consistency is not weak consistency by default</strong> — many AP databases offer tunable consistency levels (e.g., QUORUM reads in Cassandra) that provide stronger guarantees at the cost of latency.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Eventual consistency is not weak consistency by default</strong> — many AP databases offer tunable consistency levels (e.g., QUORUM reads in Cassandra) that provide stronger guarantees at the cost of latency.
           </div>
         </PanelSection>
 
         <PanelSection title="How do real databases implement CP vs AP?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             Real databases don't simply flip a "CP" or "AP" switch — they implement{" "}
-            <strong style={{ color: "var(--sd-text)" }}>specific replication and quorum mechanisms</strong>{" "}
+            <strong className="sd-strong">specific replication and quorum mechanisms</strong>{" "}
             that land them on one side of the trade-off by default, often with tunable knobs.
           </p>
           {[
@@ -810,21 +810,21 @@ export default function Lesson03() {
               body: "MongoDB defaults to reading from the primary (CP-like) but can be configured for secondary reads (AP-like). Many modern systems blur the strict CP/AP boundary by offering configurable consistency levels.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div className="sd-panel-note">
             The right question when choosing a database is not "which theorem does this implement?" but:{" "}
-            <strong style={{ color: "var(--sd-teal)" }}>what is the worst thing that can happen if two nodes disagree, and how will I detect and resolve it?</strong>
+            <strong className="sd-hl">what is the worst thing that can happen if two nodes disagree, and how will I detect and resolve it?</strong>
           </div>
         </PanelSection>
 
         <PanelSection title="Does one application have to pick one consistency model?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             No, and treating it as a single global switch is the most common way this trade-off gets applied badly. Mature systems decide{" "}
-            <strong style={{ color: "var(--sd-text)" }}>per workflow</strong>, because the business penalty for a stale read is wildly different from one endpoint to the next.
+            <strong className="sd-strong">per workflow</strong>, because the business penalty for a stale read is wildly different from one endpoint to the next.
           </p>
           {[
             {
@@ -840,14 +840,14 @@ export default function Lesson03() {
               body: "Write-heavy telemetry can acknowledge locally and push the synchronization cost onto rare analytical reads. A read-heavy product catalog can do the reverse, paying more on every write so reads can be served from the nearest replica. Put the expensive side on whichever operation happens least.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+          <div className="sd-panel-note">
             The unit of decision is the{" "}
-            <strong style={{ color: "var(--sd-teal)" }}>endpoint or workflow, not the database</strong>. A single product can run strict serializability for payments and an eventually consistent counter for view counts, and it should.
+            <strong className="sd-hl">endpoint or workflow, not the database</strong>. A single product can run strict serializability for payments and an eventually consistent counter for view counts, and it should.
           </div>
         </PanelSection>
       </SidePanel>

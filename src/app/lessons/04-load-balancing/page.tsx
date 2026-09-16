@@ -124,47 +124,47 @@ export default function Lesson04() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Lesson 4 · Foundations
         </p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+        <h1 className="sd-h1">
           Core Concepts of Load Balancing
         </h1>
-        <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
+        <p className="sd-lede">
           Distribute traffic, eliminate single points of failure, and scale without downtime.
         </p>
 
         {/* Intro */}
-        <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
+        <div className="sd-intro">
           <p>
             Load balancing is the process of{" "}
-            <strong style={{ color: "var(--sd-text)" }}>distributing incoming network traffic across a group of backend servers</strong>{" "}
+            <strong className="sd-strong">distributing incoming network traffic across a group of backend servers</strong>{" "}
             to ensure no single server bears too much demand. By acting as a reverse proxy, the load balancer prevents bottlenecks, eliminates single points of failure, and allows for the seamless addition or removal of resources — directly supporting the horizontal scaling patterns discussed in lesson one.
           </p>
           <p>
             The choice of{" "}
-            <span style={{ color: "var(--sd-teal)" }}>where</span>{" "}
+            <span className="sd-hl">where</span>{" "}
             the load balancer sits in the OSI model and{" "}
-            <span style={{ color: "var(--sd-teal)" }}>how</span>{" "}
+            <span className="sd-hl">how</span>{" "}
             it decides which server to use next are the two decisions that determine the trade-offs you accept.
           </p>
         </div>
 
         {/* The Pattern */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             The Big Picture
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Basic Shape of Every Web App</h2>
+          <h2 className="sd-h2">The Basic Shape of Every Web App</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>Clients make requests. Servers handle them. Put a load balancer in front and that traffic spreads across many identical servers, so one box going down doesn't take the whole app down with it.</p>
             <p style={{ marginTop: 10 }}>
               Pretty much every design question you'll ever see — from a chat app like WhatsApp to a live streaming platform like Twitch — starts with some version of this pattern. The more detail you layer on top, the more specialized the design gets, but{" "}
-              <strong style={{ color: "var(--sd-text)" }}>the skeleton stays the same</strong>.
+              <strong className="sd-strong">the skeleton stays the same</strong>.
             </p>
           </div>
 
           {/* Skeleton diagram */}
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 24px", marginBottom: 16 }}>
-            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24, textAlign: "center" }}>
+          <div className="sd-figure">
+            <p className="sd-figure-caption">
               The skeleton every design starts from
             </p>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
@@ -173,13 +173,13 @@ export default function Lesson04() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
                 <div style={{ fontSize: 10, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Single address</div>
-                <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+                <div className="sd-arrow">↓</div>
               </div>
               <div style={{ background: "rgba(76, 110, 245,0.12)", border: "1px solid var(--sd-accent)", borderRadius: 10, padding: "12px 28px", fontSize: 13, fontWeight: 700, color: "var(--sd-accent)", textAlign: "center" }}>
                 Load Balancer
                 <div style={{ fontSize: 10, fontWeight: 400, color: "var(--sd-muted)", marginTop: 2 }}>Routes each request</div>
               </div>
-              <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+              <div className="sd-arrow">↓</div>
               <div style={{ display: "flex", gap: 10 }}>
                 {["Server 1", "Server 2", "Server 3"].map((s) => (
                   <div key={s} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-teal)", borderRadius: 8, padding: "9px 18px", fontSize: 12, fontWeight: 600, color: "var(--sd-teal)" }}>
@@ -190,49 +190,49 @@ export default function Lesson04() {
             </div>
           </div>
 
-          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
+          <div className="sd-callout sd-callout-accent">
             The client doesn't care how many servers exist. It talks to a single address and trusts the load balancer to route things.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>That abstraction is the entire point.</strong>
+            <strong className="sd-strong">That abstraction is the entire point.</strong>
           </div>
         </div>
 
         {/* Algorithms */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Distribution Logic
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>
+          <h2 className="sd-h2">
             <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 9px", borderRadius: 4, marginRight: 10, verticalAlign: "middle", background: "rgba(76, 110, 245,0.15)", color: "var(--sd-accent)" }}>
               Algorithms
             </span>
             Traffic Distribution Strategies
           </h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>The algorithm determines how the load balancer selects the "next" server for each incoming request. The right choice depends on whether your servers are homogeneous, whether connections are short- or long-lived, and whether clients need to consistently land on the same server.</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {algorithms.map((a) => (
-              <div key={a.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px" }}>
+              <div key={a.name} className="sd-card">
                 <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-text)", marginBottom: 6, display: "flex", alignItems: "center", gap: 8 }}>
                   {a.name}
                   <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 7px", borderRadius: 4, background: a.tagBg, color: a.tagColor }}>
                     {a.tag}
                   </span>
                 </div>
-                <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65 }}>{a.body}</p>
+                <p className="sd-text-sm-tight">{a.body}</p>
               </div>
             ))}
           </div>
 
           {/* Traffic diagram */}
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 24px", marginBottom: 16 }}>
-            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24, textAlign: "center" }}>
+          <div className="sd-figure">
+            <p className="sd-figure-caption">
               Load balancer as reverse proxy
             </p>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div className="sd-stack">
                 {["Client A", "Client B", "Client C"].map((c) => (
                   <div key={c} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "7px 14px", fontSize: 12, fontWeight: 600, color: "var(--sd-accent)", whiteSpace: "nowrap" }}>
                     {c}
@@ -253,7 +253,7 @@ export default function Lesson04() {
                   <div key={i} style={{ fontSize: 14, color: "var(--sd-muted)" }}>{a}</div>
                 ))}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div className="sd-stack">
                 {["Server 1", "Server 2", "Server 3"].map((s) => (
                   <div key={s} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-teal)", borderRadius: 8, padding: "7px 14px", fontSize: 12, fontWeight: 600, color: "var(--sd-teal)", whiteSpace: "nowrap" }}>
                     {s}
@@ -265,17 +265,17 @@ export default function Lesson04() {
         </div>
 
         {/* Layer 4 vs 7 */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             OSI Model
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Layer 4 vs. Layer 7 Balancing</h2>
+          <h2 className="sd-h2">Layer 4 vs. Layer 7 Balancing</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>Load balancers operate at different layers of the OSI model, which changes how routing decisions are made. The lower the layer, the less information the balancer has — and the faster it operates. The higher the layer, the more intelligent the routing — at the cost of inspection overhead.</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div className="sd-grid-2">
             {[
               {
                 label: "Layer 4 · Transport",
@@ -299,7 +299,7 @@ export default function Lesson04() {
                 <div style={{ padding: "14px 16px" }}>
                   <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.65, marginBottom: 10 }}>{l.body}</p>
                   <div style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 6, padding: "10px 12px", fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.5 }}>
-                    <strong style={{ color: "var(--sd-teal)" }}>Example:</strong> {l.example}
+                    <strong className="sd-hl">Example:</strong> {l.example}
                   </div>
                 </div>
               </div>
@@ -307,43 +307,43 @@ export default function Lesson04() {
           </div>
 
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 0 }}>
-            <strong style={{ color: "var(--sd-text)" }}>Layer 7 introduces higher latency</strong> because the load balancer must fully parse the HTTP request before making a routing decision. The trade-off is worth it for microservices architectures where different services require specialized infrastructure.
+            <strong className="sd-strong">Layer 7 introduces higher latency</strong> because the load balancer must fully parse the HTTP request before making a routing decision. The trade-off is worth it for microservices architectures where different services require specialized infrastructure.
           </div>
         </div>
 
         {/* Health checks */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Fault Tolerance
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Health Checking and Failover</h2>
+          <h2 className="sd-h2">Health Checking and Failover</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+          <div className="sd-prose">
             <p>
               A load balancer is only useful if it knows which servers are actually alive. It performs continuous{" "}
-              <strong style={{ color: "var(--sd-text)" }}>health checks</strong> — periodically sending a probe request (typically an HTTP <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>HEAD</code> or <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>GET</code> to a <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>/health</code> endpoint) to every backend server.
+              <strong className="sd-strong">health checks</strong> — periodically sending a probe request (typically an HTTP <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>HEAD</code> or <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>GET</code> to a <code style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 3, padding: "1px 5px", fontSize: 13, color: "var(--sd-teal)" }}>/health</code> endpoint) to every backend server.
             </p>
             <p style={{ marginTop: 10 }}>
               If a server fails to respond or returns a 5xx error, the balancer marks it as{" "}
-              <strong style={{ color: "var(--sd-text)" }}>unhealthy</strong> and stops routing traffic to it. Once it passes health checks again, it's automatically reinstated. This mechanism is the bedrock of system availability.
+              <strong className="sd-strong">unhealthy</strong> and stops routing traffic to it. Once it passes health checks again, it's automatically reinstated. This mechanism is the bedrock of system availability.
             </p>
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
-            <strong style={{ color: "var(--sd-text)" }}>If your design requires high availability, you must assume servers will fail.</strong> The load balancer's job is to hide that failure from the end-user by redirecting traffic in real-time — before the user notices anything is wrong.
+            <strong className="sd-strong">If your design requires high availability, you must assume servers will fail.</strong> The load balancer's job is to hide that failure from the end-user by redirecting traffic in real-time — before the user notices anything is wrong.
           </div>
 
-          <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
-            Health checks also enable <span style={{ color: "var(--sd-teal)" }}>zero-downtime deployments</span>: drain a server, deploy, wait for it to pass health checks, then bring it back into rotation. No traffic is ever sent to a server that isn't ready.
+          <div className="sd-callout sd-callout-green">
+            Health checks also enable <span className="sd-hl">zero-downtime deployments</span>: drain a server, deploy, wait for it to pass health checks, then bring it back into rotation. No traffic is ever sent to a server that isn't ready.
           </div>
         </div>
 
         {/* Comparison table */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+        <div className="sd-section">
+          <p className="sd-eyebrow">
             Reference
           </p>
-          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Comparison of Balancing Strategies</h2>
+          <h2 className="sd-h2">Comparison of Balancing Strategies</h2>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
@@ -370,11 +370,11 @@ export default function Lesson04() {
         </div>
 
         {/* Quiz */}
-        <div style={{ marginTop: 52 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
+        <div className="sd-quiz">
+          <p className="sd-eyebrow-accent">
             Quiz Review
           </p>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
+          <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
       </PageLayout>
@@ -386,9 +386,9 @@ export default function Lesson04() {
         </p>
 
         <PanelSection title="How is an API Gateway different from a Load Balancer?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             They get grouped together because both sit in the request path before your services do, but they answer different questions.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>A Load Balancer decides where a request goes. An API Gateway decides how it should be handled.</strong>
+            <strong className="sd-strong">A Load Balancer decides where a request goes. An API Gateway decides how it should be handled.</strong>
           </p>
           {[
             {
@@ -408,26 +408,26 @@ export default function Lesson04() {
               body: "You rarely pick one over the other. A common path looks like Client → Load Balancer → API Gateway → Microservices: the Load Balancer spreads traffic and keeps the gateway itself available, then the Gateway routes each request to the right service and enforces API-level policy.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>The simple rule:</strong>
+          <div className="sd-panel-note">
+            <strong className="sd-hl">The simple rule:</strong>
             <br />
-            Need to spread traffic across servers? <strong style={{ color: "var(--sd-teal)" }}>Load Balancer.</strong>
+            Need to spread traffic across servers? <strong className="sd-hl">Load Balancer.</strong>
             <br />
-            Need centralized API management — auth, rate limits, routing by endpoint? <strong style={{ color: "var(--sd-teal)" }}>API Gateway.</strong>
+            Need centralized API management — auth, rate limits, routing by endpoint? <strong className="sd-hl">API Gateway.</strong>
             <br /><br />
             Building microservices at any real scale, you'll likely run both, each solving a different half of the problem.
           </div>
         </PanelSection>
 
         <PanelSection title="What happens when the load balancer itself is the single point of failure?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             The load balancer solves the SPOF problem for your backend — but it introduces its own SPOF. A single load balancer going down takes down your entire system.{" "}
-            <strong style={{ color: "var(--sd-text)" }}>Making the load balancer itself highly available requires a separate strategy.</strong>
+            <strong className="sd-strong">Making the load balancer itself highly available requires a separate strategy.</strong>
           </p>
           {[
             {
@@ -443,20 +443,20 @@ export default function Lesson04() {
               body: "Multiple load balancers in different data centers share the same IP address. The network layer routes each client to the topologically nearest instance. If one data center fails, traffic is automatically routed to the next nearest. Used by Cloudflare, AWS Global Accelerator, and major CDNs.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Redundancy must exist at every layer.</strong> Scaling your backend to 100 servers is meaningless if a single load balancer instance is the entry point for all of them.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Redundancy must exist at every layer.</strong> Scaling your backend to 100 servers is meaningless if a single load balancer instance is the entry point for all of them.
           </div>
         </PanelSection>
 
         <PanelSection title="When does IP Hash backfire, and what's the alternative?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             IP Hash solves session stickiness by mapping a client's IP to a fixed server. But this guarantee has several failure modes that make it{" "}
-            <strong style={{ color: "var(--sd-text)" }}>unreliable for most modern applications</strong>.
+            <strong className="sd-strong">unreliable for most modern applications</strong>.
           </p>
           {[
             {
@@ -476,20 +476,20 @@ export default function Lesson04() {
               body: "If session state lives in a shared external store (Redis, a database), any server can serve any client. You eliminate the need for sticky sessions entirely — and gain the ability to freely scale, replace, or restart servers without impacting users.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            IP Hash is a <strong style={{ color: "var(--sd-teal)" }}>workaround for a stateful architecture</strong>. If your system requires it, that's a signal to invest in externalizing session state rather than tightening the load balancer constraint.
+          <div className="sd-panel-note">
+            IP Hash is a <strong className="sd-hl">workaround for a stateful architecture</strong>. If your system requires it, that's a signal to invest in externalizing session state rather than tightening the load balancer constraint.
           </div>
         </PanelSection>
 
         <PanelSection title="How do Layer 7 balancers enable zero-downtime deployments?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             A Layer 7 load balancer's ability to inspect requests makes it a powerful tool for deployment strategies that eliminate downtime and reduce risk. These techniques are only possible because the balancer can route based on{" "}
-            <strong style={{ color: "var(--sd-text)" }}>request content, not just connection metadata</strong>.
+            <strong className="sd-strong">request content, not just connection metadata</strong>.
           </p>
           {[
             {
@@ -505,17 +505,17 @@ export default function Lesson04() {
               body: "A small percentage of traffic (e.g., 5%) is routed to the new version based on headers, cookies, or random sampling. This exposes the new version to real traffic while limiting blast radius. If error rates are acceptable, the percentage is gradually increased to 100%.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            These patterns are why <strong style={{ color: "var(--sd-teal)" }}>the load balancer is a deployment primitive</strong>, not just a traffic router. Kubernetes Ingress controllers, AWS ALB, and Nginx all expose these capabilities as first-class features.
+          <div className="sd-panel-note">
+            These patterns are why <strong className="sd-hl">the load balancer is a deployment primitive</strong>, not just a traffic router. Kubernetes Ingress controllers, AWS ALB, and Nginx all expose these capabilities as first-class features.
           </div>
         </PanelSection>
         <PanelSection title="Why do most modern web apps prefer stateless servers?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             With stateless servers, the load balancer can route any request to any server. That makes horizontal scaling, redeploys, and crash recovery clean.
           </p>
           {[
@@ -532,18 +532,18 @@ export default function Lesson04() {
               body: "Rolling or blue-green deployments work cleanly because no server owns any session. You can drain, replace, and reinstate any server at any time without worrying about which users are mid-session on which node.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>Any server can handle any request.</strong> That single property is what makes the rest of horizontal scaling, fault tolerance, and deployment strategy straightforward.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">Any server can handle any request.</strong> That single property is what makes the rest of horizontal scaling, fault tolerance, and deployment strategy straightforward.
           </div>
         </PanelSection>
 
         <PanelSection title="What is the main downside of a stateless server design?">
-          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+          <p className="sd-text-sm">
             Stateless servers must reach an external store (DB, cache, JWT) for any per-user context. That extra hop is the cost of horizontal scalability.
           </p>
           {[
@@ -560,13 +560,13 @@ export default function Lesson04() {
               body: "JWTs: encode session state in a signed token the client holds — no external store needed, at the cost of inability to invalidate sessions instantly. Edge caching: push session data closer to the server to reduce round-trip cost. Read replicas: fan out reads across multiple cache/DB replicas to prevent the store becoming a bottleneck.",
             },
           ].map((item) => (
-            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
-              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            <div key={item.title} className="sd-panel-card">
+              <div className="sd-panel-card-title">{item.title}</div>
+              <p className="sd-text-xs">{item.body}</p>
             </div>
           ))}
-          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-teal)" }}>The trade-off is explicit:</strong> you accept a latency cost on every request in exchange for the ability to scale, recover, and deploy without coordination between servers.
+          <div className="sd-panel-note">
+            <strong className="sd-hl">The trade-off is explicit:</strong> you accept a latency cost on every request in exchange for the ability to scale, recover, and deploy without coordination between servers.
           </div>
         </PanelSection>
       </SidePanel>

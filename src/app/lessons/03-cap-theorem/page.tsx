@@ -76,6 +76,44 @@ const quizCards: QuizCard[] = [
       "Nodes may accept conflicting writes during a partition, producing divergent state. This is resolved through a reconciliation process — such as last-write-wins, vector clocks, or application-level merge logic — after the partition heals.",
     ],
   },
+  {
+    question:
+      "Read-your-own-writes and monotonic reads are often treated as the same guarantee. What is the actual difference?",
+    answers: [
+      "Read-your-own-writes means a client always sees the effect of its own updates. Monotonic reads means a client never observes a value older than one it has already seen, including values written by other clients. A system can provide either one without the other.",
+    ],
+    note: "Bundling both — plus consistent prefix reads — and scoping them to a single client is what most databases call session consistency.",
+  },
+  {
+    question:
+      "Sequential consistency is weaker than linearizability. What exactly does it give up?",
+    answers: [
+      "Real-time ordering. Every client still observes all operations in the same relative order, but that order does not have to match wall-clock time — a write can appear to take effect later than it actually completed.",
+    ],
+  },
+  {
+    question:
+      "Last-Write-Wins keeps the version with the higher timestamp. What is its failure mode, and why is that failure especially dangerous?",
+    answers: [
+      "Physical clocks drift, even under NTP. A node running slightly fast stamps its write with a higher timestamp and overwrites a genuinely newer write made on a slower node. The dangerous part is that it happens silently — no error, no log, no conflict surfaced. The write is simply gone.",
+    ],
+    note: "This is why LWW fits low-stakes fields like a display name, and not anything where losing an update actually matters.",
+  },
+  {
+    question:
+      "Two replicas hold versions with vector clocks [a:2, b:1] and [a:1, b:2]. What happened, and what does the database do about it?",
+    answers: [
+      "Neither vector dominates the other, since each leads on a different node's counter. The writes were concurrent rather than sequential, so the database cannot tell which one should win. It surfaces both versions to the application layer as siblings and lets domain logic decide.",
+    ],
+    note: "Vector clocks detect the conflict without losing data, but they hand the decision to you rather than making it for you.",
+  },
+  {
+    question:
+      "CRDT merges must be commutative, associative, and idempotent. Why those three properties specifically?",
+    answers: [
+      "They correspond to the three things an unreliable network does to messages: it reorders them, it regroups them, and it delivers some of them more than once. A merge immune to all three converges on identical state no matter what the network did, with no coordinator and no application-level conflict resolution.",
+    ],
+  },
 ];
 
 export default function Lesson03() {
@@ -257,6 +295,185 @@ export default function Lesson03() {
           </div>
         </div>
 
+        {/* Consistency spectrum */}
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+            Refining the C
+          </p>
+          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>The Spectrum of Consistency Models</h2>
+
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+            <p>
+              CP and AP describe a decision made at the moment a partition hits. But{" "}
+              <strong style={{ color: "var(--sd-text)" }}>consistency itself is not a single property</strong>. It is the contract between a data store and its clients about the ordering and visibility of writes, and that contract comes in degrees.
+            </p>
+            <p style={{ marginTop: 10 }}>
+              The C in CAP names the strictest point on that gradient. Real systems rarely apply one point across an entire application — they run{" "}
+              <span style={{ color: "var(--sd-teal)" }}>different guarantees for different workflows</span>, paying for strictness only where the business actually needs it.
+            </p>
+          </div>
+
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+            The strict end
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            {[
+              {
+                name: "Linearizability",
+                color: "var(--sd-accent)",
+                body: "The strongest single-object model. Every operation appears to take effect atomically at one instant between its invocation and its completion. Once a write completes, any later read — no matter which node serves it — returns that value or a newer one.",
+              },
+              {
+                name: "Sequential Consistency",
+                color: "var(--sd-teal)",
+                body: "Relaxes real time. Operations do not have to line up with a global clock, but every client observes all operations in the same relative order. Cheaper to maintain, and enough for many coordination problems.",
+              },
+            ].map((m) => (
+              <div key={m.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: m.color, marginBottom: 8 }}>{m.name}</div>
+                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{m.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Both models force the CP choice.</strong> To hold either one during a network failure, a node cut off from the coordinator has to reject reads and writes rather than answer from state it cannot verify. That refusal is exactly what prevents split-brain.
+          </div>
+
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+            The loose end
+          </p>
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+            <p>
+              Eventual consistency guarantees only that{" "}
+              <strong style={{ color: "var(--sd-text)" }}>if writes stop, all replicas converge</strong> on the same value. Until then, concurrent reads sent to different nodes can return stale data, mutations out of order, or values that flatly contradict each other.
+            </p>
+            <p style={{ marginTop: 10 }}>
+              Between full linearizability and raw eventual convergence sit the{" "}
+              <strong style={{ color: "var(--sd-text)" }}>client-centric guarantees</strong>. Each is far cheaper than linearizability, and each buys one specific property that users actually notice when it is missing.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+            {[
+              {
+                name: "Read-Your-Own-Writes",
+                color: "var(--sd-accent)",
+                body: "A client always sees its own updates. Change your profile photo and a reload shows the new one, even while other users still see the old one.",
+              },
+              {
+                name: "Monotonic Reads",
+                color: "var(--sd-teal)",
+                body: "A client never moves backwards in time. Once it has observed a value, later queries never hand back an older one.",
+              },
+              {
+                name: "Consistent Prefix Reads",
+                color: "var(--sd-green)",
+                body: "Nobody sees a write without the writes it depends on. A reply never appears before the question it answers.",
+              },
+            ].map((g) => (
+              <div key={g.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: g.color, marginBottom: 8 }}>{g.name}</div>
+                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{g.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
+            <strong style={{ color: "var(--sd-text)" }}>These three are independent, not synonyms.</strong> A store can give you read-your-own-writes and still walk time backwards on the next query. Bundling all three and scoping them to a single client is what most databases label{" "}
+            <span style={{ color: "var(--sd-teal)" }}>session consistency</span>.
+          </div>
+
+          {/* Comparison table */}
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
+              <thead>
+                <tr>
+                  {["Model", "Under partition", "Normal latency", "Replication requirement", "Common use case"].map((h) => (
+                    <th key={h} style={{ padding: "11px 14px", textAlign: "left", background: "var(--sd-surface2)", color: "var(--sd-muted)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "1px solid var(--sd-border)" }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Linearizable", "Rejects reads and writes", "Highest — multi-node round trips", "Synchronous consensus (Raft / Paxos)", "Financial ledgers, seat booking, inventory holds"],
+                  ["Causal", "Stays available", "Low — asynchronous propagation", "Vector clocks, dependency tracking", "Comment threads, collaborative editing"],
+                  ["Eventual", "Stays available", "Lowest — local read and write", "Asynchronous background repair", "Social feeds, analytics counters, DNS"],
+                ].map(([model, partition, latency, repl, use], i, arr) => (
+                  <tr key={model}>
+                    <td style={{ padding: "12px 14px", color: "var(--sd-text)", fontWeight: 700, borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{model}</td>
+                    <td style={{ padding: "12px 14px", color: i === 0 ? "var(--sd-amber)" : "var(--sd-teal)", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{partition}</td>
+                    <td style={{ padding: "12px 14px", color: "var(--sd-muted)", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{latency}</td>
+                    <td style={{ padding: "12px 14px", color: "var(--sd-muted)", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{repl}</td>
+                    <td style={{ padding: "12px 14px", color: "var(--sd-muted)", borderBottom: i < arr.length - 1 ? "1px solid var(--sd-border)" : "none" }}>{use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Replication behavior diagram */}
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 22px" }}>
+            <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24, textAlign: "center" }}>
+              Replication behavior under network partition
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ background: "rgba(76, 110, 245,0.07)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "10px 20px", textAlign: "center" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-accent)" }}>Client Write Request</div>
+                <div style={{ fontSize: 11.5, fontFamily: "var(--sd-font-mono)", color: "var(--sd-muted)", marginTop: 3 }}>set balance = 150</div>
+              </div>
+              <div style={{ fontSize: 18, color: "var(--sd-muted)", margin: "4px 0" }}>↓</div>
+              <div style={{ fontSize: 11, color: "var(--sd-amber)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
+                Network Partition
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, width: "100%" }}>
+                {[
+                  {
+                    node: "Node A (Isolated)",
+                    mode: "CP mode",
+                    color: "var(--sd-accent)",
+                    outcome: "Write Rejected (503)",
+                    detail: "cannot reach consensus quorum",
+                  },
+                  {
+                    node: "Node B (Isolated)",
+                    mode: "AP mode",
+                    color: "var(--sd-teal)",
+                    outcome: "Write Accepted Locally",
+                    detail: "divergence risks split-brain",
+                  },
+                ].map((s, i) => (
+                  <div
+                    key={s.node}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 4,
+                      borderLeft: i === 1 ? "1px dashed var(--sd-amber)" : "none",
+                      paddingLeft: i === 1 ? 20 : 0,
+                    }}
+                  >
+                    <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+                    <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "10px 14px", textAlign: "center", width: "100%" }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--sd-text)" }}>{s.node}</div>
+                      <div style={{ fontSize: 11.5, fontFamily: "var(--sd-font-mono)", color: "var(--sd-muted)", marginTop: 3 }}>current state: balance = 100</div>
+                    </div>
+                    <div style={{ fontSize: 11, color: s.color, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 4 }}>{s.mode}</div>
+                    <div style={{ fontSize: 18, color: "var(--sd-muted)" }}>↓</div>
+                    <div style={{ background: "var(--sd-surface2)", border: `1px solid ${s.color}`, borderRadius: 8, padding: "10px 14px", textAlign: "center", width: "100%" }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 700, color: s.color }}>{s.outcome}</div>
+                      <div style={{ fontSize: 11.5, color: "var(--sd-muted)", marginTop: 3, lineHeight: 1.5 }}>{s.detail}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Quorum & split-brain */}
         <div style={{ marginBottom: 32 }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
@@ -398,6 +615,105 @@ export default function Lesson03() {
           <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
             <strong style={{ color: "var(--sd-text)" }}>CAP is a framework for failure, not normal operation.</strong> During normal operation — when there is no partition — systems can generally provide both high consistency and high availability. The trade-off only forces your hand when the network degrades.
           </div>
+        </div>
+
+        {/* Conflict resolution */}
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
+            The AP Side
+          </p>
+          <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Conflict Resolution When Replicas Diverge</h2>
+
+          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, lineHeight: 1.75 }}>
+            <p>
+              Choosing AP is not the end of a decision — it is the start of a second one. Node B accepted the write while it was isolated, so once the link comes back there are{" "}
+              <strong style={{ color: "var(--sd-text)" }}>two versions of the same record and no node that witnessed both</strong>.
+            </p>
+            <p style={{ marginTop: 10 }}>
+              Every highly available store therefore ships a reconciliation strategy. Which one it picks decides whether divergence costs you{" "}
+              <span style={{ color: "var(--sd-teal)" }}>data</span> or merely costs you{" "}
+              <span style={{ color: "var(--sd-teal)" }}>code</span>.
+            </p>
+          </div>
+
+          {/* LWW */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+            Approach 1 — Last-Write-Wins
+          </p>
+          <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18, marginBottom: 12, fontSize: 13, lineHeight: 1.7, color: "var(--sd-muted)" }}>
+            The database stamps every write with a physical wall-clock timestamp. When two conflicting versions meet during reconciliation, the higher timestamp overwrites the lower one. It is simple, deterministic, and adds almost no storage overhead — one timestamp per record.
+          </div>
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
+            <strong style={{ color: "var(--sd-amber)" }}>The cost is silent data loss.</strong> LWW trusts physical clocks, and physical clocks drift even under NTP. A node running a few milliseconds fast stamps its write with a higher timestamp and quietly discards a genuinely newer write made elsewhere. Nothing errors and nothing logs — the write is simply gone.
+          </div>
+
+          {/* Vector clocks */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+            Approach 2 — Vector Clocks and Version Vectors
+          </p>
+          <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18, marginBottom: 12, fontSize: 13, lineHeight: 1.7, color: "var(--sd-muted)" }}>
+            Rather than trusting wall clocks, vector clocks record causal history. A vector clock is a set of logical counters, one per node, where each entry counts the operations that node has applied. Comparing two vectors answers a question a timestamp cannot: did one version actually descend from the other, or did they happen independently?
+          </div>
+          <pre style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px", marginBottom: 12, overflowX: "auto", fontSize: 12.5, lineHeight: 1.8 }}>
+            <code style={{ color: "var(--sd-text)" }}>
+              <span style={{ color: "var(--sd-muted)" }}>{"// One version descends from the other"}</span>{"\n"}
+              V1 = [ a:<span style={{ color: "var(--sd-amber)" }}>1</span>, b:<span style={{ color: "var(--sd-amber)" }}>1</span> ]{"   "}V2 = [ a:<span style={{ color: "var(--sd-amber)" }}>2</span>, b:<span style={{ color: "var(--sd-amber)" }}>1</span> ]{"\n"}
+              {"  "}every entry in V1 is ≤ V2, and one is strictly less{"\n"}
+              {"  "}→ <span style={{ color: "var(--sd-teal)" }}>V1 happened before V2</span>, so V2 wins and V1 is safe to drop{"\n\n"}
+              <span style={{ color: "var(--sd-muted)" }}>{"// Neither descends from the other"}</span>{"\n"}
+              V1 = [ a:<span style={{ color: "var(--sd-amber)" }}>2</span>, b:<span style={{ color: "var(--sd-amber)" }}>1</span> ]{"   "}V2 = [ a:<span style={{ color: "var(--sd-amber)" }}>1</span>, b:<span style={{ color: "var(--sd-amber)" }}>2</span> ]{"\n"}
+              {"  "}neither vector dominates the other{"\n"}
+              {"  "}→ <span style={{ color: "var(--sd-accent)" }}>concurrent write</span>, unresolvable without domain knowledge{"\n"}
+              {"  "}→ both versions surface to the application as siblings
+            </code>
+          </pre>
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Vector clocks never lose a write, but they never decide for you either.</strong> They convert silent data loss into an explicit conflict that the application layer has to resolve — strictly more work, and strictly safer.
+          </div>
+
+          {/* CRDTs */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 10 }}>
+            Approach 3 — Conflict-Free Replicated Data Types
+          </p>
+          <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18, marginBottom: 12, fontSize: 13, lineHeight: 1.7, color: "var(--sd-muted)" }}>
+            CRDTs sidestep reconciliation entirely by choosing data structures whose merge operation cannot conflict. Every replica merges whatever it receives, in whatever order it arrives, and they all land on identical state — no coordinator, no arbitration, no application-level decision.
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 12 }}>
+            {[
+              { name: "Commutative", expr: "A ∪ B = B ∪ A", body: "Arrival order does not change the result." },
+              { name: "Associative", expr: "(A ∪ B) ∪ C = A ∪ (B ∪ C)", body: "Grouping of merges does not change the result." },
+              { name: "Idempotent", expr: "A ∪ A = A", body: "Applying the same update twice changes nothing." },
+            ].map((p) => (
+              <div key={p.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 16 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--sd-teal)", marginBottom: 6 }}>{p.name}</div>
+                <div style={{ fontSize: 11.5, fontFamily: "var(--sd-font-mono)", color: "var(--sd-amber)", marginBottom: 8 }}>{p.expr}</div>
+                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6 }}>{p.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "rgba(76, 110, 245,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
+            Those three properties are precisely what make{" "}
+            <strong style={{ color: "var(--sd-text)" }}>reordering, regrouping, and duplicate delivery</strong> harmless — which is exactly the list of things an unreliable network does to your messages.
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
+            {[
+              { name: "PN-Counter", body: "A counter supporting increments and decrements, by keeping one grow-only tally per node for each direction and summing them." },
+              { name: "LWW-Element-Set", body: "A set supporting adds and removes, where each element carries a timestamp that settles membership conflicts." },
+              { name: "OR-Set", body: "An observed-removed set, where each add is tagged with a unique id so a concurrent add always beats a concurrent delete." },
+            ].map((p) => (
+              <div key={p.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 16 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--sd-green)", marginBottom: 6 }}>{p.name}</div>
+                <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.6 }}>{p.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
+            <strong style={{ color: "var(--sd-text)" }}>Choosing between them is a question about the field, not the database.</strong> Use LWW where the last edit genuinely should win and losing one is survivable, such as a display name. Use vector clocks where no write may be lost and something can arbitrate, such as a shopping cart. Use a CRDT where convergence must happen with no arbitration at all, such as a like counter or a collaborative document.
+          </div>
 
           <div style={{ background: "rgba(157, 176, 247,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7 }}>
             These constraints form the basis for understanding database replication strategies and distributed transaction patterns — topics covered in the lessons ahead.
@@ -456,8 +772,8 @@ export default function Lesson03() {
               body: 'After a partition heals and no new conflicting writes arrive, all replicas will converge to an agreed-upon value. The system guarantees convergence, not timing. "Eventually" could be milliseconds or minutes depending on replication lag.',
             },
             {
-              title: "Conflict Resolution Strategies",
-              body: "Last-Write-Wins (LWW): the write with the most recent timestamp overwrites others — simple but can silently discard valid data. Vector Clocks: track causality between writes to detect true conflicts. CRDTs: data types designed so concurrent writes always merge without conflicts.",
+              title: "What Actually Drives Convergence",
+              body: "Nothing converges by itself. Read repair fixes a stale replica when a read notices the mismatch, hinted handoff replays writes a node missed while it was down, and anti-entropy compares replicas in the background on a schedule. Replication lag is a number you can measure and alert on, which is what turns \"eventually\" from a hope into an SLO.",
             },
             {
               title: "The Operational Reality",
@@ -502,6 +818,36 @@ export default function Lesson03() {
           <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
             The right question when choosing a database is not "which theorem does this implement?" but:{" "}
             <strong style={{ color: "var(--sd-teal)" }}>what is the worst thing that can happen if two nodes disagree, and how will I detect and resolve it?</strong>
+          </div>
+        </PanelSection>
+
+        <PanelSection title="Does one application have to pick one consistency model?">
+          <p style={{ fontSize: 13, color: "var(--sd-muted)", lineHeight: 1.7 }}>
+            No, and treating it as a single global switch is the most common way this trade-off gets applied badly. Mature systems decide{" "}
+            <strong style={{ color: "var(--sd-text)" }}>per workflow</strong>, because the business penalty for a stale read is wildly different from one endpoint to the next.
+          </p>
+          {[
+            {
+              title: "Weigh Stale Reads Against Downtime",
+              body: "In double-entry accounting, serving a balance that misses a pending withdrawal risks an illegal overdraft, so refusing the request is strictly better than accepting it. In an ad-click or video-view counter, dropping the event destroys the data outright, so accepting locally and reconciling later is strictly better. Same company, opposite answers.",
+            },
+            {
+              title: "Invariants Decide, Not Preferences",
+              body: "Updating a display name touches one row and depends on nothing, so eventual consistency and LWW are fine. Reserving a unique username or decrementing the last unit of stock spans an invariant, and if two nodes independently take that last unit from 1 to 0 you have oversold. Cross-node invariants are what force strong quorums, not the importance of the feature.",
+            },
+            {
+              title: "Let the Read/Write Ratio Bias the Cost",
+              body: "Write-heavy telemetry can acknowledge locally and push the synchronization cost onto rare analytical reads. A read-heavy product catalog can do the reverse, paying more on every write so reads can be served from the nearest replica. Put the expensive side on whichever operation happens least.",
+            },
+          ].map((item) => (
+            <div key={item.title} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--sd-text)", marginBottom: 5 }}>{item.title}</div>
+              <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.65 }}>{item.body}</p>
+            </div>
+          ))}
+          <div style={{ background: "rgba(76, 110, 245,0.08)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
+            The unit of decision is the{" "}
+            <strong style={{ color: "var(--sd-teal)" }}>endpoint or workflow, not the database</strong>. A single product can run strict serializability for payments and an eventually consistent counter for view counts, and it should.
           </div>
         </PanelSection>
       </SidePanel>

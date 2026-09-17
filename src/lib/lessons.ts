@@ -31,6 +31,7 @@ export const modules: CourseModule[] = [
       { slug: "03-cap-theorem", number: 3, title: "CAP Theorem & Trade-offs" },
       { slug: "04-load-balancing", number: 4, title: "Core Concepts of Load Balancing" },
       { slug: "05-requirements-and-estimation", number: 5, title: "Design Requirements & Estimating Resource Needs" },
+      { slug: "06-communication-patterns", number: 6, title: "Choosing a Communication Pattern" },
       // LESSON_ENTRIES_END
     ],
   },

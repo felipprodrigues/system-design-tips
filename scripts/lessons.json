@@ -41,8 +41,8 @@
     },
     {
       "number": 6,
-      "slug": "06-webhooks-vs-polling",
-      "title": "Webhooks vs. Polling: Choosing a Communication Pattern",
+      "slug": "06-communication-patterns",
+      "title": "Choosing a Communication Pattern",
       "subtitle": "How a system finds out about changes it didn't initiate.",
       "insight": "Polling asks \"anything new?\" on a timer. Webhooks flip the model — the system tells you the moment something changes."
     }

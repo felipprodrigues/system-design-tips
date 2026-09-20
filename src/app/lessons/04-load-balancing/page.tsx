@@ -110,11 +110,12 @@ const comparisonRows = [
 
 export default function Lesson04() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("04-load-balancing");
 
   return (
     <>
       <Breadcrumb
-        section="Foundations of Distributed Architectures"
+        section={nav.sectionTitle}
         lesson="Core Concepts of Load Balancing"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -571,10 +572,7 @@ export default function Lesson04() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getLessonNav("04-load-balancing")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

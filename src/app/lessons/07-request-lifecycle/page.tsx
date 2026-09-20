@@ -659,7 +659,7 @@ export default function Lesson07() {
         lessonNumber={0}
         totalLessons={0}
         nextHref={`/lessons/${modules[0].lessons[0].slug}`}
-        sectionTitle="Foundations of Distributed Architecture"
+        sectionTitle={modules[0].title}
         label="Prologue"
       />
     </>

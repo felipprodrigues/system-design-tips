@@ -118,11 +118,12 @@ const quizCards: QuizCard[] = [
 
 export default function Lesson03() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("03-cap-theorem");
 
   return (
     <>
       <Breadcrumb
-        section="Foundations of Distributed Architectures"
+        section={nav.sectionTitle}
         lesson="CAP Theorem & Trade-offs"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -852,10 +853,7 @@ export default function Lesson03() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getLessonNav("03-cap-theorem")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

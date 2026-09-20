@@ -110,11 +110,12 @@ const storagePipeline = [
 
 export default function Lesson05() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("05-requirements-and-estimation");
 
   return (
     <>
       <Breadcrumb
-        section="Foundations of Distributed Architectures"
+        section={nav.sectionTitle}
         lesson="Design Requirements & Estimating Resource Needs"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -552,10 +553,7 @@ export default function Lesson05() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getLessonNav("05-requirements-and-estimation")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

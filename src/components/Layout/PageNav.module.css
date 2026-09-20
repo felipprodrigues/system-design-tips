@@ -1,17 +1,13 @@
 .nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: color-mix(in srgb, var(--sd-surface) 90%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 -16px 32px -8px rgba(0, 0, 0, 0.4);
+  /* Sits at the end of the document, not over it. `body` is a flex column and
+     `.page` takes flex: 1, so on short pages this still lands at the bottom of
+     the viewport instead of floating mid-screen. */
+  background: var(--sd-surface);
+  border-top: 1px solid var(--sd-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 40px;
-  z-index: 100;
 }
 
 .btn {

@@ -149,11 +149,12 @@ const comparisonRows = [
 
 export default function Lesson06() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("06-communication-patterns");
 
   return (
     <>
       <Breadcrumb
-        section="Foundations of Distributed Architectures"
+        section={nav.sectionTitle}
         lesson="Choosing a Communication Pattern"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -546,10 +547,7 @@ export default function Lesson06() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getLessonNav("06-communication-patterns")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

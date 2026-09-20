@@ -25,17 +25,17 @@ export default function Home() {
         </p>
 
         <h1 style={{ fontSize: 44, fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 20 }}>
-          Foundations of Distributed Architecture
+          System Design Roadmap
         </h1>
 
-        <p style={{ color: "var(--sd-muted)", fontSize: 16, lineHeight: 1.6, marginBottom: 72, maxWidth: 440 }}>
-          A structured guide to system design fundamentals.
+        <p style={{ color: "var(--sd-muted)", fontSize: 16, lineHeight: 1.6, marginBottom: 72, maxWidth: 520 }}>
+          Concepts in the order you actually need them, from a single request to a system that serves millions.
         </p>
 
         <div style={{ marginBottom: 40 }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end", marginBottom: 4 }}>
-            <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, color: "var(--sd-muted)", border: "1px solid var(--sd-border)", borderRadius: 5, padding: "3px 8px" }}>
-              System Design Fundamentals
+          <div style={{ display: "flex", alignItems: "baseline", marginBottom: 4 }}>
+            <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)" }}>
+              Fundamentals
             </span>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -54,10 +54,7 @@ export default function Home() {
               }}
               className="sd-row"
             >
-              <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: "var(--sd-muted)" }}>
-                ·
-              </span>
-              <span className="sd-row-title" style={{ fontFamily: "var(--sd-font-display)", fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em" }}>
+              <span className="sd-row-title" style={{ gridColumn: 2, fontFamily: "var(--sd-font-display)", fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em" }}>
                 {prologue.title}
               </span>
               <span className="sd-row-arrow" style={{ color: "var(--sd-accent)", fontSize: 13, fontFamily: "var(--sd-font-mono)" }}>→</span>
@@ -68,12 +65,9 @@ export default function Home() {
         <div style={{ display: "flex", gap: 40 }}>
         {modules.map((mod) => (
           <div key={mod.number} style={{ flex: "1 1 50%", minWidth: 0, marginBottom: 24 }}>
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 4 }}>
+            <div style={{ display: "flex", alignItems: "baseline", marginBottom: 4 }}>
               <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)" }}>
                 {mod.title}
-              </span>
-              <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, color: "var(--sd-muted)", border: "1px solid var(--sd-border)", borderRadius: 5, padding: "3px 8px" }}>
-                MOD · {mod.number}
               </span>
             </div>
 

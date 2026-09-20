@@ -136,11 +136,12 @@ function PItem({
 
 export default function Lesson01() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("01-horizontal-vs-vertical-scaling");
 
   return (
     <>
       <Breadcrumb
-        section="Foundations of Distributed Architectures"
+        section={nav.sectionTitle}
         lesson="Scalability: Vertical vs Horizontal Scaling"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -480,10 +481,7 @@ export default function Lesson01() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getLessonNav("01-horizontal-vs-vertical-scaling")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

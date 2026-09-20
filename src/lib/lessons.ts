@@ -23,7 +23,7 @@ export const prologue: LessonEntry = {
 export const modules: CourseModule[] = [
   {
     number: "01",
-    title: "Foundations of Distributed Architecture",
+    title: "Scaling and Trade-offs",
     lessons: [
       // LESSON_ENTRIES_START
       { slug: "01-horizontal-vs-vertical-scaling", number: 1, title: "Scalability: Vertical vs Horizontal Scaling" },
@@ -40,6 +40,8 @@ export const modules: CourseModule[] = [
 export interface LessonNav {
   lessonNumber: number;
   totalLessons: number;
+  /** The owning module's title, so pages never hardcode it. */
+  sectionTitle: string;
   prevHref?: string;
   nextHref?: string;
 }
@@ -53,6 +55,7 @@ export function getLessonNav(slug: string): LessonNav {
     return {
       lessonNumber: index + 1,
       totalLessons: lessons.length,
+      sectionTitle: mod.title,
       prevHref: index > 0 ? `/lessons/${lessons[index - 1].slug}` : undefined,
       nextHref: index < lessons.length - 1 ? `/lessons/${lessons[index + 1].slug}` : undefined,
     };

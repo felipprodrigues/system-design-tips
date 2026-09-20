@@ -72,11 +72,12 @@ const quizCards: QuizCard[] = [
 
 export default function Lesson02() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("02-latency-throughput-availability");
 
   return (
     <>
       <Breadcrumb
-        section="Foundations of Distributed Architectures"
+        section={nav.sectionTitle}
         lesson="Latency, Throughput & Availability"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -431,10 +432,7 @@ export default function Lesson02() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getLessonNav("02-latency-throughput-availability")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

@@ -10,16 +10,68 @@ import {
   PageNav,
   PageLayout,
   Term,
+  MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
 import { modules } from "@/lib/lessons";
 
-const tcpDefinition =
-  "Transmission Control Protocol. The reliable, ordered connection two machines establish before exchanging any data — a three-way handshake (SYN, SYN-ACK, ACK) that happens before a single byte of the actual request is sent.";
-const tlsDefinition =
-  "Transport Layer Security. The encryption wrapped around that TCP connection so the request and response can’t be read or tampered with in transit — negotiated via its own handshake, on top of TCP’s.";
+/* Single source for every term on this page: the inline <T> tooltips and the
+   Key terms glossary both read from here, so the two can't drift apart. */
+const terms = {
+  dns: {
+    label: "DNS",
+    title: "DNS (Domain Name System)",
+    expands: "Domain Name System",
+    def: "The distributed lookup system that translates human-readable domain names into the IP addresses machines actually use to route traffic.",
+  },
+  tcp: {
+    label: "TCP",
+    title: "TCP three-way handshake",
+    expands: "Transmission Control Protocol",
+    def: "The SYN, SYN-ACK, ACK exchange that establishes a reliable, ordered connection between client and server before any application data is sent.",
+  },
+  tls: {
+    label: "TLS",
+    title: "TLS handshake",
+    expands: "Transport Layer Security",
+    def: "The negotiation that establishes an encrypted channel over an existing TCP connection, including certificate verification and shared key derivation, which is what turns HTTP into HTTPS.",
+  },
+  stateless: {
+    label: "stateless",
+    title: "Statelessness",
+    def: "The property of a protocol or server where each request is handled independently, with no memory of prior requests, so any request can be served by any capable server.",
+  },
+  roundTrip: {
+    label: "round trip",
+    title: "Round trip",
+    def: "One full cycle of a message sent and its reply received, the basic unit of network latency, since several handshake steps each cost a full round trip before useful data moves.",
+  },
+  keepAlive: {
+    label: "keep-alive",
+    title: "Connection keep-alive",
+    def: "Reusing an already-established (and already-secured) TCP connection for multiple requests instead of tearing it down and renegotiating for each one.",
+  },
+};
+
+/* Acronyms lead with what their letters stand for, in the tooltip and the
+   glossary alike, so both surfaces stay in sync. */
+function termBody(t: { expands?: string; def: string }) {
+  return t.expands ? <><strong className="sd-strong">{t.expands}.</strong> {t.def}</> : t.def;
+}
+
+function T({ k, as }: { k: keyof typeof terms; as?: string }) {
+  return <Term label={as ?? terms[k].label}>{termBody(terms[k])}</Term>;
+}
 
 const quizCards: QuizCard[] = [
+  {
+    question: "Why does connection reuse matter so much for a system serving many small API requests?",
+    answers: ["Each new TCP connection costs a round trip, and each new TLS connection costs one or two more, before any actual data moves. If a client opens a new connection per request, it pays that fixed handshake cost every time, which can dwarf the cost of the actual request. Reusing connections (via keep-alive or HTTP/2 multiplexing) amortizes that cost across many requests instead."],
+  },
+  {
+    question: "What does it mean for HTTP to be stateless, and why does that matter for scaling?",
+    answers: ["Stateless means the server doesn't retain memory of previous requests from a client, every request must carry whatever context it needs (like an auth token). This matters for scaling because it means any request can be routed to any server behind a load balancer, no request has to go back to the specific server that handled a previous one, which is what makes horizontal scaling with a fleet of interchangeable servers possible in the first place."],
+  },
   {
     question: "What does the client do during Client Initiation?",
     answers: ["It constructs an HTTP request, including a method, headers, and a payload."],
@@ -27,6 +79,14 @@ const quizCards: QuizCard[] = [
   {
     question: "What happens during DNS Resolution?",
     answers: ["It resolves the domain name into an IP address."],
+  },
+  {
+    question: "Why doesn't pointing a domain at a new server take effect for everyone instantly?",
+    answers: ["DNS answers are cached at several levels, and each record carries a TTL saying how long a cached answer stays valid. Until those TTLs expire, resolvers keep handing out the old IP address."],
+  },
+  {
+    question: "Why is the very first request to a server usually slower than the ones that follow it?",
+    answers: ["The first one pays for DNS resolution, the TCP handshake, and the TLS handshake before any application data moves. Once the connection exists, keep-alive and HTTP/2 multiplexing let later requests reuse it and go straight to sending data."],
   },
   {
     question: "What is the role of the load balancer?",
@@ -58,10 +118,17 @@ const quizCards: QuizCard[] = [
   },
 ];
 
+const whyThisExists = [
+  <>Typing a URL and seeing a page feels instant and singular, but it&rsquo;s actually a sequence of separate network round trips to separate systems (<T k="dns" /> servers, routers, the destination server), each with its own latency, and treating it as one atomic step hides where a real system actually spends its time.</>,
+  <>Without understanding the request lifecycle, it&rsquo;s easy to misplace blame for slowness, e.g. optimizing server code when the real cost is a slow DNS lookup or an unnecessary extra <T k="tls" /> handshake, or to design a system that repeats expensive steps (like re-resolving DNS or re-negotiating TLS) that could have been reused.</>,
+  <>System design interviews frequently probe this directly (&lsquo;walk me through what happens when a user hits your API&rsquo;), and a shaky answer here reads as a gap in fundamentals no matter how good the higher-level architecture is.</>,
+];
+
 const lifecycleSteps = [
   { name: "Client Initiation", body: "The client constructs an HTTP request, including a method (GET, POST, etc.), headers, and a payload." },
-  { name: "DNS Resolution", body: "Before the client can send data, it must resolve the domain name (e.g., api.example.com) into an IP address using the Domain Name System." },
-  { name: "Transmission", body: <>The client opens a <Term label="TCP">{tcpDefinition}</Term> connection (often upgraded to <Term label="TLS">{tlsDefinition}</Term> for encryption) and sends the request to the destination IP.</> },
+  { name: "DNS Resolution", body: <>Before the client can send data, it must resolve the domain name (e.g., api.example.com) into an IP address using <T k="dns" as="DNS" />.</> },
+  { name: "TCP Handshake", body: <>With an IP address in hand, client and server run the <T k="tcp" as="TCP handshake" /> to open a reliable, ordered connection. That is one full <T k="roundTrip" /> spent before any request data moves.</> },
+  { name: "TLS Handshake", body: <>For HTTPS, encryption is negotiated on top of that connection: the server proves its identity with a certificate and both sides derive a shared key. The <T k="tls" as="TLS handshake" /> costs further round trips, and only once it finishes does the HTTP request itself go out.</> },
   { name: "Gateway / Load Balancing", body: "The request hits an entry point — often a load balancer — that determines which specific server instance should handle the work." },
   { name: "Application Logic", body: "The server executes business logic: validating input, checking authentication, and performing calculations." },
   { name: "Data Persistence", body: "If the application requires stored data, it queries a database, waits for the result, and processes the record." },
@@ -69,10 +136,32 @@ const lifecycleSteps = [
 ];
 
 const anatomySteps = [
-  { name: "The Request", body: <>A <code style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>GET /search?q=mechanical+keyboard</code> request arrives.</> },
-  { name: "The Routing", body: "The load balancer inspects the request. If the /search path is under heavy load, it might route this request to a pool of \"Search Services\" optimized for read-heavy operations, rather than the \"User Account\" service." },
+  { name: "The Request", body: "A shopper types \"mechanical keyboard\" into the search box and hits enter." },
+  { name: "The Routing", body: "The load balancer inspects the request. If search traffic is under heavy load, it might route this one to a pool of \"Search Services\" optimized for read-heavy operations, rather than the \"User Account\" service." },
   { name: "The Processing", body: "The application server receives the request. It doesn't just pass the query directly to the database — it validates that the search string isn't malicious, checks if the user is authenticated, and verifies if the result is already available in memory." },
   { name: "The Data Fetch", body: "If the database is hit, the request creates a \"connection session.\" The database interprets the SQL/NoSQL command, optimizes the execution plan, and returns the rows." },
+];
+
+const seenInTheWild = [
+  "Cloudflare and Google's public DNS resolvers (1.1.1.1 and 8.8.8.8) exist specifically to make the DNS resolution step of this lifecycle faster and more reliable than relying on a default ISP resolver.",
+  "Browsers implement HTTP/2 and HTTP/3 largely to reduce the cost of this lifecycle at scale, multiplexing many logical requests over one physical connection so a page with 80 assets doesn't pay 80 separate handshake costs.",
+  "TLS certificate authorities like Let's Encrypt automated what used to be a slow, manual, paid step in this lifecycle (getting a trusted certificate), which is a major reason HTTPS became the web default rather than the exception.",
+  "API gateways at companies like Stripe and Twilio terminate the TCP/TLS handshake at the edge, close to the client, specifically to shorten this lifecycle for API calls originating far from their origin servers.",
+];
+
+const keyPoints = [
+  "A single request is really a chain: DNS, TCP handshake, TLS handshake, then HTTP request/response, each step a real round trip with real latency.",
+  "DNS caching and connection reuse (keep-alive, HTTP/2 multiplexing) exist specifically to avoid repeating expensive steps in this chain on every request.",
+  "HTTP is stateless by design, which is what makes it possible to route any request to any server, a prerequisite for horizontal scaling.",
+  "TLS adds security but also adds round trips, a real latency cost that shows up disproportionately on the first request to a new connection.",
+  "Physical distance and round-trip count are the two real drivers of network latency, which is why both CDNs (attack distance) and connection reuse (attack round trips) matter.",
+];
+
+const commonMistakes = [
+  "Treating 'the request' as a single instantaneous step instead of a chain of separate network operations, which hides where latency actually comes from.",
+  "Assuming HTTPS only adds encryption, when it also adds real latency from the TLS handshake, especially on the first connection before session resumption kicks in.",
+  "Designing a client that opens a brand-new connection per request instead of reusing connections, paying the full DNS+TCP+TLS cost repeatedly for no reason.",
+  "Forgetting that DNS has its own caching and TTL behavior, which means DNS changes (like pointing a domain at a new server) don't take effect everywhere instantly.",
 ];
 
 const requestPath = [
@@ -87,6 +176,14 @@ const responsePath = [
   { label: "App Server", value: "Return Result" },
   { label: "Load Balancer", value: "HTTP Response" },
   { label: "Client", value: "Render Result" },
+];
+
+/* Boxes for the opening figure. `kind` is the small mono label above the name. */
+const chainNodes = [
+  { kind: "Client", name: "Client (browser)", x: 16, y: 168, w: 180, accent: false },
+  { kind: "Server", name: "DNS Resolver", x: 300, y: 28, w: 196, accent: true },
+  { kind: "Server", name: "Web Server", x: 560, y: 168, w: 180, accent: true },
+  { kind: "DB", name: "Database", x: 800, y: 168, w: 150, accent: true },
 ];
 
 export default function Lesson07() {
@@ -112,6 +209,15 @@ export default function Lesson07() {
           Tracing an HTTP request from client click to rendered response — and every hand-off in between.
         </p>
 
+        {/* Why this exists */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Why This Exists
+          </p>
+          <h2 className="sd-h2">Why This Lesson Comes First</h2>
+          <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
+        </div>
+
         {/* Intro */}
         <div className="sd-intro">
           <p>
@@ -122,6 +228,100 @@ export default function Lesson07() {
             When a user clicks &quot;Search&quot; or &quot;Login,&quot; they are triggering an{" "}
             <span className="sd-hl">HTTP request</span>. This signal moves from the client — a browser or mobile app — through several layers before a response is returned.
           </p>
+        </div>
+
+        {/* Think of it like */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Think Of It Like
+          </p>
+          <h2 className="sd-h2">An Office Building With No Directory</h2>
+
+          <div className="sd-prose">
+            <p>
+              Getting a web page loaded is like ordering food through a chain of intermediaries in an old-fashioned office building with no directory. First you ask the front desk which floor the company you want is on (<T k="dns" />). Then you walk to that floor and knock, and someone has to confirm you&rsquo;re allowed in and agree on a shared language before you can talk business (the <T k="tcp" /> and <T k="tls" /> handshakes). Only after all of that do you actually hand over your order and get a response (the <strong className="sd-strong">HTTP request and response</strong>).
+            </p>
+            <p style={{ marginTop: 12 }}>
+              Every one of those steps takes real time, and if you have to repeat the whole walk for every single question, you&rsquo;re wasting most of your visit on logistics instead of getting an answer.
+            </p>
+          </div>
+        </div>
+
+        {/* Opening figure — the separate systems involved */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            The Map
+          </p>
+          <h2 className="sd-h2">The Chain of Systems Behind One Request</h2>
+
+          <div className="sd-figure" style={{ overflowX: "auto" }}>
+            <svg
+              viewBox="0 0 966 268"
+              role="img"
+              aria-label="A client resolves a domain against a DNS resolver, then opens a TCP and TLS connection to a web server, which queries a database."
+              style={{ width: "100%", minWidth: 560, display: "block" }}
+            >
+              <title>The chain of systems behind one request</title>
+              <defs>
+                <marker id="sd-arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-muted)" />
+                </marker>
+              </defs>
+
+              {/* Client up to the DNS resolver, then on to the web server */}
+              <path d="M 196 210 H 250 V 70 H 290" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-arrowhead)" />
+              <path d="M 196 210 H 550" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-arrowhead)" />
+              <path d="M 740 210 H 790" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-arrowhead)" />
+
+              <circle cx="400" cy="210" r="4" fill="var(--sd-teal)" />
+              <circle cx="765" cy="210" r="4" fill="var(--sd-teal)" />
+
+              <text x="258" y="140" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">resolve domain</text>
+              <text x="372" y="196" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)" textAnchor="middle">TCP + TLS, then HTTP</text>
+              <text x="765" y="196" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)" textAnchor="middle">query</text>
+
+              {chainNodes.map((n) => (
+                <g key={n.name}>
+                  <rect
+                    x={n.x}
+                    y={n.y}
+                    width={n.w}
+                    height={84}
+                    rx={10}
+                    fill="var(--sd-surface2)"
+                    stroke={n.accent ? "var(--sd-teal)" : "var(--sd-border-strong)"}
+                    strokeWidth="1.5"
+                  />
+                  <text
+                    x={n.x + n.w / 2}
+                    y={n.y + 33}
+                    textAnchor="middle"
+                    fontFamily="var(--sd-font-mono)"
+                    fontSize="11"
+                    letterSpacing="1"
+                    fill={n.accent ? "var(--sd-teal)" : "var(--sd-muted)"}
+                  >
+                    {n.kind.toUpperCase()}
+                  </text>
+                  <text
+                    x={n.x + n.w / 2}
+                    y={n.y + 56}
+                    textAnchor="middle"
+                    fontFamily="var(--sd-font-mono)"
+                    fontSize="15"
+                    fontWeight="700"
+                    fill="var(--sd-text)"
+                  >
+                    {n.name}
+                  </text>
+                </g>
+              ))}
+            </svg>
+          </div>
+
+          <div className="sd-callout sd-callout-accent">
+            The DNS lookup is a <strong className="sd-strong">side trip, not a link in the chain</strong>. The client asks a completely different server for an address, gets it back, and only then starts talking to the one it actually wanted. That detour is pure latency, which is why its answer gets cached so aggressively.
+          </div>
         </div>
 
         {/* The Request Lifecycle */}
@@ -141,6 +341,27 @@ export default function Lesson07() {
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-text)", marginBottom: 3 }}>{step.name}</div>
                   <p className="sd-text-sm-tight">{step.body}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="sd-callout sd-callout-green" style={{ marginTop: 16 }}>
+            Notice what none of these steps require: <strong className="sd-strong">memory of the last request</strong>. HTTP is <T k="stateless" /> by design, so every request carries everything needed to handle it. That is what lets the gateway send one request to server A and the next to server B without anything breaking, and it is the property every horizontal scaling strategy rests on.
+          </div>
+        </div>
+
+        {/* Key terms */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Key Terms
+          </p>
+          <h2 className="sd-h2">The Vocabulary of a Round Trip</h2>
+
+          <div className="sd-stack">
+            {Object.values(terms).map((t) => (
+              <div key={t.title} className="sd-card">
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-teal)", marginBottom: 4 }}>{t.title}</div>
+                <p className="sd-text-sm-tight">{termBody(t)}</p>
               </div>
             ))}
           </div>
@@ -246,7 +467,7 @@ export default function Lesson07() {
                 label: "Network Latency",
                 color: "var(--sd-amber)",
                 headerBg: "rgba(157, 176, 247,0.12)",
-                body: <>The physical distance between the client and the server adds time. Every hop — DNS lookup, <Term label="TCP">{tcpDefinition}</Term> handshake, <Term label="TLS">{tlsDefinition}</Term> negotiation — compounds the total time until the first byte of data is received.</>,
+                body: <>The physical distance between the client and the server adds time. Every hop — DNS lookup, <T k="tcp" /> handshake, <T k="tls" /> negotiation — compounds the total time until the first byte of data is received.</>,
               },
             ].map((l) => (
               <div key={l.label} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, overflow: "hidden" }}>
@@ -262,6 +483,54 @@ export default function Lesson07() {
 
           <div className="sd-callout">
             A well-designed system minimizes the number of <strong className="sd-strong">synchronous</strong> hops in a request. If a request requires three different database queries to complete, the system is at the mercy of the cumulative latency of all three.
+          </div>
+        </div>
+
+        {/* Seen in the wild */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Seen In The Wild
+          </p>
+          <h2 className="sd-h2">Products Built To Shorten This Chain</h2>
+          <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
+        </div>
+
+        {/* Key points */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Key Points
+          </p>
+          <h2 className="sd-h2">What To Carry Forward</h2>
+          <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} />
+        </div>
+
+        {/* Common mistakes */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Common Mistakes
+          </p>
+          <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
+          <MarkerList mark="✕" color="var(--sd-danger)" bg="var(--sd-danger-wash)" items={commonMistakes} columns={2} />
+
+          <blockquote style={{ borderLeft: "2px solid var(--sd-teal)", padding: "2px 0 2px 16px", margin: "20px 0 0", fontSize: 14, lineHeight: 1.75, color: "var(--sd-text)", fontStyle: "italic" }}>
+            &ldquo;I used to think &lsquo;loading&rsquo; just meant the page was being lazy. Turns out it&rsquo;s four different systems passing notes before anyone says anything useful.&rdquo;
+            <footer style={{ marginTop: 10, fontSize: 12, color: "var(--sd-muted)", fontStyle: "normal" }}>
+              <span className="sd-strong">Madhumitha Kolkar</span>
+              <span style={{ fontFamily: "var(--sd-font-mono)", margin: "0 6px" }}>·</span>
+              <span style={{ fontFamily: "var(--sd-font-mono)" }}>Index 0</span>
+            </footer>
+          </blockquote>
+        </div>
+
+        {/* Try it yourself */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Try It Yourself
+          </p>
+          <h2 className="sd-h2">Watch The Chain In Your Own Browser</h2>
+
+          <div className="sd-callout sd-callout-accent">
+            Open your browser&rsquo;s developer tools, go to the Network tab, and reload any page. Click the very first request and look at the timing breakdown, you should see separate numbers for <strong className="sd-strong">DNS lookup</strong>, <strong className="sd-strong">initial connection</strong> (TCP), <strong className="sd-strong">SSL</strong> (TLS), and <strong className="sd-strong">waiting for the server</strong> (often labeled TTFB). Notice how much time is spent before the server even starts working on your request.
           </div>
         </div>
 
@@ -298,9 +567,9 @@ export default function Lesson07() {
         <PanelSection title="Why does TLS add extra round trips, and how is that cost reduced in practice?" defaultOpen>
           <p className="sd-text-sm">
             A request first opens a{" "}
-            <Term label="TCP">{tcpDefinition}</Term>{" "}
+            <T k="tcp" />{" "}
             connection, then layers{" "}
-            <Term label="TLS">{tlsDefinition}</Term>{" "}
+            <T k="tls" />{" "}
             on top of it. Encryption isn&rsquo;t free — negotiating it costs{" "}
             <strong className="sd-strong">round trips before any application data moves</strong>, and shaving those off is a recurring theme in web performance work.
           </p>
@@ -359,7 +628,7 @@ export default function Lesson07() {
         <PanelSection title="What replaces a synchronous database round trip when it's too slow to do inline?">
           <p className="sd-text-sm">
             Minimizing synchronous hops doesn&rsquo;t mean the work disappears — it means{" "}
-            <strong className="sd-strong">moving it off the request's critical path</strong>.
+            <strong className="sd-strong">moving it off the request&rsquo;s critical path</strong>.
           </p>
           {[
             {

@@ -35,7 +35,7 @@ export default function Home() {
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end", marginBottom: 4 }}>
             <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 11, color: "var(--sd-muted)", border: "1px solid var(--sd-border)", borderRadius: 5, padding: "3px 8px" }}>
-              PROLOGUE
+              System Design Fundamentals
             </span>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>

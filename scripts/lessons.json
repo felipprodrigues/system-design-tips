@@ -7,7 +7,7 @@
     {
       "number": 1,
       "slug": "01-horizontal-vs-vertical-scaling",
-      "title": "Horizontal vs Vertical Scaling",
+      "title": "Scalability: Vertical vs Horizontal Scaling",
       "subtitle": "Understanding how systems grow — and the trade-offs each approach demands.",
       "insight": "Most real systems don't pick one and ignore the other — they start vertical for simplicity, then shift horizontal once demand outgrows what a single box can handle."
     },

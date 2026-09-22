@@ -13,7 +13,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { modules } from "@/lib/lessons";
+import { getLessonNav } from "@/lib/lessons";
 
 /* Single source for every term on this page: the inline <T> tooltips and the
    Key terms glossary both read from here, so the two can't drift apart. */
@@ -188,11 +188,12 @@ const chainNodes = [
 
 export default function Lesson07() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("07-request-lifecycle");
 
   return (
     <>
       <Breadcrumb
-        section="Course"
+        section={nav.sectionTitle}
         lesson="The Lifecycle of a Software Request"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -655,13 +656,7 @@ export default function Lesson07() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        lessonNumber={0}
-        totalLessons={0}
-        nextHref={`/lessons/${modules[0].lessons[0].slug}`}
-        sectionTitle={modules[0].title}
-        label="Prologue"
-      />
+      <PageNav {...nav} label="Prologue" />
     </>
   );
 }

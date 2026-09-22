@@ -11,6 +11,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import { getLessonNav } from "@/lib/lessons";
 
 const quizCards: QuizCard[] = [
   {
@@ -114,11 +115,12 @@ const tradeoffs = [
 
 export default function Lesson02DatabaseSharding() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("02-database-sharding-partitioning");
 
   return (
     <>
       <Breadcrumb
-        section="Data Storage and Management Strategies"
+        section={nav.sectionTitle}
         lesson="Implementing Database Sharding and Partitioning"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
@@ -126,7 +128,7 @@ export default function Lesson02DatabaseSharding() {
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Lesson 2 · Data Storage and Management Strategies
+          Lesson {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Implementing Database Sharding and Partitioning
@@ -526,12 +528,7 @@ export default function Lesson02DatabaseSharding() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        lessonNumber={2}
-        totalLessons={6}
-        prevHref="/lessons/01-relational-vs-nosql"
-        sectionTitle="Data Storage and Management Strategies"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

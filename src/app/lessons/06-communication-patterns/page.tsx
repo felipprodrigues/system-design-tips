@@ -162,7 +162,7 @@ export default function Lesson06() {
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Lesson 6 · Foundations
+          Lesson {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Choosing a Communication Pattern

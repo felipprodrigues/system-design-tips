@@ -53,6 +53,16 @@ export default function PanelSection({
     }
   }
 
+  // `.body` is height: 0 in CSS and only ever opened by the inline height that
+  // expand() sets, so a defaultOpen section rendered as open-but-zero-height.
+  // Land it in the same end state expand() does, once, on mount.
+  useEffect(() => {
+    if (!defaultOpen || !bodyRef.current) return;
+    bodyRef.current.style.height = "auto";
+    bodyRef.current.classList.add(styles.settled);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!id || activeId !== id) return;
     if (!open) expand();

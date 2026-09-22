@@ -43,3 +43,4 @@ next-env.d.ts
 # local-only notes (not for the repo)
 /TODO.md
 /LESSONS.md
+/REQUIREMENTS.md

@@ -41,7 +41,6 @@ export const groups: LessonGroup[] = [
     title: "Data Storage and Management Strategies",
     lessons: [
       { slug: "01-relational-vs-nosql", number: 1, title: "Selecting Relational vs NoSQL Database Models" },
-      { slug: "02-database-sharding-partitioning", number: 2, title: "Implementing Database Sharding and Partitioning" },
     ],
   },
 ];

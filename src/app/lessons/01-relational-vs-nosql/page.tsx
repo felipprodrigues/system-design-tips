@@ -9,10 +9,20 @@ import {
   QuizCarousel,
   PageNav,
   PageLayout,
+  MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import { getLessonNav } from "@/lib/lessons";
 
 const quizCards: QuizCard[] = [
+  {
+    question: "A candidate says 'we'll use NoSQL because it's more scalable.' What follow-up question exposes whether they actually understand the trade-off?",
+    answers: ["Ask what access pattern the data has: does the system need to join this data against other entities, and does it need strict cross-record consistency? If the answer is yes to either, NoSQL's scalability advantage may come at the cost of pushing hard consistency and relational logic into the application layer, which can be a worse trade than a well-sharded relational database."],
+  },
+  {
+    question: "Why might a system use both a relational database and a NoSQL store together?",
+    answers: ["Because different parts of the system have different natural access patterns. Core transactional data like orders or account balances benefits from ACID guarantees and JOINs, so it fits relational. A high-volume, simple-lookup use case like session storage or a real-time activity feed benefits from a NoSQL store's horizontal scalability and flexible schema. Using one database per use case (polyglot persistence) is often better than forcing one database to serve both well."],
+  },
   {
     question: "What mathematical foundation is the relational model built on, and what does it prioritize?",
     answers: [
@@ -71,25 +81,36 @@ const matrixRows = [
   { requirement: "Scale", relational: "Vertical (Scale-up)", nosql: "Horizontal (Scale-out)" },
 ];
 
-const decisionSteps = [
-  {
-    question: "Are relationships complex and critical?",
-    yesOutcome: "Choose Relational Database",
-    yesColor: "var(--sd-accent)",
-    yesBg: "rgba(76, 110, 245,0.12)",
-  },
-  {
-    question: "Do you need high write throughput or massive horizontal scale?",
-    yesOutcome: "Choose NoSQL",
-    yesColor: "var(--sd-teal)",
-    yesBg: "rgba(127, 147, 242,0.12)",
-  },
-  {
-    question: "Is the schema highly volatile?",
-    yesOutcome: "Choose NoSQL",
-    yesColor: "var(--sd-teal)",
-    yesBg: "rgba(127, 147, 242,0.12)",
-  },
+
+const terms = [
+  { title: "ACID", def: "Atomicity, Consistency, Isolation, Durability, the four guarantees a relational transaction typically provides, ensuring data stays correct even under concurrent access or a crash." },
+  { title: "Schema", def: "The defined structure (tables, columns, types, relationships) that data must conform to, strictly enforced in relational databases and loosely enforced or unenforced in most NoSQL databases." },
+  { title: "JOIN", def: "A relational query operation that combines rows from two or more tables based on a related column, the mechanism that makes normalized, non-duplicated data practical to query." },
+  { title: "Document store", def: "A NoSQL database that stores data as flexible, JSON-like documents rather than fixed rows, allowing different records in the same collection to have different fields." },
+  { title: "Polyglot persistence", def: "Using multiple different databases within one system, each chosen for the access pattern it fits best, instead of forcing every use case into a single database." },
+];
+
+const seenInTheWild = [
+  "Banks and payment processors like Stripe run their core ledger on relational databases (typically PostgreSQL or a similar system) specifically because ACID guarantees are non-negotiable when money is involved.",
+  "Amazon built DynamoDB, a key-value/document NoSQL store, to handle its shopping cart and product catalog at a scale where relational sharding became a bigger operational burden than giving up cross-table JOINs.",
+  "Facebook uses a graph-shaped data model (originally TAO, built on top of MySQL) because the social graph, who's friends with whom, is naturally a traversal problem that graph-style access patterns fit better than deeply normalized relational tables.",
+  "Discord migrated parts of its message storage to Cassandra, a wide-column store, specifically to handle enormous write volume across billions of messages that would have required extensive sharding to sustain on a single relational cluster.",
+];
+
+const keyPoints = [
+  "SQL means fixed schema, strong relational guarantees (ACID), and native support for JOINs across tables.",
+  "NoSQL is an umbrella term covering document, key-value, wide-column, and graph databases, each with a different natural shape and access pattern.",
+  "NoSQL's schema flexibility moves consistency responsibility from the database to the application, it doesn't remove the need for structure.",
+  "NoSQL databases are usually built for horizontal scale from the start, which is the real reason they often win at very high write volume, not raw per-query speed.",
+  "The right choice depends on the access pattern: relational data with strict consistency needs fits SQL, high-volume flexible-shape data with simple access patterns often fits NoSQL better.",
+  "Polyglot persistence, using different databases for different parts of one system, is normal at real scale, not a sign of indecision.",
+];
+
+const commonMistakes = [
+  "Choosing NoSQL purely because it sounds more scalable, without checking whether the actual access pattern needs relational JOINs and strict consistency.",
+  "Assuming a flexible schema means no schema, when in practice the application still needs a consistent shape, it's just unenforced by the database.",
+  "Believing relational databases can't scale, when in reality read replicas, connection pooling, and even sharding can take a well-designed relational system very far before it becomes the bottleneck.",
+  "Using a single NoSQL database for everything in a system, including data that's deeply relational, instead of considering polyglot persistence for the parts that genuinely need different guarantees.",
 ];
 
 const exercises = [
@@ -113,6 +134,7 @@ const exercises = [
 
 export default function Lesson01Module02() {
   const [panelOpen, setPanelOpen] = useState(false);
+  const nav = getLessonNav("01-relational-vs-nosql");
   const [activePanelSection, setActivePanelSection] = useState<string | null>(null);
 
   function openPanelSection(id: string) {
@@ -123,7 +145,7 @@ export default function Lesson01Module02() {
   return (
     <>
       <Breadcrumb
-        section="Data Storage and Management Strategies"
+        section={nav.sectionTitle}
         lesson="Selecting Relational vs NoSQL Database Models"
         action={<DeepDiveButton onClick={() => { setActivePanelSection(null); setPanelOpen(true); }} />}
       />
@@ -131,7 +153,7 @@ export default function Lesson01Module02() {
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Lesson 1 · Data Storage and Management Strategies
+          Lesson {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Selecting Relational vs NoSQL Database Models
@@ -139,6 +161,18 @@ export default function Lesson01Module02() {
         <p className="sd-lede">
           Two philosophies for storing data — integrity-first structure versus flexible, horizontally scalable performance.
         </p>
+
+        {/* Big idea */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Big Idea
+          </p>
+          <div className="sd-prose" style={{ fontSize: 16 }}>
+            <p>
+              SQL and NoSQL aren&rsquo;t &lsquo;old vs new&rsquo; or &lsquo;slow vs fast&rsquo;, they&rsquo;re different bets about which is more expensive to give up: <strong className="sd-strong">strict structure and cross-table consistency</strong>, or <strong className="sd-strong">flexible schema and effortless horizontal scale</strong>.
+            </p>
+          </div>
+        </div>
 
         {/* Intro */}
         <div className="sd-intro">
@@ -150,6 +184,23 @@ export default function Lesson01Module02() {
             NoSQL databases (<span className="sd-hl">Not Only SQL</span>) trade off that rigid consistency for{" "}
             <strong className="sd-strong">horizontal scale, flexible data structures</strong>, and optimized read/write performance for specific data access patterns.
           </p>
+        </div>
+
+        {/* Think of it like */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Think Of It Like
+          </p>
+          <h2 className="sd-h2">A Filing Cabinet Or A Shelf Of Boxes</h2>
+
+          <div className="sd-prose">
+            <p>
+              A <strong className="sd-strong">relational database</strong> is like a well-organized filing cabinet with strict labeled folders, every document has to fit a defined form, but you can cross-reference any folder against any other instantly and trust the filing is internally consistent.
+            </p>
+            <p style={{ marginTop: 12 }}>
+              A <strong className="sd-strong">NoSQL database</strong> is more like a set of labeled boxes where each box can hold whatever shape of thing makes sense for what&rsquo;s in it, faster to just toss something in without redesigning the whole cabinet, but you give up the guarantee that everything follows one strict, cross-checkable format.
+            </p>
+          </div>
         </div>
 
         {/* Relational Model */}
@@ -254,6 +305,23 @@ export default function Lesson01Module02() {
           </div>
         </div>
 
+        {/* Key terms */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Key Terms
+          </p>
+          <h2 className="sd-h2">The Vocabulary Of The Trade-off</h2>
+
+          <div className="sd-stack">
+            {terms.map((t) => (
+              <div key={t.title} className="sd-card">
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-teal)", marginBottom: 4 }}>{t.title}</div>
+                <p className="sd-text-sm-tight">{t.def}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Decision Matrix */}
         <div className="sd-section">
           <p className="sd-eyebrow">
@@ -294,50 +362,124 @@ export default function Lesson01Module02() {
           <p className="sd-eyebrow">
             Putting It Together
           </p>
-          <h2 className="sd-h2">Evaluate Your Storage Needs</h2>
+          <h2 className="sd-h2">Choosing SQL vs NoSQL By Access Pattern</h2>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "24px", marginBottom: 16 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ width: "100%", maxWidth: 380, background: "rgba(76, 110, 245,0.1)", border: "1px solid var(--sd-accent)", borderRadius: 8, padding: "10px 20px", fontSize: 12.5, fontWeight: 600, color: "var(--sd-accent)", textAlign: "center" }}>
-                Start: Define Data Access Patterns
-              </div>
+          <div className="sd-figure" style={{ overflowX: "auto" }}>
+            <svg
+              viewBox="0 0 1060 760"
+              role="img"
+              aria-label="A decision tree. Start from the access pattern. If it needs JOINs and strict ACID, choose relational SQL. Otherwise, ask whether it is mostly lookup by known key: huge volume leads to key-value or wide-column, a flexible evolving shape leads to a document store, and traversal-heavy access leads to a graph database."
+              style={{ width: "100%", minWidth: 640, display: "block" }}
+            >
+              <title>Choosing SQL vs NoSQL by access pattern</title>
+              <defs>
+                <marker id="sd-db-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-muted)" />
+                </marker>
+              </defs>
 
-              {decisionSteps.map((step, i) => {
-                const isLast = i === decisionSteps.length - 1;
-                return (
-                  <div key={step.question} style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                    <div style={{ width: 1, height: 18, background: "var(--sd-border)" }} />
+              {/* edges */}
+              <path d="M 460 80 V 105" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
+              <path d="M 383 251 C 320 330, 200 360, 175 432" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
+              <path d="M 537 251 C 620 300, 670 330, 700 370" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
+              <path d="M 612 516 C 540 580, 470 600, 455 652" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
+              <path d="M 700 562 C 700 600, 705 612, 705 652" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
+              <path d="M 787 516 C 860 580, 915 600, 927 652" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
 
-                    <div style={{ width: "100%", maxWidth: 380, background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "14px 16px" }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
-                        Question {i + 1}
-                      </div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--sd-text)", lineHeight: 1.5, marginBottom: 12 }}>
-                        {step.question}
-                      </div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                        <div style={{ background: step.yesBg, border: `1px solid ${step.yesColor}`, borderRadius: 6, padding: "8px 10px" }}>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: step.yesColor, marginBottom: 2 }}>Yes →</div>
-                          <div style={{ fontSize: 11.5, fontWeight: 700, color: step.yesColor }}>{step.yesOutcome}</div>
-                        </div>
-                        <div style={{ background: isLast ? "rgba(76, 110, 245,0.1)" : "var(--sd-bg)", border: `1px solid ${isLast ? "var(--sd-accent)" : "var(--sd-border)"}`, borderRadius: 6, padding: "8px 10px" }}>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--sd-muted)", marginBottom: 2 }}>No →</div>
-                          <div style={{ fontSize: 11.5, fontWeight: 700, color: isLast ? "var(--sd-accent)" : "var(--sd-muted)" }}>
-                            {isLast ? "Choose Relational Database" : "Next question"}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+              {/* branch labels */}
+              <text x="318" y="340" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fill="var(--sd-muted)">Yes</text>
+              <text x="636" y="336" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fill="var(--sd-muted)">No</text>
+              <text x="372" y="608" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">Yes, huge volume</text>
+              <text x="705" y="600" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">Flexible, evolving</text>
+              <text x="705" y="617" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">shape</text>
+              <text x="988" y="608" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">Traversal-heavy</text>
+
+              {/* start */}
+              <rect x="330" y="16" width="260" height="64" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-teal)" strokeWidth="1.5" />
+              <text x="460" y="42" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">What&apos;s the access</text>
+              <text x="460" y="62" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">pattern?</text>
+
+              {/* decision 1 */}
+              <polygon points="460,113 615,205 460,297 305,205" fill="var(--sd-surface2)" stroke="var(--sd-teal)" strokeWidth="1.5" />
+              <text x="460" y="199" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">Need JOINs and</text>
+              <text x="460" y="219" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">strict ACID?</text>
+
+              {/* decision 2 */}
+              <polygon points="700,378 875,470 700,562 525,470" fill="var(--sd-surface2)" stroke="var(--sd-teal)" strokeWidth="1.5" />
+              <text x="700" y="464" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">Mostly lookup by</text>
+              <text x="700" y="484" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">known key?</text>
+
+              {/* outcomes */}
+              <rect x="60" y="440" width="230" height="60" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-accent)" strokeWidth="1.5" />
+              <text x="175" y="476" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-text)">Relational (SQL)</text>
+
+              <rect x="330" y="660" width="250" height="58" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-green)" strokeWidth="1.5" />
+              <text x="455" y="695" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fontWeight="700" fill="var(--sd-text)">Key-value / wide-column</text>
+
+              <rect x="615" y="660" width="180" height="58" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-green)" strokeWidth="1.5" />
+              <text x="705" y="695" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fontWeight="700" fill="var(--sd-text)">Document store</text>
+
+              <rect x="830" y="660" width="195" height="58" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-green)" strokeWidth="1.5" />
+              <text x="927" y="695" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fontWeight="700" fill="var(--sd-text)">Graph database</text>
+            </svg>
           </div>
 
-          <div className="sd-callout">
+          <div className="sd-callout sd-callout-accent">
+            The first question is the only one that decides <strong className="sd-strong">SQL or not</strong>. Everything below it is choosing <em>which</em> NoSQL, which is why &ldquo;we&rsquo;ll use NoSQL&rdquo; is an unfinished answer: it names the branch, not the destination.
+          </div>
+
+          <div className="sd-callout" style={{ marginTop: 12 }}>
             When data grows beyond a single instance, your choice of database dictates how you handle future complexity. In upcoming modules, we&rsquo;ll examine how to apply{" "}
             <span className="sd-hl">partitioning</span> and{" "}
             <span className="sd-hl">sharding</span> to these models to manage massive datasets.
+          </div>
+        </div>
+
+        {/* Seen in the wild */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Seen In The Wild
+          </p>
+          <h2 className="sd-h2">How Real Systems Actually Choose</h2>
+          <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
+        </div>
+
+        {/* Key points */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Key Points
+          </p>
+          <h2 className="sd-h2">What To Carry Forward</h2>
+          <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} columns={2} />
+        </div>
+
+        {/* Common mistakes */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Common Mistakes
+          </p>
+          <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
+          <MarkerList mark="✕" color="var(--sd-danger)" bg="var(--sd-danger-wash)" items={commonMistakes} columns={2} />
+
+          <blockquote style={{ borderLeft: "2px solid var(--sd-teal)", padding: "2px 0 2px 16px", margin: "20px 0 0", fontSize: 14, lineHeight: 1.75, color: "var(--sd-text)", fontStyle: "italic" }}>
+            &ldquo;I tried filing my toys in flexible unlabeled boxes once. Efficient at throw-in time, a nightmare at find-it-again time. Turns out that&rsquo;s the whole SQL versus NoSQL argument in miniature.&rdquo;
+            <footer style={{ marginTop: 10, fontSize: 12, color: "var(--sd-muted)", fontStyle: "normal" }}>
+              <span className="sd-strong">Madhumitha Kolkar</span>
+              <span style={{ fontFamily: "var(--sd-font-mono)", margin: "0 6px" }}>·</span>
+              <span style={{ fontFamily: "var(--sd-font-mono)" }}>Index 0</span>
+            </footer>
+          </blockquote>
+        </div>
+
+        {/* Try it yourself */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">
+            Try It Yourself
+          </p>
+          <h2 className="sd-h2">Two Features, Two Shapes</h2>
+
+          <div className="sd-callout sd-callout-accent">
+            Pick an app you use daily and guess its data model for two features: the core <strong className="sd-strong">account and billing data</strong> (would you want strict consistency there?) and its <strong className="sd-strong">activity feed or notifications</strong> (does that need cross-entity JOINs, or mostly fast lookups by a known key?). Notice how the two features probably want different database shapes, even inside the same product.
           </div>
         </div>
 
@@ -574,13 +716,7 @@ export default function Lesson01Module02() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        lessonNumber={1}
-        totalLessons={6}
-        prevHref="/lessons/05-requirements-and-estimation"
-        nextHref="/lessons/02-database-sharding-partitioning"
-        sectionTitle="Data Storage and Management Strategies"
-      />
+      <PageNav {...nav} />
     </>
   );
 }

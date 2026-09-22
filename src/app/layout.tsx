@@ -34,7 +34,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
     >
-      <body>
+      {/* Extensions (ColorZilla, Grammarly, and friends) add attributes to <body>
+          before React hydrates. suppressHydrationWarning does not cascade from
+          <html>, so body needs its own. Scoped to this element's own attributes;
+          mismatches anywhere in the tree below are still reported. */}
+      <body suppressHydrationWarning>
         {children}
         <Analytics />
         <Script

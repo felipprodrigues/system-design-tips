@@ -18,36 +18,36 @@ quiz to check what stuck. No prior background assumed, read them in any order.
 Start here if you are new. How a request actually travels, how systems are shaped, and the
 order to think in when handed a blank page.
 
-- [The Lifecycle of a Software Request](https://systemdesignbits.vercel.app/lessons/07-request-lifecycle) — follow one HTTP request end to end: DNS, TCP and TLS, the load balancer, the server, the database, and where the time in a round trip actually goes.
-- Architectural Styles: Monolith to Event-Driven *(coming soon)* — monolith, modular monolith, microservices, and event-driven: the progression teams get forced through, what triggers each move, and what each step costs.
-- A 7-Step Walkthrough for Any System Design *(coming soon)* — a repeatable seven-step order for any system design problem, what each step hands the next, and the ways the framework gets misused in interviews.
+- [The Lifecycle of a Software Request](https://systemdesignbits.vercel.app/lessons/07-request-lifecycle) — How an HTTP request works end to end: DNS lookup, TCP and TLS handshake, load balancer, server, database, and where the round trip time goes.
+- Architectural Styles: Monolith to Event-Driven *(coming soon)* — Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs.
+- A 7-Step Walkthrough for Any System Design *(coming soon)* — A 7-step system design framework: requirements, estimation, API design, data model, high level design, deep dives, and finding bottlenecks.
 
 ## Scaling and Trade-offs
 
 What breaks as traffic grows, and what each fix costs you.
 
 <!-- LESSON_LINKS_START -->
-- [Scalability: Vertical vs Horizontal Scaling](https://systemdesignbits.vercel.app/lessons/01-horizontal-vs-vertical-scaling) — vertical scaling buys a bigger machine, horizontal scaling buys more of them. What each costs, why state is the hard part, and how real systems choose.
-- [Latency, Throughput & Availability](https://systemdesignbits.vercel.app/lessons/02-latency-throughput-availability) — the three numbers every system is judged by: what each actually measures, and how improving one degrades another.
-- [CAP Theorem & Trade-offs](https://systemdesignbits.vercel.app/lessons/03-cap-theorem) — during a network partition a system stays consistent or stays available, never both. CP versus AP, the consistency spectrum, quorums, and PACELC.
-- [Core Concepts of Load Balancing](https://systemdesignbits.vercel.app/lessons/04-load-balancing) — how traffic gets spread across servers: layer 4 versus layer 7, routing algorithms, health checks and failover, and removing the single point of failure.
-- [Design Requirements & Estimating Resource Needs](https://systemdesignbits.vercel.app/lessons/05-requirements-and-estimation) — turn a vague product goal into numbers: functional versus non-functional requirements, back-of-the-envelope estimation, storage, and bandwidth sizing.
+- [Scalability: Vertical vs Horizontal Scaling](https://systemdesignbits.vercel.app/lessons/01-horizontal-vs-vertical-scaling) — Horizontal vs vertical scaling explained: scale out versus scale up, stateless servers behind a load balancer, and how real systems choose.
+- [Latency, Throughput & Availability](https://systemdesignbits.vercel.app/lessons/02-latency-throughput-availability) — Latency, throughput and availability explained: what each metric measures, p99 percentiles, how they trade off, and what nines of uptime cost.
+- [CAP Theorem & Trade-offs](https://systemdesignbits.vercel.app/lessons/03-cap-theorem) — CAP theorem explained: consistency vs availability during a network partition, CP vs AP systems, eventual consistency, quorums, and PACELC.
+- [Core Concepts of Load Balancing](https://systemdesignbits.vercel.app/lessons/04-load-balancing) — Load balancing explained: layer 4 vs layer 7, round robin and least connections, health checks and failover, and sticky sessions.
+- [Design Requirements & Estimating Resource Needs](https://systemdesignbits.vercel.app/lessons/05-requirements-and-estimation) — Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing.
 <!-- LESSON_LINKS_END -->
-- Caching Strategies & Cache Invalidation *(coming soon)* — cache-aside, write-through, and write-back, plus TTLs, explicit invalidation, stampedes, and penetration: keeping a second copy of the truth honest.
+- Caching Strategies & Cache Invalidation *(coming soon)* — Caching strategies explained: cache-aside, write-through and write-back, TTL vs explicit invalidation, cache stampede, and cache penetration.
 
 ## Communication and APIs
 
 How parts of a system talk to each other, and how you expose one to the outside.
 
-- [Choosing a Communication Pattern](https://systemdesignbits.vercel.app/lessons/06-communication-patterns) — polling, long polling, webhooks, SSE, and WebSockets: how a system learns about changes it did not initiate, and which pattern fits which update rate.
-- [API Design: REST, GraphQL, and gRPC](https://systemdesignbits.vercel.app/lessons/08-api-design) — the three styles compared by the caller each is built for: fixed response shapes, over-fetching, the N+1 problem, and where each one fits.
+- [Choosing a Communication Pattern](https://systemdesignbits.vercel.app/lessons/06-communication-patterns) — Polling vs webhooks vs WebSockets: long polling and server-sent events compared, and the update rate and latency each pattern really fits.
+- [API Design: REST, GraphQL, and gRPC](https://systemdesignbits.vercel.app/lessons/08-api-design) — REST vs GraphQL vs gRPC compared: fixed response shapes, over-fetching and under-fetching, the N+1 problem, protobuf, and when to use each.
 
 ## Data Storage and Management Strategies
 
 Choosing a database, then surviving the size of it.
 
-- [Selecting Relational vs NoSQL Database Models](https://systemdesignbits.vercel.app/lessons/01-relational-vs-nosql) — when to choose SQL and when to choose NoSQL: ACID guarantees and JOINs versus flexible schemas and horizontal scale, decided by your access patterns.
-- [Implementing Database Sharding and Partitioning](https://systemdesignbits.vercel.app/lessons/02-database-sharding-partitioning) — range and hash sharding, shard keys and hot shards, partitioning inside one node, shard maps, and the cost sharding adds to joins and transactions.
+- [Selecting Relational vs NoSQL Database Models](https://systemdesignbits.vercel.app/lessons/01-relational-vs-nosql) — SQL vs NoSQL explained: ACID transactions and JOINs versus flexible schemas and horizontal scale, and how access patterns decide the choice.
+- [Implementing Database Sharding and Partitioning](https://systemdesignbits.vercel.app/lessons/02-database-sharding-partitioning) — Database sharding and partitioning explained: shard keys, range vs hash sharding, hot shards, shard maps, and the cost of cross-shard joins.
 
 ---
 

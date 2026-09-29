@@ -1,0 +1,171 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--sd-border);
+  background: var(--sd-surface);
+  color: var(--sd-muted);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.chip:hover {
+  color: var(--sd-text);
+  border-color: var(--sd-border-strong);
+}
+.chip[aria-pressed="true"] {
+  color: var(--sd-accent);
+  border-color: var(--sd-accent);
+  background: rgba(76, 110, 245, 0.1);
+}
+
+.count {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.tally {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.card:hover {
+  border-color: var(--sd-border-strong);
+  transform: translateY(-1px);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.company {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sd-accent);
+}
+
+/* Postmortems and papers are a different kind of read, so they say so. */
+.kind {
+  font-family: var(--sd-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+  border: 1px solid var(--sd-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.title {
+  font-family: var(--sd-font-display);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.title a {
+  color: var(--sd-text);
+  text-decoration: none;
+}
+.title a:hover {
+  color: var(--sd-accent);
+}
+
+.arrow {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  color: var(--sd-muted);
+  margin-left: 6px;
+}
+.title a:hover .arrow {
+  color: var(--sd-accent);
+}
+
+.takeaway {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--sd-muted);
+  flex: 1;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sd-border);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: none;
+  background: var(--sd-surface2);
+  color: var(--sd-muted);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.tag:hover {
+  color: var(--sd-accent);
+}
+
+.lesson {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  color: var(--sd-teal);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.lesson::before {
+  content: "Lesson: ";
+  color: var(--sd-muted);
+}
+.lesson:hover {
+  text-decoration: underline;
+}

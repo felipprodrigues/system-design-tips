@@ -9,3 +9,7 @@ export type { QuizCard } from "./Carousel/QuizCarousel";
 export { default as ThemeToggle } from "./ThemeToggle/ThemeToggle";
 export { default as Term } from "./Term/Term";
 export { default as MarkerList } from "./MarkerList/MarkerList";
+export { default as Hero } from "./Layout/Hero";
+export { default as TopNav } from "./Nav/TopNav";
+export { default as TopBar } from "./Nav/TopBar";
+export { default as CaseStudyBrowser } from "./CaseStudies/CaseStudyBrowser";

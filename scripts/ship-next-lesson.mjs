@@ -38,15 +38,41 @@ const targetDir = join(root, "src/app/lessons", next.slug);
 mkdirSync(targetDir, { recursive: true });
 renameSync(draftPath, join(targetDir, "page.tsx"));
 
+/* Lesson pages are client components, so their metadata has to live in a route layout. */
+writeFileSync(
+  join(targetDir, "layout.tsx"),
+  `import { lessonMetadata } from "@/lib/seo";
+
+export const metadata = lessonMetadata("${next.slug}");
+
+export default function Layout({ children }: LayoutProps<"/lessons/${next.slug}">) {
+  return children;
+}
+`,
+);
+
 const lessonsDataPath = join(root, "src/lib/lessons.ts");
 const lessonsData = readFileSync(lessonsDataPath, "utf8");
-const entry = `      { slug: "${next.slug}", number: ${next.number}, title: "${next.title.replace(/"/g, '\\"')}" },\n`;
+const esc = (value) => value.replace(/"/g, '\\"');
+/* The description becomes the lesson page's meta description, so it ships with the entry. */
+const entry = `      { slug: "${next.slug}", number: ${next.number}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
 const marker = "      // LESSON_ENTRIES_END";
 if (!lessonsData.includes(marker)) {
   console.error("LESSON_ENTRIES_END marker not found in src/lib/lessons.ts");
   process.exit(1);
 }
 writeFileSync(lessonsDataPath, lessonsData.replace(marker, entry + marker));
+
+/* Same idea for the public lesson index in the README. */
+const readmePath = join(root, "README.md");
+const readme = readFileSync(readmePath, "utf8");
+const readmeMarker = "<!-- LESSON_LINKS_END -->";
+const link = `- [${next.title}](https://systemdesignbits.vercel.app/lessons/${next.slug}) \u2014 ${next.subtitle}\n`;
+if (!readme.includes(readmeMarker)) {
+  console.error("LESSON_LINKS_END marker not found in README.md");
+  process.exit(1);
+}
+writeFileSync(readmePath, readme.replace(readmeMarker, link + readmeMarker));
 
 sh(`git add -A`);
 shf("git", [

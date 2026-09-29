@@ -515,11 +515,6 @@ export default function Lesson07() {
 
           <blockquote style={{ borderLeft: "2px solid var(--sd-teal)", padding: "2px 0 2px 16px", margin: "20px 0 0", fontSize: 14, lineHeight: 1.75, color: "var(--sd-text)", fontStyle: "italic" }}>
             &ldquo;I used to think &lsquo;loading&rsquo; just meant the page was being lazy. Turns out it&rsquo;s four different systems passing notes before anyone says anything useful.&rdquo;
-            <footer style={{ marginTop: 10, fontSize: 12, color: "var(--sd-muted)", fontStyle: "normal" }}>
-              <span className="sd-strong">Madhumitha Kolkar</span>
-              <span style={{ fontFamily: "var(--sd-font-mono)", margin: "0 6px" }}>·</span>
-              <span style={{ fontFamily: "var(--sd-font-mono)" }}>Index 0</span>
-            </footer>
           </blockquote>
         </div>
 

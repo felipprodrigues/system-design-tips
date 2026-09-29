@@ -463,11 +463,6 @@ export default function Lesson01Module02() {
 
           <blockquote style={{ borderLeft: "2px solid var(--sd-teal)", padding: "2px 0 2px 16px", margin: "20px 0 0", fontSize: 14, lineHeight: 1.75, color: "var(--sd-text)", fontStyle: "italic" }}>
             &ldquo;I tried filing my toys in flexible unlabeled boxes once. Efficient at throw-in time, a nightmare at find-it-again time. Turns out that&rsquo;s the whole SQL versus NoSQL argument in miniature.&rdquo;
-            <footer style={{ marginTop: 10, fontSize: 12, color: "var(--sd-muted)", fontStyle: "normal" }}>
-              <span className="sd-strong">Madhumitha Kolkar</span>
-              <span style={{ fontFamily: "var(--sd-font-mono)", margin: "0 6px" }}>·</span>
-              <span style={{ fontFamily: "var(--sd-font-mono)" }}>Index 0</span>
-            </footer>
           </blockquote>
         </div>
 

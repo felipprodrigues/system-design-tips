@@ -35,6 +35,7 @@ export const groups: LessonGroup[] = [
     title: "Communication and APIs",
     lessons: [
       { slug: "06-communication-patterns", number: 1, title: "Choosing a Communication Pattern" },
+      { slug: "08-api-design", number: 2, title: "API Design: REST, GraphQL, and gRPC" },
     ],
   },
   {

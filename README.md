@@ -64,8 +64,8 @@ Then open [http://localhost:3000](http://localhost:3000). `pnpm build` runs the 
 
 | Path | What lives there |
 | --- | --- |
-| `src/app/lessons/<slug>/page.tsx` | One lesson, one page component |
-| `src/app/lessons/<slug>/layout.tsx` | That lesson's metadata, built from `lessons.ts` |
+| `src/lessons/<slug>.tsx` | One lesson, one component |
+| `src/app/lessons/[slug]/page.tsx` | The single route that renders and titles every lesson |
 | `src/lib/lessons.ts` | The lesson index: slug, title, description, grouping, and prev/next order |
 | `src/lib/seo.ts` | Canonical URL, site name, and per-lesson metadata |
 | `src/components/` | Shared lesson UI: layout, breadcrumb, quiz carousel, side panel, marker lists |

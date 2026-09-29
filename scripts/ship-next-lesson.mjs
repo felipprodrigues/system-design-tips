@@ -34,22 +34,10 @@ if (!existsSync(draftPath)) {
 const branch = `lesson/${next.slug}`;
 sh(`git checkout -b ${branch}`);
 
-const targetDir = join(root, "src/app/lessons", next.slug);
-mkdirSync(targetDir, { recursive: true });
-renameSync(draftPath, join(targetDir, "page.tsx"));
-
-/* Lesson pages are client components, so their metadata has to live in a route layout. */
-writeFileSync(
-  join(targetDir, "layout.tsx"),
-  `import { lessonMetadata } from "@/lib/seo";
-
-export const metadata = lessonMetadata("${next.slug}");
-
-export default function Layout({ children }: LayoutProps<"/lessons/${next.slug}">) {
-  return children;
-}
-`,
-);
+/* One body per lesson under src/lessons; the /lessons/[slug] route renders and titles it. */
+const bodiesDir = join(root, "src/lessons");
+mkdirSync(bodiesDir, { recursive: true });
+renameSync(draftPath, join(bodiesDir, `${next.slug}.tsx`));
 
 const lessonsDataPath = join(root, "src/lib/lessons.ts");
 const lessonsData = readFileSync(lessonsDataPath, "utf8");

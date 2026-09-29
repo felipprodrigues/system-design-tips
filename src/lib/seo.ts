@@ -7,7 +7,7 @@ export const SITE_NAME = "System Design Roadmap";
 
 const bySlug = new Map(groups.flatMap((g) => g.lessons.map((l) => [l.slug, l] as const)));
 
-/** Per-lesson title, description and canonical, from the single source of truth in lessons.ts. */
+/** Per-lesson title, description and canonical, for the /lessons/[slug] route. */
 export function lessonMetadata(slug: string): Metadata {
   const lesson = bySlug.get(slug);
   if (!lesson) throw new Error(`Unknown lesson slug: ${slug}`);

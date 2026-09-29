@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const fontDisplay = Bricolage_Grotesque({
@@ -22,8 +23,24 @@ const fontMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "System Design",
-  description: "A structured guide to system design fundamentals.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME}: learn system design one lesson at a time`,
+    /* Lesson pages set only their own title; this frames it for search results. */
+    template: `%s · ${SITE_NAME}`,
+  },
+  description:
+    "A structured, free course on system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME}: learn system design one lesson at a time`,
+    description:
+      "A structured, free course on system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

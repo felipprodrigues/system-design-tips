@@ -9,11 +9,24 @@ import {
   QuizCarousel,
   PageNav,
   PageLayout,
+  MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
 import { getLessonNav } from "@/lib/lessons";
 
 const quizCards: QuizCard[] = [
+  {
+    question: "Why is it inaccurate to say a system 'chooses CA' in the CAP theorem?",
+    answers: [
+      "Because partition tolerance isn't a feature you can opt out of — network partitions are a real, unavoidable failure mode in any system with more than one node communicating over a network. 'Choosing CA' would mean assuming partitions never happen. The actual choice a system makes is what to do when one does: stay consistent by refusing some requests (CP), or stay available by answering with possibly stale data (AP).",
+    ],
+  },
+  {
+    question: "Give an example of a real feature where you'd deliberately choose AP over CP, and explain why.",
+    answers: [
+      "A likes counter on a social media post. During a network partition it's far better to keep accepting and displaying likes, even if the count is briefly slightly off between replicas, than to stop the feature working entirely. The cost of being briefly wrong (an undercount by a few) is much lower than the cost of being unavailable, which makes AP the right call.",
+    ],
+  },
   {
     question: 'What does the "C" in CAP mean, and what does it guarantee?',
     answers: [
@@ -116,6 +129,43 @@ const quizCards: QuizCard[] = [
   },
 ];
 
+const whyThisExists = [
+  "The instant a system spans more than one machine connected by a network, that network can fail: a link drops, a data center loses connectivity, a router misbehaves. The system has to decide what to do in that moment, and no distributed system avoids that decision entirely.",
+  "Consistency sounds like a single obvious good thing to want, but it comes in graded levels, and the strongest form is directly in tension with staying available and staying fast. Treating it as free or all-or-nothing produces designs that quietly promise more than they can deliver.",
+  "CAP is one of the most frequently misquoted ideas in system design. Misreading what partition tolerance means leads to conclusions like \u201cwe chose CA\u201d, which is not a real option once a network partition is possible at all.",
+];
+
+const terms = [
+  { title: "CAP theorem", def: "A distributed system experiencing a network partition can guarantee at most two of consistency, availability, and partition tolerance. Since partitions are unavoidable, the live choice is between consistency and availability." },
+  { title: "Partition", def: "A failure where network communication between nodes is lost or delayed, splitting the system into groups that cannot talk to each other." },
+  { title: "Strong consistency", def: "Every read reflects the most recent write regardless of which replica answers \u2014 the strictest and most expensive model to maintain across replicas." },
+  { title: "Eventual consistency", def: "Replicas converge to the same value over time if writes stop, but a read immediately after a write may temporarily see stale data." },
+  { title: "PACELC", def: "An extension of CAP: even without a Partition, systems trade Latency against Consistency during normal operation, not just Availability against Consistency during a partition." },
+];
+
+const seenInTheWild = [
+  "DynamoDB and Cassandra are classic AP-leaning systems. They default to eventual consistency and stay available during network trouble, which fits shopping carts and activity feeds.",
+  "Relational databases configured with synchronous replication, and systems like Google Spanner (which uses tightly synchronized clocks to approximate global strong consistency), lean CP \u2014 correctness first, at some availability and latency cost.",
+  "Zookeeper and etcd, used for distributed configuration and leader election in systems like Kubernetes, are explicitly CP: they would rather stop answering than risk two nodes both believing they are the leader.",
+  "Amazon\u2019s original Dynamo paper, the ancestor of DynamoDB and Cassandra, was built to keep the shopping cart available during partitions \u2014 preferring \u201cthe cart might briefly show slightly stale items\u201d over \u201cthe customer cannot shop right now\u201d.",
+];
+
+const keyPoints = [
+  "CAP says a distributed system can guarantee at most two of consistency, availability, and partition tolerance, but partition tolerance is not optional \u2014 so the live trade-off is CP versus AP during an actual partition.",
+  "CP systems refuse or delay answers during a partition to avoid returning wrong data; AP systems keep answering with possibly stale data and reconcile afterwards.",
+  "Strong consistency is the easiest model to reason about and the most expensive to provide across distant replicas; eventual consistency is weaker, far cheaper, and often sufficient.",
+  "The trade-off only bites during an actual partition. Under a healthy network most systems offer both consistency and availability, which is exactly why under-designing for it stays invisible until the one day it does not.",
+  "Different data in the same system deserves different points on the spectrum \u2014 a balance and a like count should not share a consistency model.",
+  "PACELC extends the idea: even with no partition, there is a latency-versus-consistency trade-off during ordinary operation.",
+];
+
+const commonMistakes = [
+  "Claiming a system \u201cchooses CA\u201d, treating partition tolerance as optional, when any real distributed system eventually faces a partition and needs defined behavior for it.",
+  "Assuming eventual consistency is \u201cbasically strong consistency, just a little slower\u201d, when the actual guarantee \u2014 convergence only if writes stop \u2014 allows meaningfully stale or conflicting reads under continuous load.",
+  "Applying one consistency model to an entire system, when a financial balance and a like count clearly belong at different points on the spectrum.",
+  "Using CAP to argue about normal-operation latency trade-offs. CAP is about partition-time behavior; the latency argument is PACELC.",
+];
+
 export default function Lesson03() {
   const [panelOpen, setPanelOpen] = useState(false);
   const nav = getLessonNav("03-cap-theorem");
@@ -140,6 +190,17 @@ export default function Lesson03() {
           When the network fails, you must choose — and there is no middle ground.
         </p>
 
+        {/* Big idea */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Big Idea</p>
+          <div className="sd-prose" style={{ fontSize: 16 }}>
+            <p>
+              CAP isn&rsquo;t a menu you pick freely from. Network partitions happen whether you plan for them or not, so the real choice every distributed system makes is{" "}
+              <strong className="sd-strong">what happens during one</strong>: keep answering and risk being wrong, or refuse to answer until you can be sure.
+            </p>
+          </div>
+        </div>
+
         {/* Intro */}
         <div className="sd-intro">
           <p>
@@ -152,6 +213,31 @@ export default function Lesson03() {
             <span className="sd-hl">lens for evaluating trade-offs</span>{" "}
             every time you choose a data store or design a failure mode.
           </p>
+        </div>
+
+        {/* Why this exists */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Why This Exists</p>
+          <h2 className="sd-h2">The Decision You Cannot Opt Out Of</h2>
+          <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
+        </div>
+
+        {/* Think of it like */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Think Of It Like</p>
+          <h2 className="sd-h2">Two Stores, One Inventory Count, One Phone Line</h2>
+
+          <div className="sd-prose">
+            <p>
+              Two people run the same small store in two different towns, sharing one inventory count and staying in sync over a phone line. While the line works this is easy — they call before every sale to confirm current stock.
+            </p>
+            <p style={{ marginTop: 12 }}>
+              Now the line goes dead. Each of them has a choice: <strong className="sd-strong">stop selling that item until the line is back</strong> (consistent, but that item is now unavailable in both towns), or <strong className="sd-strong">keep selling from the last number they had</strong> (available, but both towns might sell the last unit and one customer gets disappointed later).
+            </p>
+            <p style={{ marginTop: 12 }}>
+              The dead phone line is the partition. What each store does during the outage is the whole CAP theorem in one story.
+            </p>
+          </div>
         </div>
 
         {/* Three pillars */}
@@ -207,6 +293,43 @@ export default function Lesson03() {
             <strong className="sd-strong">Partition Tolerance (P) is non-negotiable.</strong> Networks are unreliable — packets drop, cables get cut, hardware fails. Because you cannot prevent partitions, the real choice is between{" "}
             <span className="sd-hl">C</span> and{" "}
             <span className="sd-hl">A</span> when a partition occurs.
+          </div>
+
+          <div className="sd-figure" style={{ overflowX: "auto" }}>
+            <p className="sd-figure-caption">CAP as a triangle of trade-offs</p>
+            <svg
+              viewBox="0 0 680 470"
+              role="img"
+              aria-label="A triangle with Consistency at the top, Availability at the bottom left and Partition tolerance at the bottom right. The Consistency-to-Availability edge is drawn as unavailable, because it assumes a network that never partitions. Real distributed systems live on the CP edge or the AP edge."
+              style={{ width: "100%", minWidth: 520, display: "block" }}
+            >
+              <title>CAP as a triangle of trade-offs</title>
+
+              <polygon points="340,80 610,395 70,395" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" />
+              <line x1="340" y1="80" x2="70" y2="395" stroke="var(--sd-danger)" strokeWidth="1.5" strokeDasharray="7 7" />
+
+              <circle cx="340" cy="80" r="7" fill="var(--sd-accent)" />
+              <circle cx="70" cy="395" r="7" fill="var(--sd-teal)" />
+              <circle cx="610" cy="395" r="7" fill="var(--sd-green)" />
+
+              <text x="340" y="52" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="15" fontWeight="700" fill="var(--sd-accent)">Consistency</text>
+              <text x="90" y="424" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="15" fontWeight="700" fill="var(--sd-teal)">Availability</text>
+              <text x="590" y="424" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="15" fontWeight="700" fill="var(--sd-green)">Partition tolerance</text>
+
+              <text x="105" y="222" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-danger)">CA</text>
+              <text x="105" y="242" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">assumes a network that</text>
+              <text x="105" y="258" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">never partitions</text>
+
+              <text x="572" y="222" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-accent)">CP</text>
+              <text x="572" y="242" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">refuse rather than</text>
+              <text x="572" y="258" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">be wrong</text>
+
+              <text x="340" y="426" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-teal)">AP</text>
+              <text x="340" y="446" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">answer now, reconcile later</text>
+
+              <text x="340" y="300" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12.5" fill="var(--sd-muted)">Real distributed systems keep P,</text>
+              <text x="340" y="320" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12.5" fill="var(--sd-muted)">so they live on the CP or AP edge</text>
+            </svg>
           </div>
         </div>
 
@@ -475,6 +598,68 @@ export default function Lesson03() {
           </div>
         </div>
 
+        {/* PACELC */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Beyond The Partition</p>
+          <h2 className="sd-h2">PACELC: The Trade-off That Never Fully Goes Away</h2>
+
+          <div className="sd-prose">
+            <p>
+              CAP only describes behavior <strong className="sd-strong">during</strong> a partition, which is why it is so easy to under-design for: the system looks fine right up until the day the network doesn&rsquo;t. PACELC adds the other half of the picture.
+            </p>
+            <p style={{ marginTop: 10 }}>
+              Keeping replicas strongly consistent means coordinating across them, and coordination costs time. So even with a perfectly healthy network, you are still paying for consistency — just in{" "}
+              <strong className="sd-strong">latency</strong> instead of availability.
+            </p>
+          </div>
+
+          <pre style={{ background: "var(--sd-bg)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "16px 18px", marginBottom: 16, overflowX: "auto", fontSize: 12.5, lineHeight: 1.9 }}>
+            <code className="sd-strong">
+              <span className="sd-hl-accent">if</span> Partition{"     "}→ trade <span className="sd-hl">Availability</span> against <span className="sd-hl-amber">Consistency</span>{"\n"}
+              <span className="sd-hl-accent">else</span>{"            "}→ trade <span className="sd-hl">Latency</span>{"     "} against <span className="sd-hl-amber">Consistency</span>
+            </code>
+          </pre>
+
+          <div className="sd-grid-2">
+            {[
+              {
+                name: "PC/EC — consistent either way",
+                color: "var(--sd-accent)",
+                body: "Refuses during a partition, and pays coordination latency the rest of the time. Spanner, etcd and Zookeeper sit here: every write waits on a quorum even when nothing is broken.",
+              },
+              {
+                name: "PA/EL — responsive either way",
+                color: "var(--sd-teal)",
+                body: "Answers during a partition, and answers from the nearest replica the rest of the time. Cassandra and DynamoDB default here, which is why a read can be stale even on a perfectly healthy day.",
+              },
+            ].map((m) => (
+              <div key={m.name} style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: 18 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: m.color, marginBottom: 8 }}>{m.name}</div>
+                <p className="sd-text-xs">{m.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="sd-callout">
+            Most databases expose this as a per-query knob rather than a global setting — DynamoDB&rsquo;s strongly-consistent read and Cassandra&rsquo;s tunable consistency levels are both PACELC choices made one call at a time.
+          </div>
+        </div>
+
+        {/* Key terms */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Key Terms</p>
+          <h2 className="sd-h2">The Vocabulary Of The Trade-off</h2>
+
+          <div className="sd-grid-2">
+            {terms.map((t) => (
+              <div key={t.title} className="sd-card">
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--sd-teal)", marginBottom: 4 }}>{t.title}</div>
+                <p className="sd-text-sm-tight">{t.def}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Quorum & split-brain */}
         <div className="sd-section">
           <p className="sd-eyebrow">
@@ -716,8 +901,50 @@ export default function Lesson03() {
             <strong className="sd-strong">Choosing between them is a question about the field, not the database.</strong> Use LWW where the last edit genuinely should win and losing one is survivable, such as a display name. Use vector clocks where no write may be lost and something can arbitrate, such as a shopping cart. Use a CRDT where convergence must happen with no arbitration at all, such as a like counter or a collaborative document.
           </div>
 
+        </div>
+
+        {/* Seen in the wild */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Seen In The Wild</p>
+          <h2 className="sd-h2">Which Side Real Systems Picked</h2>
+          <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
+        </div>
+
+        {/* Key points */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Key Points</p>
+          <h2 className="sd-h2">What To Carry Forward</h2>
+          <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} columns={2} />
+        </div>
+
+        {/* Common mistakes */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Common Mistakes</p>
+          <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
+          <MarkerList mark="✕" color="var(--sd-danger)" bg="var(--sd-danger-wash)" items={commonMistakes} columns={2} />
+
+          <blockquote style={{ borderLeft: "2px solid var(--sd-teal)", padding: "2px 0 2px 16px", margin: "20px 0 0", fontSize: 14, lineHeight: 1.75, color: "var(--sd-text)", fontStyle: "italic" }}>
+            &ldquo;Both of my humans feed me dinner. The weekend they stopped comparing notes, I got fed twice a night. Each of them stayed available, neither of them was wrong, and the divergence was only detected at the vet.&rdquo;
+          </blockquote>
+        </div>
+
+        {/* Try it yourself */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Try It Yourself</p>
+          <h2 className="sd-h2">Two Features, Two Failure Modes</h2>
+
+          <div className="sd-callout sd-callout-accent">
+            Think of two features in the same app: one where wrong data would genuinely upset you (a bank balance) and one where slightly stale data wouldn&rsquo;t bother you (a follower count). For each, write down whether you&rsquo;d rather it go <strong className="sd-strong">briefly unavailable</strong> or <strong className="sd-strong">briefly show an outdated number</strong> during a network hiccup — you just picked CP for one and AP for the other, inside a single product.
+          </div>
+        </div>
+
+        {/* Summary */}
+        <div className="sd-section">
+          <p className="sd-eyebrow">Summary</p>
+          <h2 className="sd-h2">Choose The Failure You Can Live With</h2>
+
           <div className="sd-callout sd-callout-green">
-            These constraints form the basis for understanding database replication strategies and distributed transaction patterns — topics covered in the lessons ahead.
+            Partitions are not a scenario you opt into, so every distributed system already has an answer for them — the only question is whether that answer was chosen deliberately. Pick CP where being wrong is worse than being down, AP where being down is worse than being briefly wrong, and pick it per workflow rather than once for the whole system. These constraints form the basis for database replication strategies and distributed transaction patterns — topics covered in the lessons ahead.
           </div>
         </div>
 

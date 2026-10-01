@@ -1,0 +1,28 @@
+.hero {
+  margin-bottom: 56px;
+}
+
+.eyebrow {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sd-accent);
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+
+.intro {
+  color: var(--sd-muted);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 560px;
+}

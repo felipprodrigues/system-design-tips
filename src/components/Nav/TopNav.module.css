@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 999px;
+}
+
+.tab {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sd-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--sd-text);
+}
+
+.tab[data-active] {
+  color: var(--sd-text);
+  background: var(--sd-surface2);
+}

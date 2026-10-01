@@ -19,6 +19,7 @@ export const groups: LessonGroup[] = [
     title: "Fundamentals",
     lessons: [
       { slug: "07-request-lifecycle", number: 1, title: "The Lifecycle of a Software Request", description: "How an HTTP request works end to end: DNS lookup, TCP and TLS handshake, load balancer, server, database, and where the round trip time goes." },
+      { slug: "10-architectural-styles", number: 2, title: "Architectural Styles: Monolith to Event-Driven", description: "Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs." },
     ],
   },
   {

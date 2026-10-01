@@ -19,7 +19,7 @@ Start here if you are new. How a request actually travels, how systems are shape
 order to think in when handed a blank page.
 
 - [The Lifecycle of a Software Request](https://systemdesignbits.vercel.app/lessons/07-request-lifecycle) — How an HTTP request works end to end: DNS lookup, TCP and TLS handshake, load balancer, server, database, and where the round trip time goes.
-- Architectural Styles: Monolith to Event-Driven *(coming soon)* — Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs.
+- [Architectural Styles: Monolith to Event-Driven](https://systemdesignbits.vercel.app/lessons/10-architectural-styles) — Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs.
 - A 7-Step Walkthrough for Any System Design *(coming soon)* — A 7-step system design framework: requirements, estimation, API design, data model, high level design, deep dives, and finding bottlenecks.
 
 ## Scaling and Trade-offs

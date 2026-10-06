@@ -31,6 +31,7 @@ export const groups: LessonGroup[] = [
       { slug: "03-cap-theorem", number: 3, title: "CAP Theorem & Trade-offs", description: "CAP theorem explained: consistency vs availability during a network partition, CP vs AP systems, eventual consistency, quorums, and PACELC." },
       { slug: "04-load-balancing", number: 4, title: "Core Concepts of Load Balancing", description: "Load balancing explained: layer 4 vs layer 7, round robin and least connections, health checks and failover, and sticky sessions." },
       { slug: "05-requirements-and-estimation", number: 5, title: "Design Requirements & Estimating Resource Needs", description: "Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing." },
+      { slug: "09-caching-strategies", number: 6, title: "Caching Strategies & Cache Invalidation", description: "Caching strategies explained: cache-aside, write-through and write-back, TTL vs explicit invalidation, cache stampede, and cache penetration." },
       // LESSON_ENTRIES_END
     ],
   },

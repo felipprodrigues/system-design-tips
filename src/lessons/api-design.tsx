@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   MarkerList,
 } from "@/components";
@@ -151,7 +152,7 @@ const topologyNodes = [
 
 export default function Lesson08() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("08-api-design");
+  const nav = getLessonNav("api-design");
 
   return (
     <>
@@ -167,6 +168,7 @@ export default function Lesson08() {
           Lesson {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">API Design: REST, GraphQL, and gRPC</h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Three ways to expose a system, and the caller each one is built for.
         </p>

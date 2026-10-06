@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import type { Metadata } from "next";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from "next/font/google";
+import Script from "next/script";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -51,10 +51,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
     >
-      {/* Extensions (ColorZilla, Grammarly, and friends) add attributes to <body>
-          before React hydrates. suppressHydrationWarning does not cascade from
-          <html>, so body needs its own. Scoped to this element's own attributes;
-          mismatches anywhere in the tree below are still reported. */}
       <body suppressHydrationWarning>
         {children}
         <Analytics />

@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
@@ -110,7 +111,7 @@ const comparisonRows = [
 
 export default function Lesson04() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("04-load-balancing");
+  const nav = getLessonNav("load-balancing");
 
   return (
     <>
@@ -128,6 +129,7 @@ export default function Lesson04() {
         <h1 className="sd-h1">
           Core Concepts of Load Balancing
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Distribute traffic, eliminate single points of failure, and scale without downtime.
         </p>

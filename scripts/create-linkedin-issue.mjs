@@ -23,7 +23,8 @@ if (!lesson) {
 }
 
 const siteUrl = process.env.SITE_URL || "https://your-project.vercel.app";
-const link = `${siteUrl}${mod.basePath}/${lesson.slug}`;
+/* The branch keeps the authoring number; the published URL drops it. */
+const link = `${siteUrl}${mod.basePath}/${lesson.slug.replace(/^\d{2}-/, "")}`;
 
 const post = [
   `New lesson in "${mod.title}": ${lesson.title}`,

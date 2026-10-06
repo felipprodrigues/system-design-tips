@@ -36,7 +36,7 @@ export const caseStudies: CaseStudy[] = [
       "A real network partition: automated failover promoted a cross-country database primary, both sides accepted writes the other never saw, and failing back stopped being safe.",
     themes: ["Availability & resilience", "Consistency"],
     kind: "Postmortem",
-    lesson: "03-cap-theorem",
+    lesson: "cap-theorem",
   },
   {
     title: "Amazon's Dynamo",
@@ -46,7 +46,7 @@ export const caseStudies: CaseStudy[] = [
       "The paper that made availability the default: eventual consistency, vector clocks, and a shopping cart that must stay writable while the network is broken.",
     themes: ["Consistency", "Databases & sharding"],
     kind: "Paper",
-    lesson: "03-cap-theorem",
+    lesson: "cap-theorem",
   },
   {
     title: "How multiplayer technology works",
@@ -55,7 +55,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Concurrent edits from many clients converging on one document, and why they chose their own approach over off-the-shelf conflict resolution.",
     themes: ["Real-time", "Consistency"],
-    lesson: "03-cap-theorem",
+    lesson: "cap-theorem",
   },
   {
     title: "Avoiding double payments in a distributed payments system",
@@ -64,7 +64,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "What it takes to retry a payment safely when the first attempt might have succeeded and you cannot tell.",
     themes: ["Consistency", "API design"],
-    lesson: "03-cap-theorem",
+    lesson: "cap-theorem",
   },
   {
     title: "Scaling Memcache at Facebook",
@@ -82,7 +82,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Choosing a shard key for real data, and the migration it took to get there without downtime.",
     themes: ["Databases & sharding"],
-    lesson: "02-database-sharding-partitioning",
+    lesson: "database-sharding-partitioning",
   },
   {
     title: "Scaling PostgreSQL",
@@ -91,7 +91,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "How far a single primary plus read replicas goes before sharding becomes unavoidable.",
     themes: ["Databases & sharding", "Scaling"],
-    lesson: "01-relational-vs-nosql",
+    lesson: "relational-vs-nosql",
   },
   {
     title: "How Discord stores trillions of messages",
@@ -100,7 +100,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Hot partitions, the limits they hit on Cassandra, and what moving the whole message store bought them.",
     themes: ["Databases & sharding", "Scaling"],
-    lesson: "01-relational-vs-nosql",
+    lesson: "relational-vs-nosql",
   },
   {
     title: "Announcing Snowflake",
@@ -109,7 +109,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Unique IDs without a central counter, the problem you inherit the moment auto-increment stops working across shards.",
     themes: ["Databases & sharding"],
-    lesson: "02-database-sharding-partitioning",
+    lesson: "database-sharding-partitioning",
   },
   {
     title: "H3, a hexagonal hierarchical spatial index",
@@ -118,7 +118,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Partitioning space instead of rows, so proximity queries stay cheap as the map fills up.",
     themes: ["Databases & sharding"],
-    lesson: "02-database-sharding-partitioning",
+    lesson: "database-sharding-partitioning",
   },
   {
     title: "DBLog, a generic change data capture framework",
@@ -135,7 +135,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "A layer 4 load balancer designed in the open, including how connections survive a backend coming and going.",
     themes: ["Load balancing"],
-    lesson: "04-load-balancing",
+    lesson: "load-balancing",
   },
   {
     title: "Fault tolerance in a high volume distributed system",
@@ -161,7 +161,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Idempotency keys, and why any API a client will retry needs them before it needs anything else.",
     themes: ["API design", "Consistency"],
-    lesson: "08-api-design",
+    lesson: "api-design",
   },
   {
     title: "Scaling your API with rate limiters",
@@ -170,7 +170,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Four different limiters, each protecting against a different way callers overwhelm you.",
     themes: ["API design", "Availability & resilience"],
-    lesson: "08-api-design",
+    lesson: "api-design",
   },
   {
     title: "Real-time messaging",
@@ -179,7 +179,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Holding millions of long-lived connections open, and what has to give when every client expects instant delivery.",
     themes: ["Real-time"],
-    lesson: "06-communication-patterns",
+    lesson: "communication-patterns",
   },
   {
     title: "Scaling with common sense",
@@ -188,7 +188,7 @@ export const caseStudies: CaseStudy[] = [
     takeaway:
       "Millions of trades a day on Postgres, Redis, and Go, as the counterweight to every design that assumes scale demands exotic infrastructure.",
     themes: ["Scaling"],
-    lesson: "01-horizontal-vs-vertical-scaling",
+    lesson: "horizontal-vs-vertical-scaling",
   },
 ];
 

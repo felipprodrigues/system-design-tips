@@ -1,0 +1,34 @@
+.connector {
+  position: relative;
+  height: 52px;
+}
+
+.stem {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 27px;
+  background: var(--sd-border-strong);
+}
+
+.bar,
+.drop {
+  position: absolute;
+  top: 26px;
+  background: var(--sd-border-strong);
+}
+
+.bar {
+  height: 1px;
+}
+
+.drop {
+  width: 1px;
+  height: 26px;
+}
+
+.grid {
+  display: grid;
+  align-items: start;
+}

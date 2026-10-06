@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   Term,
   MarkerList,
@@ -188,7 +189,7 @@ const chainNodes = [
 
 export default function Lesson07() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("07-request-lifecycle");
+  const nav = getLessonNav("request-lifecycle");
 
   return (
     <>
@@ -206,6 +207,7 @@ export default function Lesson07() {
         <h1 className="sd-h1">
           The Lifecycle of a Software Request
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Tracing an HTTP request from client click to rendered response — and every hand-off in between.
         </p>

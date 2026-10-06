@@ -1,0 +1,35 @@
+/* Floated rather than wrapped in a flex row: it sits immediately before the lede
+   paragraph, so the float lands on the lede's first line at the right edge without
+   any lesson body having to restructure its header. .sd-lede's 40px bottom margin
+   keeps a one-line pill clear of the first section. */
+.toggle {
+  float: right;
+  margin-left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--sd-border);
+  border-radius: 999px;
+  color: var(--sd-muted);
+  padding: 4px 12px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.toggle:hover {
+  background: var(--sd-surface2);
+  color: var(--sd-text);
+}
+
+.toggle[data-done] {
+  border-color: var(--sd-green);
+  color: var(--sd-green);
+}
+
+.mark {
+  font-size: 12px;
+  line-height: 1;
+}

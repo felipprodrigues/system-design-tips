@@ -1,22 +1,27 @@
-/* Matches ThemeToggle's button exactly — they sit side by side. */
+/* The navbar trigger: the official .bmc-btn look (#FFDD00, black
+   outline, white cup) with data-text="" — logo only — shrunk to the
+   30px height the other nav controls use. */
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
   height: 30px;
+  padding: 0 10px;
   flex-shrink: 0;
-  background: var(--sd-surface2);
+  background-color: #ffdd00;
   border: none;
   border-radius: 8px;
-  color: var(--sd-muted);
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .btn:hover {
-  color: var(--sd-text);
-  background: var(--sd-border-strong);
+  opacity: 0.85;
+}
+
+.btnLogo {
+  height: 20px;
+  width: auto;
 }
 
 .dialog {

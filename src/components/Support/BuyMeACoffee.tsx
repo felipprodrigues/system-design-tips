@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { Coffee } from "lucide-react";
 import styles from "./BuyMeACoffee.module.css";
 
 const BMC_URL = "https://buymeacoffee.com/devrodrigus";
@@ -19,7 +18,7 @@ export default function BuyMeACoffee() {
         onClick={() => ref.current?.showModal()}
         aria-label="Buy me a coffee"
       >
-        <Coffee size={15} />
+        <Image src="/bmc-logo.svg" alt="" width={32} height={46} className={styles.btnLogo} />
       </button>
 
       <dialog ref={ref} className={styles.dialog} onClick={(e) => {

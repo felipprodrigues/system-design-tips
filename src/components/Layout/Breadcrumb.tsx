@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import BuyMeACoffee from "../Support/BuyMeACoffee";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import TopNav from "../Nav/TopNav";
 import styles from "./Breadcrumb.module.css";
@@ -26,6 +27,7 @@ export default function Breadcrumb({ section, sectionHref = "/", lesson, action 
       </div>
       <div className={styles.action}>
         {action}
+        <BuyMeACoffee />
         <ThemeToggle />
       </div>
     </nav>

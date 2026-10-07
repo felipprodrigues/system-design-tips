@@ -64,25 +64,44 @@
   padding: 8px;
 }
 
-/* The official Buy Me a Coffee button, minus its CDN script: same
-   #FFDD00 / black Arial styling the widget renders. */
+/* The official Buy Me a Coffee button: the exact .bmc-btn rules
+   button.prod.min.js emits for this widget config (#FFDD00, Arial,
+   black text, white cup), rendered as markup instead of loaded as a
+   script — the widget builds itself with document.writeln(), which
+   only works during initial parse and would blank the page here. */
 .link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #ffdd00;
+  min-width: 210px;
+  height: 60px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 12px;
+  background-color: #ffdd00;
   color: #000;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 27px;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
   transition: opacity 0.15s ease;
 }
 
 .link:hover {
   opacity: 0.85;
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
+  transform: scale(0.9);
+}
+
+.linkText {
+  margin-left: 8px;
+  white-space: nowrap;
 }
 
 .close {

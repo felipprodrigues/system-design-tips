@@ -39,8 +39,8 @@ export default function BuyMeACoffee() {
             className={styles.qr}
           />
           <a className={styles.link} href={BMC_URL} target="_blank" rel="noopener noreferrer">
-            <Coffee size={18} strokeWidth={2.2} />
-            Buy me a coffee
+            <Image src="/bmc-logo.svg" alt="" width={32} height={46} className={styles.logo} />
+            <span className={styles.linkText}>Buy me a coffee</span>
           </a>
           <button className={styles.close} onClick={() => ref.current?.close()}>
             Close

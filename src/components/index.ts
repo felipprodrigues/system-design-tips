@@ -16,3 +16,4 @@ export { default as CaseStudyBrowser } from "./CaseStudies/CaseStudyBrowser";
 export { default as TopNav } from "./Nav/TopNav";
 export { default as TopBar } from "./Nav/TopBar";
 export { default as LearnedToggle } from "./Progress/LearnedToggle";
+export { default as BuyMeACoffee } from "./Support/BuyMeACoffee";

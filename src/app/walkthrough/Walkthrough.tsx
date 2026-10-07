@@ -174,13 +174,13 @@ const handoffs = [
 ];
 
 const courseLinks = [
-  ["Clarify Requirements", "Design Requirements & Estimating Resource Needs", "/lessons/05-requirements-and-estimation"],
-  ["Estimate Capacity", "Latency, Throughput & Availability", "/lessons/02-latency-throughput-availability"],
-  ["High-Level Design", "Architectural Styles: Monolith to Event-Driven", "/lessons/10-architectural-styles"],
-  ["Database Design", "Selecting Relational vs NoSQL Database Models", "/lessons/01-relational-vs-nosql"],
-  ["Interface Design", "API Design: REST, GraphQL, and gRPC", "/lessons/08-api-design"],
-  ["Scalability and Performance", "Caching Strategies & Cache Invalidation", "/lessons/09-caching-strategies"],
-  ["Reliability and Resiliency", "CAP Theorem & Trade-offs", "/lessons/03-cap-theorem"],
+  ["Clarify Requirements", "Design Requirements & Estimating Resource Needs", "/lessons/requirements-and-estimation"],
+  ["Estimate Capacity", "Latency, Throughput & Availability", "/lessons/latency-throughput-availability"],
+  ["High-Level Design", "Architectural Styles: Monolith to Event-Driven", "/lessons/architectural-styles"],
+  ["Database Design", "Selecting Relational vs NoSQL Database Models", "/lessons/relational-vs-nosql"],
+  ["Interface Design", "API Design: REST, GraphQL, and gRPC", "/lessons/api-design"],
+  ["Scalability and Performance", "Caching Strategies & Cache Invalidation", "/lessons/caching-strategies"],
+  ["Reliability and Resiliency", "CAP Theorem & Trade-offs", "/lessons/cap-theorem"],
 ];
 
 const commonMistakes = [
@@ -245,219 +245,228 @@ export default function Walkthrough() {
             </p>
           </div>
 
-          {/* Stepper */}
-          <div className="sd-figure" style={{ overflowX: "auto", marginBottom: 14 }}>
-            <svg
-              viewBox="0 0 980 210"
-              role="group"
-              aria-label="Seven-step walkthrough. Select a step to see what it produces and what it adds to the diagram."
-              style={{ width: "100%", minWidth: 720, display: "block" }}
-            >
-              <title>The seven-step walkthrough</title>
-              <defs>
-                <marker id="sd-step-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
-                </marker>
-                <marker id="sd-loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-muted)" />
-                </marker>
-              </defs>
+          {/* Stepper and diagram in one card: pressing an arrow changes a picture that is
+              already level with your cursor, instead of one somewhere off the top of the
+              screen. The arrows sit outside the scrolling area so they stay put on a
+              narrow viewport, where the diagram pans under them. */}
+          <div className="sd-figure" style={{ padding: 0, overflow: "hidden", marginBottom: 14 }}>
+            <div style={{ overflowX: "auto", padding: "28px 24px 24px" }}>
+              <svg
+                viewBox="0 0 980 210"
+                role="group"
+                aria-label="Seven-step walkthrough. Select a step to see what it produces and what it adds to the diagram."
+                style={{ width: "100%", minWidth: 720, display: "block" }}
+              >
+                <title>The seven-step walkthrough</title>
+                <defs>
+                  <marker id="sd-step-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
+                  </marker>
+                  <marker id="sd-loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-muted)" />
+                  </marker>
+                </defs>
 
-              {steps.map((s, i) => {
-                const x = 10 + i * 140;
-                const on = s.n === active;
-                const done = s.n < active;
-                return (
-                  <g key={s.n}>
-                    {i > 0 && (
-                      <path
-                        d={`M ${x - 20} 80 H ${x - 4}`}
-                        fill="none"
-                        stroke={done || on ? s.color : "var(--sd-border-strong)"}
-                        strokeWidth="1.5"
-                        markerEnd="url(#sd-step-arrow)"
-                      />
-                    )}
-                    <g
-                      role="button"
-                      tabIndex={0}
-                      aria-pressed={on}
-                      aria-label={`Step ${s.n}, ${s.label}`}
-                      onClick={() => setActive(s.n)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          setActive(s.n);
-                        }
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <rect
-                        x={x}
-                        y={30}
-                        width={120}
-                        height={100}
-                        rx={10}
-                        fill={on ? s.wash : "var(--sd-surface2)"}
-                        stroke={on || done ? s.color : "var(--sd-border)"}
-                        strokeWidth={on ? 2.5 : 1.5}
-                        opacity={on || done ? 1 : 0.55}
-                      />
-                      <text x={x + 60} y={57} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fontWeight="700" fill={s.color} opacity={on || done ? 1 : 0.6}>
-                        {`0${s.n}`}
-                      </text>
-                      {s.label.split(" ").map((word, w) => (
-                        <text
-                          key={word + w}
-                          x={x + 60}
-                          y={80 + w * 15}
-                          textAnchor="middle"
-                          fontFamily="var(--sd-font-mono)"
-                          fontSize="11.5"
-                          fill="var(--sd-text)"
+                {steps.map((s, i) => {
+                  const x = 10 + i * 140;
+                  const on = s.n === active;
+                  const done = s.n < active;
+                  return (
+                    <g key={s.n}>
+                      {i > 0 && (
+                        <path
+                          d={`M ${x - 20} 80 H ${x - 4}`}
+                          fill="none"
+                          stroke={done || on ? s.color : "var(--sd-border-strong)"}
+                          strokeWidth="1.5"
+                          markerEnd="url(#sd-step-arrow)"
+                        />
+                      )}
+                      <g
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={on}
+                        aria-label={`Step ${s.n}, ${s.label}`}
+                        onClick={() => setActive(s.n)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setActive(s.n);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <rect
+                          x={x}
+                          y={30}
+                          width={120}
+                          height={100}
+                          rx={10}
+                          fill={on ? s.wash : "var(--sd-surface2)"}
+                          stroke={on || done ? s.color : "var(--sd-border)"}
+                          strokeWidth={on ? 2.5 : 1.5}
                           opacity={on || done ? 1 : 0.55}
-                        >
-                          {word}
+                        />
+                        <text x={x + 60} y={57} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fontWeight="700" fill={s.color} opacity={on || done ? 1 : 0.6}>
+                          {`0${s.n}`}
                         </text>
-                      ))}
+                        {s.label.split(" ").map((word, w) => (
+                          <text
+                            key={word + w}
+                            x={x + 60}
+                            y={80 + w * 15}
+                            textAnchor="middle"
+                            fontFamily="var(--sd-font-mono)"
+                            fontSize="11.5"
+                            fill="var(--sd-text)"
+                            opacity={on || done ? 1 : 0.55}
+                          >
+                            {word}
+                          </text>
+                        ))}
+                      </g>
                     </g>
-                  </g>
-                );
-              })}
+                  );
+                })}
 
-              {/* Load-shaped findings send you back to the diagram */}
-              <path
-                d="M 910 140 V 180 H 300 V 140"
-                fill="none"
-                stroke="var(--sd-muted)"
-                strokeWidth="1.5"
-                strokeDasharray="5 4"
-                markerEnd="url(#sd-loop-arrow)"
-              />
-              <text x="605" y="199" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11.5" fill="var(--sd-muted)">
-                what the numbers reveal sends you back to the diagram
-              </text>
-            </svg>
-          </div>
-
-          {/* Above the diagram, not below the whole block: the point of pressing Next is
-              to watch the picture change, and from the bottom the picture was off-screen. */}
-          <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 12 }}>
-            <button
-              type="button"
-              onClick={() => setActive((n) => Math.max(1, n - 1))}
-              disabled={active === 1}
-              style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5, padding: "8px 14px", borderRadius: 8, border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", cursor: active === 1 ? "default" : "pointer", opacity: active === 1 ? 0.4 : 1 }}
-            >
-              ← Back
-            </button>
-            <button
-              type="button"
-              onClick={() => setActive((n) => Math.min(steps.length, n + 1))}
-              disabled={active === steps.length}
-              style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5, padding: "8px 14px", borderRadius: 8, border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", cursor: active === steps.length ? "default" : "pointer", opacity: active === steps.length ? 0.4 : 1 }}
-            >
-              Next step →
-            </button>
-            <span aria-live="polite" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: "var(--sd-muted)" }}>
-              {`Step ${active} of ${steps.length} · ${step.label}`}
-            </span>
-          </div>
-
-          {/* The diagram, assembling */}
-          <div className="sd-figure" style={{ overflowX: "auto", marginBottom: 14 }}>
-            <svg
-              viewBox="0 0 940 340"
-              role="img"
-              aria-label={`The design after step ${active}. ${step.draws}`}
-              style={{ width: "100%", minWidth: 640, display: "block" }}
-            >
-              <title>{`The design after step ${active}`}</title>
-              <defs>
-                <marker id="sd-hl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
-                </marker>
-              </defs>
-
-              {active < 3 && (
-                <text x="470" y="26" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fill="var(--sd-muted)">
-                  nothing drawn yet
-                </text>
-              )}
-
-              {edges.map((e) => {
-                const shown = e.from <= active;
-                return (
-                  <g key={e.id} opacity={shown ? 1 : 0.12}>
-                    <path
-                      d={e.d}
-                      fill="none"
-                      stroke="var(--sd-border-strong)"
-                      strokeWidth="1.5"
-                      strokeDasharray={shown ? undefined : "4 4"}
-                      markerEnd={shown ? "url(#sd-hl-arrow)" : undefined}
-                    />
-                    {e.label && shown && (
-                      <text x={e.lx} y={e.ly} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">
-                        {e.label}
-                      </text>
-                    )}
-                  </g>
-                );
-              })}
-
-              {/* Step 5 draws the contract, not a component */}
-              <g opacity={active >= 5 ? 1 : 0.12}>
-                <rect
-                  x={385}
-                  y={105}
-                  width={190}
-                  height={235}
-                  rx={12}
+                {/* Load-shaped findings send you back to the diagram */}
+                <path
+                  d="M 910 140 V 180 H 300 V 140"
                   fill="none"
-                  stroke="var(--sd-accent)"
+                  stroke="var(--sd-muted)"
                   strokeWidth="1.5"
-                  strokeDasharray="6 5"
+                  strokeDasharray="5 4"
+                  markerEnd="url(#sd-loop-arrow)"
                 />
-                <text x={480} y={124} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="10.5" letterSpacing="1" fill="var(--sd-accent)">
-                  PUBLIC INTERFACE
+                <text x="605" y="199" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11.5" fill="var(--sd-muted)">
+                  what the numbers reveal sends you back to the diagram
                 </text>
-              </g>
+              </svg>
+            </div>
 
-              {nodes.map((n) => {
-                const shown = n.from <= active;
-                const justAdded = n.from === active;
-                const lit = justAdded || n.spotlight === active;
-                const ring = n.id === "lb" && active === 7 ? "var(--sd-danger)" : lit ? "var(--sd-teal)" : "var(--sd-border-strong)";
-                return (
-                  <g key={n.id} opacity={shown ? 1 : 0.12}>
-                    <rect
-                      x={n.x}
-                      y={n.y}
-                      width={n.w}
-                      height={n.h}
-                      rx={10}
-                      fill="var(--sd-surface2)"
-                      stroke={ring}
-                      strokeWidth={lit || (n.id === "lb" && active === 7) ? 2.5 : 1.5}
-                      strokeDasharray={shown ? undefined : "4 4"}
-                    />
-                    <text x={n.x + n.w / 2} y={n.y + 27} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="10.5" letterSpacing="1" fill={lit ? "var(--sd-teal)" : "var(--sd-muted)"}>
-                      {n.kind.toUpperCase()}
+            {/* Divider and caption in one strip: it joins the halves and says where you are. */}
+            <div
+              aria-live="polite"
+              style={{ borderTop: "1px solid var(--sd-border)", borderBottom: "1px solid var(--sd-border)", background: "var(--sd-surface2)", padding: "9px 14px", textAlign: "center", fontFamily: "var(--sd-font-mono)", fontSize: 11.5, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)" }}
+            >
+              {`Step ${active} of ${steps.length} · ${step.label}`}
+            </div>
+
+            <div style={{ position: "relative" }}>
+              <div style={{ overflowX: "auto", padding: "24px 56px" }}>
+                <svg
+                  viewBox="0 0 940 340"
+                  role="img"
+                  aria-label={`The design after step ${active}. ${step.draws}`}
+                  style={{ width: "100%", minWidth: 640, display: "block" }}
+                >
+                  <title>{`The design after step ${active}`}</title>
+                  <defs>
+                    <marker id="sd-hl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
+                    </marker>
+                  </defs>
+
+                  {active < 3 && (
+                    <text x="470" y="26" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fill="var(--sd-muted)">
+                      nothing drawn yet
                     </text>
-                    <text x={n.x + n.w / 2} y={n.y + 49} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-text)">
-                      {n.name}
+                  )}
+
+                  {edges.map((e) => {
+                    const shown = e.from <= active;
+                    return (
+                      <g key={e.id} opacity={shown ? 1 : 0.12}>
+                        <path
+                          d={e.d}
+                          fill="none"
+                          stroke="var(--sd-border-strong)"
+                          strokeWidth="1.5"
+                          strokeDasharray={shown ? undefined : "4 4"}
+                          markerEnd={shown ? "url(#sd-hl-arrow)" : undefined}
+                        />
+                        {e.label && shown && (
+                          <text x={e.lx} y={e.ly} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11" fill="var(--sd-muted)">
+                            {e.label}
+                          </text>
+                        )}
+                      </g>
+                    );
+                  })}
+
+                  {/* Step 5 draws the contract, not a component */}
+                  <g opacity={active >= 5 ? 1 : 0.12}>
+                    <rect
+                      x={385}
+                      y={105}
+                      width={190}
+                      height={235}
+                      rx={12}
+                      fill="none"
+                      stroke="var(--sd-accent)"
+                      strokeWidth="1.5"
+                      strokeDasharray="6 5"
+                    />
+                    <text x={480} y={124} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="10.5" letterSpacing="1" fill="var(--sd-accent)">
+                      PUBLIC INTERFACE
                     </text>
                   </g>
-                );
-              })}
 
-              {active === 7 && (
-                <text x={270} y={300} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11.5" fill="var(--sd-danger)">
-                  still a single point of failure
-                </text>
-              )}
-            </svg>
+                  {nodes.map((n) => {
+                    const shown = n.from <= active;
+                    const justAdded = n.from === active;
+                    const lit = justAdded || n.spotlight === active;
+                    const ring = n.id === "lb" && active === 7 ? "var(--sd-danger)" : lit ? "var(--sd-teal)" : "var(--sd-border-strong)";
+                    return (
+                      <g key={n.id} opacity={shown ? 1 : 0.12}>
+                        <rect
+                          x={n.x}
+                          y={n.y}
+                          width={n.w}
+                          height={n.h}
+                          rx={10}
+                          fill="var(--sd-surface2)"
+                          stroke={ring}
+                          strokeWidth={lit || (n.id === "lb" && active === 7) ? 2.5 : 1.5}
+                          strokeDasharray={shown ? undefined : "4 4"}
+                        />
+                        <text x={n.x + n.w / 2} y={n.y + 27} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="10.5" letterSpacing="1" fill={lit ? "var(--sd-teal)" : "var(--sd-muted)"}>
+                          {n.kind.toUpperCase()}
+                        </text>
+                        <text x={n.x + n.w / 2} y={n.y + 49} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-text)">
+                          {n.name}
+                        </text>
+                      </g>
+                    );
+                  })}
+
+                  {active === 7 && (
+                    <text x={270} y={300} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11.5" fill="var(--sd-danger)">
+                      still a single point of failure
+                    </text>
+                  )}
+                </svg>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActive((n) => Math.max(1, n - 1))}
+                disabled={active === 1}
+                aria-label="Previous step"
+                style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", fontFamily: "var(--sd-font-mono)", fontSize: 15, left: 12, cursor: active === 1 ? "default" : "pointer", opacity: active === 1 ? 0.3 : 1 }}
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => setActive((n) => Math.min(steps.length, n + 1))}
+                disabled={active === steps.length}
+                aria-label="Next step"
+                style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", fontFamily: "var(--sd-font-mono)", fontSize: 15, right: 12, cursor: active === steps.length ? "default" : "pointer", opacity: active === steps.length ? 0.3 : 1 }}
+              >
+                →
+              </button>
+            </div>
           </div>
 
           <div style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderLeft: `3px solid ${step.color}`, borderRadius: 8, padding: "13px 16px" }}>

@@ -1,5 +1,5 @@
 import { groups } from "@/lib/lessons";
-import { GroupCard, TopicTracks, Hero } from "@/components";
+import { GroupCard, MethodCard, TopicTracks, Hero } from "@/components";
 
 export default function Home() {
   const [onRamp, ...topics] = groups;
@@ -11,6 +11,7 @@ export default function Home() {
         that serves millions.
       </Hero>
 
+      <MethodCard />
       <GroupCard group={onRamp} />
       <TopicTracks groups={topics} />
     </>

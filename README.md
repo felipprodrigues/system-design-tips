@@ -7,6 +7,9 @@ and the trade-offs behind every distributed system.
 
 Lessons marked *(coming soon)* are written and in review, not yet published.
 
+**New to this?** [A 7-Step Walkthrough for Any System Design](https://systemdesignbits.vercel.app/walkthrough) is the order to work in when you are
+handed a blank page — not a lesson, but the method the lessons feed into.
+
 Every lesson is one self-contained page: the big idea, why the problem exists, an analogy, the
 mechanism itself, worked examples and diagrams, what real systems do, common mistakes, and a
 quiz to check what stuck. No prior background assumed, read them in any order.
@@ -20,7 +23,6 @@ order to think in when handed a blank page.
 
 - [The Lifecycle of a Software Request](https://systemdesignbits.vercel.app/lessons/request-lifecycle) — How an HTTP request works end to end: DNS lookup, TCP and TLS handshake, load balancer, server, database, and where the round trip time goes.
 - [Architectural Styles: Monolith to Event-Driven](https://systemdesignbits.vercel.app/lessons/architectural-styles) — Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs.
-- A 7-Step Walkthrough for Any System Design *(coming soon)* — A 7-step system design framework: requirements, estimation, API design, data model, high level design, deep dives, and finding bottlenecks.
 
 ## Scaling and Trade-offs
 

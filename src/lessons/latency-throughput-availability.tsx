@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
@@ -72,7 +73,7 @@ const quizCards: QuizCard[] = [
 
 export default function Lesson02() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("02-latency-throughput-availability");
+  const nav = getLessonNav("latency-throughput-availability");
 
   return (
     <>
@@ -89,6 +90,7 @@ export default function Lesson02() {
         <h1 className="sd-h1">
           Latency, Throughput &amp; Availability
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           The three pillars of system observability — if you can't measure these, you can't operate.
         </p>

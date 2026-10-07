@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   MarkerList,
 } from "@/components";
@@ -134,7 +135,7 @@ const exercises = [
 
 export default function Lesson01Module02() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("01-relational-vs-nosql");
+  const nav = getLessonNav("relational-vs-nosql");
   const [activePanelSection, setActivePanelSection] = useState<string | null>(null);
 
   function openPanelSection(id: string) {
@@ -158,6 +159,7 @@ export default function Lesson01Module02() {
         <h1 className="sd-h1">
           Selecting Relational vs NoSQL Database Models
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Two philosophies for storing data — integrity-first structure versus flexible, horizontally scalable performance.
         </p>

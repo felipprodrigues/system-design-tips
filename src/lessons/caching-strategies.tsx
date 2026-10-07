@@ -4,6 +4,7 @@ import {
   Breadcrumb,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   MarkerList,
 } from "@/components";
@@ -167,7 +168,7 @@ const seqArrow = (
 );
 
 export default function Lesson09() {
-  const nav = getLessonNav("09-caching-strategies");
+  const nav = getLessonNav("caching-strategies");
 
   return (
     <>
@@ -179,6 +180,7 @@ export default function Lesson09() {
           Lesson {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">Caching Strategies &amp; Cache Invalidation</h1>
+        <LearnedToggle />
         <p className="sd-lede">
           A second copy of the truth, and every way of keeping it honest.
         </p>

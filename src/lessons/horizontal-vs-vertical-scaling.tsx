@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   MarkerList,
 } from "@/components";
@@ -136,7 +137,7 @@ function PItem({
 
 export default function Lesson01() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("01-horizontal-vs-vertical-scaling");
+  const nav = getLessonNav("horizontal-vs-vertical-scaling");
 
   return (
     <>
@@ -153,6 +154,7 @@ export default function Lesson01() {
         <h1 className="sd-h1">
           Scalability: Vertical vs Horizontal Scaling
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Understanding how systems grow — and the trade-offs each approach demands.
         </p>

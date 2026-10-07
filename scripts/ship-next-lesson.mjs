@@ -18,7 +18,12 @@ function shf(cmd, args, opts = {}) {
   return execFileSync(cmd, args, { cwd: root, stdio: "pipe", encoding: "utf8", ...opts }).trim();
 }
 
-const next = lessons.find((l) => !existsSync(join(root, "src/app/lessons", l.slug, "page.tsx")));
+/* scripts/lessons.json keys every lesson by its authoring number, which the
+   published URL no longer carries. Drafts and branches keep the numbered name so
+   the queue still reads in order; everything public uses the stripped slug. */
+const published = (l) => l.slug.replace(/^\d{2}-/, "");
+
+const next = lessons.find((l) => !existsSync(join(root, "src/lessons", `${published(l)}.tsx`)));
 
 if (!next) {
   console.log("All lessons already shipped — nothing to do.");
@@ -37,13 +42,13 @@ sh(`git checkout -b ${branch}`);
 /* One body per lesson under src/lessons; the /lessons/[slug] route renders and titles it. */
 const bodiesDir = join(root, "src/lessons");
 mkdirSync(bodiesDir, { recursive: true });
-renameSync(draftPath, join(bodiesDir, `${next.slug}.tsx`));
+renameSync(draftPath, join(bodiesDir, `${published(next)}.tsx`));
 
 const lessonsDataPath = join(root, "src/lib/lessons.ts");
 const lessonsData = readFileSync(lessonsDataPath, "utf8");
 const esc = (value) => value.replace(/"/g, '\\"');
 /* The description becomes the lesson page's meta description, so it ships with the entry. */
-const entry = `      { slug: "${next.slug}", number: ${next.number}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
+const entry = `      { slug: "${published(next)}", number: ${next.number}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
 const marker = "      // LESSON_ENTRIES_END";
 if (!lessonsData.includes(marker)) {
   console.error("LESSON_ENTRIES_END marker not found in src/lib/lessons.ts");
@@ -55,7 +60,7 @@ writeFileSync(lessonsDataPath, lessonsData.replace(marker, entry + marker));
 const readmePath = join(root, "README.md");
 const readme = readFileSync(readmePath, "utf8");
 const readmeMarker = "<!-- LESSON_LINKS_END -->";
-const link = `- [${next.title}](https://systemdesignbits.vercel.app/lessons/${next.slug}) \u2014 ${next.subtitle}\n`;
+const link = `- [${next.title}](https://systemdesignbits.vercel.app/lessons/${published(next)}) \u2014 ${next.subtitle}\n`;
 if (!readme.includes(readmeMarker)) {
   console.error("LESSON_LINKS_END marker not found in README.md");
   process.exit(1);

@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   MarkerList,
 } from "@/components";
@@ -168,7 +169,7 @@ const commonMistakes = [
 
 export default function Lesson03() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("03-cap-theorem");
+  const nav = getLessonNav("cap-theorem");
 
   return (
     <>
@@ -186,6 +187,7 @@ export default function Lesson03() {
         <h1 className="sd-h1">
           CAP Theorem &amp; Trade-offs
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           When the network fails, you must choose — and there is no middle ground.
         </p>

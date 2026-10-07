@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
@@ -110,7 +111,7 @@ const storagePipeline = [
 
 export default function Lesson05() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("05-requirements-and-estimation");
+  const nav = getLessonNav("requirements-and-estimation");
 
   return (
     <>
@@ -128,6 +129,7 @@ export default function Lesson05() {
         <h1 className="sd-h1">
           Design Requirements &amp; Estimating Resource Needs
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Turning vague product goals into concrete, quantifiable engineering constraints.
         </p>

@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
@@ -149,7 +150,7 @@ const comparisonRows = [
 
 export default function Lesson06() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("06-communication-patterns");
+  const nav = getLessonNav("communication-patterns");
 
   return (
     <>
@@ -167,6 +168,7 @@ export default function Lesson06() {
         <h1 className="sd-h1">
           Choosing a Communication Pattern
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           How a system finds out about changes it didn't initiate.
         </p>

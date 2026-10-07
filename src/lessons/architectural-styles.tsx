@@ -4,6 +4,7 @@ import {
   Breadcrumb,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
   MarkerList,
 } from "@/components";
@@ -204,7 +205,7 @@ function CompareTable({ spec }: { spec: { left: string; right: string; rows: str
 }
 
 export default function Lesson10() {
-  const nav = getLessonNav("10-architectural-styles");
+  const nav = getLessonNav("architectural-styles");
 
   return (
     <>
@@ -216,6 +217,7 @@ export default function Lesson10() {
           Lesson {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">Architectural Styles: Monolith to Event-Driven</h1>
+        <LearnedToggle />
         <p className="sd-lede">
           The progression companies actually get forced through, and what each step costs.
         </p>

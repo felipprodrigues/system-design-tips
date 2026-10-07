@@ -8,6 +8,7 @@ import {
   PanelSection,
   QuizCarousel,
   PageNav,
+  LearnedToggle,
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
@@ -115,7 +116,7 @@ const tradeoffs = [
 
 export default function Lesson02DatabaseSharding() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("02-database-sharding-partitioning");
+  const nav = getLessonNav("database-sharding-partitioning");
 
   return (
     <>
@@ -133,6 +134,7 @@ export default function Lesson02DatabaseSharding() {
         <h1 className="sd-h1">
           Implementing Database Sharding and Partitioning
         </h1>
+        <LearnedToggle />
         <p className="sd-lede">
           Decomposing a single, massive dataset into smaller chunks spread across nodes — trading query simplicity for horizontal scale.
         </p>

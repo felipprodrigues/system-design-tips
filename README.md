@@ -1,7 +1,7 @@
 # System Design Roadmap
 
-A free, structured course on system design fundamentals: scaling, databases, caching, APIs,
-and the trade-offs behind every distributed system.
+A free, self-study roadmap through system design fundamentals: scaling, databases, caching,
+APIs, and the trade-offs behind every distributed system.
 
 **Read it at [systemdesignbits.vercel.app](https://systemdesignbits.vercel.app)**
 

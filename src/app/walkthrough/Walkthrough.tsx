@@ -173,7 +173,7 @@ const handoffs = [
   ["7 → 3", "What has to survive a failure", "The diagram gets revised, honestly"],
 ];
 
-const courseLinks = [
+const stepLessons = [
   ["Clarify Requirements", "Design Requirements & Estimating Resource Needs", "/lessons/requirements-and-estimation"],
   ["Estimate Capacity", "Latency, Throughput & Availability", "/lessons/latency-throughput-availability"],
   ["High-Level Design", "Architectural Styles: Monolith to Event-Driven", "/lessons/architectural-styles"],
@@ -542,17 +542,17 @@ export default function Walkthrough() {
           </div>
         </div>
 
-        {/* Where each step lives in the course */}
+        {/* Where each step lives in the roadmap */}
         <div className="sd-section">
           <p className="sd-eyebrow">Going Deeper</p>
-          <h2 className="sd-h2">Where Each Step Lives In This Course</h2>
+          <h2 className="sd-h2">Where Each Step Lives In The Roadmap</h2>
 
           <div className="sd-prose">
             <p>This lesson is the map, not the territory. Each step has a lesson that does the actual work.</p>
           </div>
 
           <div className="sd-stack">
-            {courseLinks.map(([stepName, title, href]) => (
+            {stepLessons.map(([stepName, title, href]) => (
               <a
                 key={href}
                 href={href}
@@ -569,7 +569,7 @@ export default function Walkthrough() {
             <a href="https://github.com/ByteByteGoHq/system-design-101" target="_blank" rel="noreferrer" style={{ color: "var(--sd-accent)" }}>
               system-design-101 repository
             </a>{" "}
-            is the wider reference behind it, and worth reading alongside this course.
+            is the wider reference behind it, and worth reading alongside these lessons.
           </div>
         </div>
 

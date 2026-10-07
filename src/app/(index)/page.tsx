@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <>
-      <Hero eyebrow="Course" title="System Design Roadmap">
+      <Hero eyebrow="Self-study" title="System Design Roadmap">
         Concepts in the order you actually need them, from a single request to a system
         that serves millions.
       </Hero>

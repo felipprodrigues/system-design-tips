@@ -1,0 +1,124 @@
+/* The navbar trigger: the official .bmc-btn look (#FFDD00, black
+   outline, white cup) with data-text="" — logo only — shrunk to the
+   30px height the other nav controls use. */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  background-color: #ffdd00;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btnLogo {
+  height: 20px;
+  width: auto;
+}
+
+.dialog {
+  margin: auto; /* centers in the viewport for a top-layer dialog */
+  padding: 0;
+  border: 1px solid var(--sd-border-strong);
+  border-radius: 14px;
+  background: var(--sd-surface);
+  color: var(--sd-text);
+  font-family: var(--sd-font);
+  max-width: calc(100vw - 32px);
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--sd-font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.sub {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--sd-muted);
+}
+
+.qr {
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px;
+}
+
+/* The official Buy Me a Coffee button: the exact .bmc-btn rules
+   button.prod.min.js emits for this widget config (#FFDD00, Arial,
+   black text, white cup), rendered as markup instead of loaded as a
+   script — the widget builds itself with document.writeln(), which
+   only works during initial parse and would blank the page here. */
+.link {
+  min-width: 210px;
+  height: 60px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 12px;
+  background-color: #ffdd00;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 27px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  transition: opacity 0.15s ease;
+}
+
+.link:hover {
+  opacity: 0.85;
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
+  transform: scale(0.9);
+}
+
+.linkText {
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.close {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--sd-muted);
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--sd-text);
+}

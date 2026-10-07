@@ -1,3 +1,4 @@
+import BuyMeACoffee from "../Support/BuyMeACoffee";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import TopNav from "./TopNav";
 import styles from "./TopBar.module.css";
@@ -11,6 +12,7 @@ export default function TopBar() {
         <TopNav />
       </div>
       <div className={styles.controls}>
+        <BuyMeACoffee />
         <ThemeToggle />
       </div>
     </div>

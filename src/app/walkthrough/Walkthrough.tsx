@@ -340,6 +340,30 @@ export default function Walkthrough() {
             </svg>
           </div>
 
+          {/* Above the diagram, not below the whole block: the point of pressing Next is
+              to watch the picture change, and from the bottom the picture was off-screen. */}
+          <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 12 }}>
+            <button
+              type="button"
+              onClick={() => setActive((n) => Math.max(1, n - 1))}
+              disabled={active === 1}
+              style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5, padding: "8px 14px", borderRadius: 8, border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", cursor: active === 1 ? "default" : "pointer", opacity: active === 1 ? 0.4 : 1 }}
+            >
+              ← Back
+            </button>
+            <button
+              type="button"
+              onClick={() => setActive((n) => Math.min(steps.length, n + 1))}
+              disabled={active === steps.length}
+              style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5, padding: "8px 14px", borderRadius: 8, border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", cursor: active === steps.length ? "default" : "pointer", opacity: active === steps.length ? 0.4 : 1 }}
+            >
+              Next step →
+            </button>
+            <span aria-live="polite" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: "var(--sd-muted)" }}>
+              {`Step ${active} of ${steps.length} · ${step.label}`}
+            </span>
+          </div>
+
           {/* The diagram, assembling */}
           <div className="sd-figure" style={{ overflowX: "auto", marginBottom: 14 }}>
             <svg
@@ -460,28 +484,6 @@ export default function Walkthrough() {
                 <p className="sd-text-sm-tight">{hl(pt.body)}</p>
               </div>
             ))}
-          </div>
-
-          <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 14 }}>
-            <button
-              type="button"
-              onClick={() => setActive((n) => Math.max(1, n - 1))}
-              disabled={active === 1}
-              style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5, padding: "8px 14px", borderRadius: 8, border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", cursor: active === 1 ? "default" : "pointer", opacity: active === 1 ? 0.4 : 1 }}
-            >
-              ← Back
-            </button>
-            <button
-              type="button"
-              onClick={() => setActive((n) => Math.min(steps.length, n + 1))}
-              disabled={active === steps.length}
-              style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5, padding: "8px 14px", borderRadius: 8, border: "1px solid var(--sd-border)", background: "var(--sd-surface2)", color: "var(--sd-text)", cursor: active === steps.length ? "default" : "pointer", opacity: active === steps.length ? 0.4 : 1 }}
-            >
-              Next step →
-            </button>
-            <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: "var(--sd-muted)" }}>
-              {`${active} / ${steps.length}`}
-            </span>
           </div>
 
           <div className="sd-callout sd-callout-accent" style={{ marginTop: 18 }}>

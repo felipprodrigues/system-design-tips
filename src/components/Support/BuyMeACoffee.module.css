@@ -64,15 +64,25 @@
   padding: 8px;
 }
 
+/* The official Buy Me a Coffee button, minus its CDN script: same
+   #FFDD00 / black Arial styling the widget renders. */
 .link {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--sd-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #ffdd00;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
+  transition: opacity 0.15s ease;
 }
 
 .link:hover {
-  text-decoration: underline;
+  opacity: 0.85;
 }
 
 .close {

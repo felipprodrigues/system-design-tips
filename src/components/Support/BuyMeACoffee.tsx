@@ -27,7 +27,7 @@ export default function BuyMeACoffee() {
         if (e.target === ref.current) ref.current?.close();
       }}>
         <div className={styles.inner}>
-          <h2 className={styles.title}>Buy me a coffee</h2>
+          <h2 className={styles.title}>Support the project</h2>
           <p className={styles.sub}>
             System Design Bits is free and always will be. If it helped, a coffee helps back.
           </p>
@@ -39,7 +39,8 @@ export default function BuyMeACoffee() {
             className={styles.qr}
           />
           <a className={styles.link} href={BMC_URL} target="_blank" rel="noopener noreferrer">
-            buymeacoffee.com/devrodrigus
+            <Coffee size={18} strokeWidth={2.2} />
+            Buy me a coffee
           </a>
           <button className={styles.close} onClick={() => ref.current?.close()}>
             Close

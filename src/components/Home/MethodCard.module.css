@@ -1,13 +1,12 @@
-/* Borrows the surface, border and radius of GroupCard so it reads as the same family,
-   and earns its distinction from the accent border rather than a different shape. */
+/* Borrows the border and radius of GroupCard so it reads as the same family, and earns
+   its distinction from an accent-tinted fill rather than a different shape. */
 .card {
   position: relative;
   display: block;
   margin-bottom: 20px;
   padding: 20px;
-  background: var(--sd-surface);
+  background: var(--sd-accent-wash);
   border: 1px solid var(--sd-border);
-  border-left: 2px solid var(--sd-accent);
   border-radius: 12px;
   text-decoration: none;
   color: var(--sd-text);

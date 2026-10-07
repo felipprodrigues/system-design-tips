@@ -469,13 +469,14 @@ export default function Walkthrough() {
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderLeft: `3px solid ${step.color}`, borderRadius: 8, padding: "13px 16px" }}>
+          {/* The step's colour is the whole background rather than a stripe down one edge. */}
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start", background: step.wash, border: "1px solid var(--sd-border)", borderRadius: 8, padding: "13px 16px" }}>
             <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: step.color, flexShrink: 0, lineHeight: 1.65 }}>{`0${step.n}`}</span>
             <p className="sd-text-sm-tight">{step.draws}</p>
           </div>
 
           {/* Active step detail */}
-          <div style={{ background: step.wash, border: "1px solid var(--sd-border)", borderRadius: 10, padding: "10px 14px", margin: "16px 0 10px" }}>
+          <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "10px 14px", margin: "16px 0 10px" }}>
             <p className="sd-text-sm-tight" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5 }}>
               {step.asks}
             </p>

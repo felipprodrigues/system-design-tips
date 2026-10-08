@@ -657,7 +657,7 @@ export default function Lesson01Module02() {
         <PanelSection title={'What does "eventual consistency" actually cost you in practice?'}>
           <p className="sd-text-sm">
             It&rsquo;s not free flexibility — it&rsquo;s a real, user-visible trade-off, and it&rsquo;s the same tension formalized by the{" "}
-            <strong className="sd-strong">CAP theorem</strong> from earlier in this course.
+            <strong className="sd-strong">CAP theorem</strong> from earlier in the roadmap.
           </p>
           {[
             {

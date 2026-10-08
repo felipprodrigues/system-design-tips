@@ -1,0 +1,66 @@
+/* Borrows the border and radius of GroupCard so it reads as the same family, and earns
+   its distinction from an accent-tinted fill rather than a different shape. */
+.card {
+  position: relative;
+  display: block;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: var(--sd-accent-wash);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--sd-text);
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--sd-accent);
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-accent);
+}
+
+.title {
+  font-family: var(--sd-font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+.card:hover .title {
+  color: var(--sd-accent);
+}
+
+.blurb {
+  margin-top: 6px;
+  /* Leaves room for the arrow, which is absolutely positioned out of the flow. */
+  padding-right: 28px;
+  font-size: 14px;
+  color: var(--sd-muted);
+}
+
+/* Parked bottom-right rather than inline so it never reflows the blurb's last line. */
+.arrow {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  color: var(--sd-accent);
+  font-family: var(--sd-font-mono);
+  font-size: 13px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover .arrow {
+  opacity: 1;
+  transform: translateX(0);
+}

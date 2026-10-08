@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_NAME}`,
   },
   description:
-    "A structured, free course on system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
+    "A free, self-study roadmap through system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME}: learn system design one lesson at a time`,
     description:
-      "A structured, free course on system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
+      "A free, self-study roadmap through system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
   },
   twitter: { card: "summary_large_image" },
 };

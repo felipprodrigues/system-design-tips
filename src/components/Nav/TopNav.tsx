@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./TopNav.module.css";
 
-/* The two top-level sections. Lessons is the course index at the root; anything
+/* The two top-level sections. Lessons is the roadmap index at the root; anything
    under /lessons belongs to it too, so a lesson page keeps the tab lit. */
 const TABS = [
   { href: "/", label: "Lessons", owns: (path: string) => path === "/" || path.startsWith("/lessons") },

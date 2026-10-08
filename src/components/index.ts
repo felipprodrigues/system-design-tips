@@ -11,6 +11,7 @@ export { default as Term } from "./Term/Term";
 export { default as MarkerList } from "./MarkerList/MarkerList";
 export { default as Hero } from "./Layout/Hero";
 export { default as GroupCard } from "./Home/GroupCard";
+export { default as MethodCard } from "./Home/MethodCard";
 export { default as TopicTracks } from "./Home/TopicTracks";
 export { default as CaseStudyBrowser } from "./CaseStudies/CaseStudyBrowser";
 export { default as TopNav } from "./Nav/TopNav";

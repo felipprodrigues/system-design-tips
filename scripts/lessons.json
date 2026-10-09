@@ -45,6 +45,13 @@
       "title": "Choosing a Communication Pattern",
       "subtitle": "How a system finds out about changes it didn't initiate.",
       "insight": "Polling asks \"anything new?\" on a timer. Webhooks flip the model — the system tells you the moment something changes."
+    },
+    {
+      "number": 7,
+      "slug": "07-message-queues",
+      "title": "Message Queues & Asynchronous Processing",
+      "subtitle": "Message queues explained: producers and consumers, at-least-once delivery, idempotency, backpressure, dead letter queues, and why backlogs cost more to drain than to create.",
+      "insight": "A queue doesn't remove work, it moves when the work happens. The bill arrives as duplicates, ordering limits, and a backlog that takes hours to drain."
     }
   ]
 }

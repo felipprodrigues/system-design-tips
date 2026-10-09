@@ -34,6 +34,7 @@ What breaks as traffic grows, and what each fix costs you.
 - [CAP Theorem & Trade-offs](https://systemdesignbits.vercel.app/lessons/cap-theorem) — CAP theorem explained: consistency vs availability during a network partition, CP vs AP systems, eventual consistency, quorums, and PACELC.
 - [Core Concepts of Load Balancing](https://systemdesignbits.vercel.app/lessons/load-balancing) — Load balancing explained: layer 4 vs layer 7, round robin and least connections, health checks and failover, and sticky sessions.
 - [Design Requirements & Estimating Resource Needs](https://systemdesignbits.vercel.app/lessons/requirements-and-estimation) — Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing.
+- [Message Queues & Asynchronous Processing](https://systemdesignbits.vercel.app/lessons/message-queues) — Message queues explained: producers and consumers, at-least-once delivery, idempotency, backpressure, dead letter queues, and why backlogs cost more to drain than to create.
 <!-- LESSON_LINKS_END -->
 - Caching Strategies & Cache Invalidation *(coming soon)* — Caching strategies explained: cache-aside, write-through and write-back, TTL vs explicit invalidation, cache stampede, and cache penetration.
 

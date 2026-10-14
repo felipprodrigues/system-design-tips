@@ -40,6 +40,7 @@ export const groups: LessonGroup[] = [
     lessons: [
       { slug: "communication-patterns", number: 1, title: "Choosing a Communication Pattern", description: "Polling vs webhooks vs WebSockets: long polling and server-sent events compared, and the update rate and latency each pattern really fits." },
       { slug: "api-design", number: 2, title: "API Design: REST, GraphQL, and gRPC", description: "REST vs GraphQL vs gRPC compared: fixed response shapes, over-fetching and under-fetching, the N+1 problem, protobuf, and when to use each." },
+      { slug: "rate-limiting", number: 3, title: "Rate Limiting", description: "Rate limiting explained: token bucket, leaky bucket, fixed and sliding windows, 429 responses with Retry-After, per-IP vs per-key limits, and distributed enforcement with Redis." },
     ],
   },
   {

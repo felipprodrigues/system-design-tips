@@ -43,6 +43,7 @@ How parts of a system talk to each other, and how you expose one to the outside.
 
 - [Choosing a Communication Pattern](https://systemdesignbits.vercel.app/lessons/communication-patterns) — Polling vs webhooks vs WebSockets: long polling and server-sent events compared, and the update rate and latency each pattern really fits.
 - [API Design: REST, GraphQL, and gRPC](https://systemdesignbits.vercel.app/lessons/api-design) — REST vs GraphQL vs gRPC compared: fixed response shapes, over-fetching and under-fetching, the N+1 problem, protobuf, and when to use each.
+- [Rate Limiting](https://systemdesignbits.vercel.app/lessons/rate-limiting) — Rate limiting explained: token bucket, leaky bucket, fixed and sliding windows, 429 responses with Retry-After, per-IP vs per-key limits, and distributed enforcement with Redis.
 
 ## Data Storage and Management Strategies
 

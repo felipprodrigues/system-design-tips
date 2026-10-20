@@ -32,6 +32,7 @@ export const groups: LessonGroup[] = [
       { slug: "load-balancing", number: 4, title: "Core Concepts of Load Balancing", description: "Load balancing explained: layer 4 vs layer 7, round robin and least connections, health checks and failover, and sticky sessions." },
       { slug: "requirements-and-estimation", number: 5, title: "Design Requirements & Estimating Resource Needs", description: "Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing." },
       { slug: "caching-strategies", number: 6, title: "Caching Strategies & Cache Invalidation", description: "Caching strategies explained: cache-aside, write-through and write-back, TTL vs explicit invalidation, cache stampede, and cache penetration." },
+      { slug: "content-delivery-networks", number: 7, title: "Content Delivery Networks (CDNs)", description: "CDNs explained: edge servers and points of presence, origin pull vs origin push, cache hit ratio, content-hashed filenames, edge compute, and why personalized responses barely benefit." },
       // LESSON_ENTRIES_END
     ],
   },

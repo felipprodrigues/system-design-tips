@@ -36,6 +36,7 @@ What breaks as traffic grows, and what each fix costs you.
 - [Design Requirements & Estimating Resource Needs](https://systemdesignbits.vercel.app/lessons/requirements-and-estimation) — Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing.
 <!-- LESSON_LINKS_END -->
 - Caching Strategies & Cache Invalidation *(coming soon)* — Caching strategies explained: cache-aside, write-through and write-back, TTL vs explicit invalidation, cache stampede, and cache penetration.
+- [Content Delivery Networks (CDNs)](https://systemdesignbits.vercel.app/lessons/content-delivery-networks) — CDNs explained: edge servers and points of presence, origin pull vs origin push, cache hit ratio, content-hashed filenames, edge compute, and why personalized responses barely benefit.
 
 ## Communication and APIs
 

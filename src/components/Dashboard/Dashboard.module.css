@@ -74,6 +74,16 @@
   margin-bottom: 2px;
 }
 
+.check {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  color: var(--sd-done);
+  /* Used both inside the flex meta row and inline in a sentence; the nudge is
+     for the inline case and is ignored by the flex one. */
+  vertical-align: -2px;
+}
+
 .cardMetaTitle {
   min-width: 0;
   font-size: 12px;

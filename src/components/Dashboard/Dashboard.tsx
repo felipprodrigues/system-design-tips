@@ -9,6 +9,16 @@ import styles from "./Dashboard.module.css";
 /* Client-side because every number here comes from localStorage. Before hydration
    the roadmap reads as untouched, which is also exactly what a first-time visitor
    sees, so the prerendered HTML is correct rather than a placeholder. */
+/* A tick rather than a "Completed" pill: this line is a footnote under the next
+   concept, and a badge there pulled the eye away from the thing to read next. */
+function Check() {
+  return (
+    <svg viewBox="0 0 16 16" className={styles.check} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="Completed" role="img">
+      <path d="m3 8.5 3.2 3.2L13 5" />
+    </svg>
+  );
+}
+
 export default function Dashboard() {
   const roadmap = useRoadmap();
   const started = roadmap.done > 0 || roadmap.lastVisited !== undefined;
@@ -62,7 +72,7 @@ export default function Dashboard() {
                    card's headline. */
                 <>
                   <p className={styles.cardMeta}>
-                    <span className={styles.badge} data-status="done">Completed</span>
+                    <Check />
                     <span className={styles.cardMetaTitle}>{roadmap.lastVisited.lesson.title}</span>
                   </p>
                   <p className={styles.cardHint}>Next</p>
@@ -75,14 +85,9 @@ export default function Dashboard() {
                 <>
                   <p className={styles.cardValue}>{roadmap.lastVisited.lesson.title}</p>
                   {roadmap.lastVisited.status === "done" ? (
-                    <>
-                      <p>
-                        <span className={styles.badge} data-status="done">Completed</span>
-                      </p>
-                      <p className={styles.cardHint}>
-                        That was the last one. More ship regularly.
-                      </p>
-                    </>
+                    <p className={styles.cardHint}>
+                      <Check /> Completed, and it was the last one. More ship regularly.
+                    </p>
                   ) : (
                     <>
                       <p className={styles.cardHint}>{roadmap.lastVisited.lesson.minutes} min read</p>

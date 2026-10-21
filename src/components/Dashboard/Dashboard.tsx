@@ -131,7 +131,7 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.banners}>
-        <Link href="/walkthrough" className={styles.banner}>
+        <Link href="/walkthrough" className={styles.banner} data-tone="method">
           <span className={styles.bannerIcon} aria-hidden="true">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
               <circle cx="10" cy="10" r="7.5" />
@@ -148,7 +148,7 @@ export default function Dashboard() {
           <span className={styles.bannerArrow} aria-hidden="true">→</span>
         </Link>
 
-        <Link href="/case-studies" className={styles.banner}>
+        <Link href="/case-studies" className={styles.banner} data-tone="cases">
           <span className={styles.bannerIcon} aria-hidden="true">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
               <rect x="3" y="4.5" width="14" height="4" rx="1" />
@@ -158,7 +158,7 @@ export default function Dashboard() {
           </span>
           <span>
             <span className={styles.bannerEyebrow}>Case studies</span>
-            <span className={styles.bannerTitle}>How it actually went</span>
+            <span className={styles.bannerTitle}>System blueprints</span>
             <span className={styles.bannerSub}>
               The same trade-offs, met by real teams at real scale.
             </span>

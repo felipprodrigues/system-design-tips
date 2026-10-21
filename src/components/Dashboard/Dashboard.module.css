@@ -316,58 +316,73 @@
   margin-top: 26px;
 }
 
+/* Each banner sets --tone, and everything tinted inside it reads from that, so a
+   banner is one variable away from a different colour. */
 .banner {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 18px;
-  background: var(--sd-surface);
-  border: 1px solid var(--sd-border);
+  gap: 15px;
+  padding: 18px 20px;
+  background: linear-gradient(100deg, var(--tone-wash), transparent 64%), var(--sd-surface);
+  border: 1px solid color-mix(in srgb, var(--tone) 26%, transparent);
   border-radius: 12px;
   transition: border-color 0.15s ease;
 }
 
+.banner[data-tone="method"] {
+  --tone: var(--sd-warm);
+  --tone-wash: var(--sd-warm-wash);
+}
+
+.banner[data-tone="cases"] {
+  --tone: var(--sd-accent);
+  --tone-wash: var(--sd-accent-wash);
+}
+
 .banner:hover {
-  border-color: var(--sd-accent);
+  border-color: color-mix(in srgb, var(--tone) 60%, transparent);
 }
 
 .bannerIcon {
   display: grid;
   place-items: center;
   flex: none;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
-  background: var(--sd-accent-wash);
-  color: var(--sd-accent);
+  background: color-mix(in srgb, var(--tone) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
+  color: var(--tone);
 }
 
 .bannerIcon svg {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
 }
 
 .bannerEyebrow {
   display: block;
   font-family: var(--sd-font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--sd-muted);
+  color: var(--tone);
 }
 
 .bannerTitle {
   display: block;
-  margin-top: 2px;
+  margin-top: 3px;
   font-family: var(--sd-font-display);
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .bannerSub {
   display: block;
-  margin-top: 3px;
+  margin-top: 4px;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--sd-muted);
@@ -376,7 +391,7 @@
 .bannerArrow {
   margin-left: auto;
   align-self: center;
-  color: var(--sd-accent);
+  color: var(--tone);
   font-family: var(--sd-font-mono);
 }
 

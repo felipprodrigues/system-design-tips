@@ -26,8 +26,14 @@
   --sd-done:      #3fb950;
   --sd-done-wash: rgba(63, 185, 80, 0.12);
 
-  /* Genuine red, reserved for "this is a mistake" content. Apart from this and
-     --sd-done the palette is deliberately monochrome. */
+  /* The warm half of the two destination banners, so The Method and Case Studies
+     are told apart by hue rather than by reading them. Third and last true colour
+     in the palette, and used nowhere else — content never reaches for it. */
+  --sd-warm:      #c2a14d;
+  --sd-warm-wash: rgba(194, 161, 77, 0.14);
+
+  /* Genuine red, reserved for "this is a mistake" content. Apart from this,
+     --sd-done and --sd-warm the palette is deliberately monochrome. */
   --sd-danger:      #e5595d;
   --sd-danger-wash: rgba(229, 89, 93, 0.09);
 
@@ -62,6 +68,9 @@
 
   --sd-done:      #1a7f37;
   --sd-done-wash: rgba(26, 127, 55, 0.1);
+
+  --sd-warm:      #866615;
+  --sd-warm-wash: rgba(134, 102, 21, 0.1);
 
   --sd-danger:      #c62b30;
   --sd-danger-wash: rgba(198, 43, 48, 0.07);

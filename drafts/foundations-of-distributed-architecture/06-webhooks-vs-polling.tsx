@@ -11,7 +11,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -106,21 +106,21 @@ const comparisonRows = [
   { strategy: "SSE", use: "One-way live feeds (notifications, live scores)", downside: "No client-to-server messages on the same channel; some proxies buffer streams" },
 ];
 
-export default function Lesson06() {
+export default function Concept06() {
   const [panelOpen, setPanelOpen] = useState(false);
 
   return (
     <>
       <Breadcrumb
         section="Foundations of Distributed Architectures"
-        lesson="Webhooks vs. Polling: Choosing a Communication Pattern"
+        concept="Webhooks vs. Polling: Choosing a Communication Pattern"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Lesson 6 · Foundations
+          Concept 6 · Foundations
         </p>
         <h1 style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
           Webhooks vs. Polling: Choosing a Communication Pattern
@@ -446,7 +446,7 @@ export default function Lesson06() {
       </SidePanel>
 
       <PageNav
-        {...getLessonNav("06-webhooks-vs-polling")}
+        {...getConceptNav("06-webhooks-vs-polling")}
         sectionTitle="Foundations of Distributed Architectures"
       />
     </>

@@ -13,7 +13,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -133,9 +133,9 @@ const exercises = [
   },
 ];
 
-export default function Lesson01Module02() {
+export default function Concept01Module02() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("relational-vs-nosql");
+  const nav = getConceptNav("relational-vs-nosql");
   const [activePanelSection, setActivePanelSection] = useState<string | null>(null);
 
   function openPanelSection(id: string) {
@@ -147,14 +147,14 @@ export default function Lesson01Module02() {
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Selecting Relational vs NoSQL Database Models"
+        concept="Selecting Relational vs NoSQL Database Models"
         action={<DeepDiveButton onClick={() => { setActivePanelSection(null); setPanelOpen(true); }} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Selecting Relational vs NoSQL Database Models
@@ -532,7 +532,7 @@ export default function Lesson01Module02() {
 
           <div className="sd-callout sd-callout-green">
             Relational databases prioritize the correctness of complex data relationships, while NoSQL databases prioritize performance and flexibility for specific, high-velocity use cases. Choosing between them requires a clear understanding of your read/write patterns and the degree of consistency your system demands. We&rsquo;ll build on this by exploring how to{" "}
-            <strong className="sd-strong">distribute these datasets effectively</strong> in the next lesson.
+            <strong className="sd-strong">distribute these datasets effectively</strong> in the next concept.
           </div>
         </div>
 
@@ -549,7 +549,7 @@ export default function Lesson01Module02() {
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => { setPanelOpen(false); setActivePanelSection(null); }} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
-          The trade-offs in this lesson rarely have one correct answer. Here&rsquo;s a deeper walkthrough of the trickier ones.
+          The trade-offs in this concept rarely have one correct answer. Here&rsquo;s a deeper walkthrough of the trickier ones.
         </p>
 
         <PanelSection

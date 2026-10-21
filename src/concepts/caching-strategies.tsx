@@ -9,7 +9,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 import { hl } from "@/lib/highlight";
 
 const quizCards: QuizCard[] = [
@@ -167,17 +167,17 @@ const seqArrow = (
   </defs>
 );
 
-export default function Lesson09() {
-  const nav = getLessonNav("caching-strategies");
+export default function Concept09() {
+  const nav = getConceptNav("caching-strategies");
 
   return (
     <>
-      <Breadcrumb section={nav.sectionTitle} lesson="Caching Strategies & Cache Invalidation" />
+      <Breadcrumb section={nav.sectionTitle} concept="Caching Strategies & Cache Invalidation" />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">Caching Strategies &amp; Cache Invalidation</h1>
         <LearnedToggle />

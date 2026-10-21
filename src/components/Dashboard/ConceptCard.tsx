@@ -10,15 +10,15 @@ import styles from "./Dashboard.module.css";
    Not-started carries no badge — an empty slot reads as "nothing here yet" faster
    than a row of grey "Not started" pills does. The status still reaches screen
    readers through the link's own label. */
-export default function ConceptCard({ lesson, status }: ConceptProgress) {
+export default function ConceptCard({ concept, status }: ConceptProgress) {
   return (
     <Link
-      href={`/concepts/${lesson.slug}`}
+      href={`/concepts/${concept.slug}`}
       className={styles.concept}
       data-status={status}
-      aria-label={`${lesson.title} — ${STATUS_LABEL[status]}, ${lesson.minutes} min read`}
+      aria-label={`${concept.title} — ${STATUS_LABEL[status]}, ${concept.minutes} min read`}
     >
-      <span className={styles.conceptTitle}>{lesson.title}</span>
+      <span className={styles.conceptTitle}>{concept.title}</span>
       {status !== "todo" && (
         <span className={styles.badge} data-status={status} aria-hidden="true">
           {STATUS_LABEL[status]}

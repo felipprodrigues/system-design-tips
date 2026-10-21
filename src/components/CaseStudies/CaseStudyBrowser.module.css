@@ -155,17 +155,17 @@
   color: var(--sd-accent);
 }
 
-.lesson {
+.concept {
   font-family: var(--sd-font-mono);
   font-size: 11px;
   color: var(--sd-teal);
   text-decoration: none;
   white-space: nowrap;
 }
-.lesson::before {
-  content: "Lesson: ";
+.concept::before {
+  content: "Concept: ";
   color: var(--sd-muted);
 }
-.lesson:hover {
+.concept:hover {
   text-decoration: underline;
 }

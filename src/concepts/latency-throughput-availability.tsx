@@ -12,7 +12,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -71,21 +71,21 @@ const quizCards: QuizCard[] = [
   },
 ];
 
-export default function Lesson02() {
+export default function Concept02() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("latency-throughput-availability");
+  const nav = getConceptNav("latency-throughput-availability");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Latency, Throughput & Availability"
+        concept="Latency, Throughput & Availability"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Latency, Throughput &amp; Availability
@@ -323,7 +323,7 @@ export default function Lesson02() {
           <div className="sd-prose">
             <p>These metrics don't exist in isolation — optimizing for one creates pressure on the others.</p>
             <p style={{ marginTop: 10 }}>
-              To improve <strong className="sd-strong">latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong className="sd-strong">availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong className="sd-strong">throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous lesson.
+              To improve <strong className="sd-strong">latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong className="sd-strong">availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong className="sd-strong">throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous concept.
             </p>
           </div>
 

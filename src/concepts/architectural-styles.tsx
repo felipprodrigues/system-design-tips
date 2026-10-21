@@ -9,7 +9,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 import { hl } from "@/lib/highlight";
 
 const quizCards: QuizCard[] = [
@@ -204,17 +204,17 @@ function CompareTable({ spec }: { spec: { left: string; right: string; rows: str
   );
 }
 
-export default function Lesson10() {
-  const nav = getLessonNav("architectural-styles");
+export default function Concept10() {
+  const nav = getConceptNav("architectural-styles");
 
   return (
     <>
-      <Breadcrumb section={nav.sectionTitle} lesson="Architectural Styles: Monolith to Event-Driven" />
+      <Breadcrumb section={nav.sectionTitle} concept="Architectural Styles: Monolith to Event-Driven" />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">Architectural Styles: Monolith to Event-Driven</h1>
         <LearnedToggle />

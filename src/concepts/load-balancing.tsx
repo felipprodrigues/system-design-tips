@@ -12,7 +12,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -109,22 +109,22 @@ const comparisonRows = [
   { strategy: "Layer 7", use: "Microservices, content-based routing", downside: "Higher latency due to packet inspection" },
 ];
 
-export default function Lesson04() {
+export default function Concept04() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("load-balancing");
+  const nav = getConceptNav("load-balancing");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Core Concepts of Load Balancing"
+        concept="Core Concepts of Load Balancing"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Core Concepts of Load Balancing
@@ -139,7 +139,7 @@ export default function Lesson04() {
           <p>
             Load balancing is the process of{" "}
             <strong className="sd-strong">distributing incoming network traffic across a group of backend servers</strong>{" "}
-            to ensure no single server bears too much demand. By acting as a reverse proxy, the load balancer prevents bottlenecks, eliminates single points of failure, and allows for the seamless addition or removal of resources — directly supporting the horizontal scaling patterns discussed in lesson one.
+            to ensure no single server bears too much demand. By acting as a reverse proxy, the load balancer prevents bottlenecks, eliminates single points of failure, and allows for the seamless addition or removal of resources — directly supporting the horizontal scaling patterns discussed in concept one.
           </p>
           <p>
             The choice of{" "}
@@ -404,7 +404,7 @@ export default function Lesson04() {
             },
             {
               title: "Which Layer They Operate At",
-              body: "API Gateways typically operate at Layer 7, since routing by endpoint or header requires reading the request. Load Balancers can operate at Layer 4 or Layer 7 depending on the technology — the same split covered earlier in this lesson.",
+              body: "API Gateways typically operate at Layer 7, since routing by endpoint or header requires reading the request. Load Balancers can operate at Layer 4 or Layer 7 depending on the technology — the same split covered earlier in this concept.",
             },
             {
               title: "How They Compose in Practice",

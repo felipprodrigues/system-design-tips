@@ -12,7 +12,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -129,7 +129,7 @@ const patterns = [
   },
 ];
 
-// The five shapes, in the order the lesson introduces them. Short and long
+// The five shapes, in the order the concept introduces them. Short and long
 // polling share one shape here; the timing difference is covered above.
 const shapes = [
   { name: "API", mode: "Pull", color: "var(--sd-muted)", top: "Client", arrow: "\u2192", bottom: "Server", note: "One question, one answer", example: "Opening an order page. You see its status right then, nothing after." },
@@ -148,22 +148,22 @@ const comparisonRows = [
   { strategy: "SSE", fresh: "Immediate", reachable: false, use: "One-way live feeds (notifications, live scores)", cost: "No client-to-server channel; some proxies buffer streams" },
 ];
 
-export default function Lesson06() {
+export default function Concept06() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("communication-patterns");
+  const nav = getConceptNav("communication-patterns");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Choosing a Communication Pattern"
+        concept="Choosing a Communication Pattern"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Choosing a Communication Pattern

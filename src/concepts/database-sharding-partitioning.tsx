@@ -12,7 +12,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -114,22 +114,22 @@ const tradeoffs = [
   },
 ];
 
-export default function Lesson02DatabaseSharding() {
+export default function Concept02DatabaseSharding() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("database-sharding-partitioning");
+  const nav = getConceptNav("database-sharding-partitioning");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Implementing Database Sharding and Partitioning"
+        concept="Implementing Database Sharding and Partitioning"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Implementing Database Sharding and Partitioning

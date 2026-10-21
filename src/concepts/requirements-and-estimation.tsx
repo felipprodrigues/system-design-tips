@@ -12,7 +12,7 @@ import {
   PageLayout,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -109,22 +109,22 @@ const storagePipeline = [
   { label: "Annual storage", value: "≈ 1.8 PB / year" },
 ];
 
-export default function Lesson05() {
+export default function Concept05() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("requirements-and-estimation");
+  const nav = getConceptNav("requirements-and-estimation");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Design Requirements & Estimating Resource Needs"
+        concept="Design Requirements & Estimating Resource Needs"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Design Requirements &amp; Estimating Resource Needs
@@ -141,7 +141,7 @@ export default function Lesson05() {
             <strong className="sd-strong">numerical boundaries</strong>. You cannot design for &quot;high scale&quot; or &quot;low latency&quot; until those terms are defined as concrete targets — a specific RPS figure, a specific latency percentile, a specific number of nines.
           </p>
           <p>
-            This lesson covers two things: how to split requirements into{" "}
+            This concept covers two things: how to split requirements into{" "}
             <span className="sd-hl">functional</span> and{" "}
             <span className="sd-hl">non-functional</span> buckets, and how to turn a handful of business projections into{" "}
             <strong className="sd-strong">Back-of-the-Envelope (BOTE)</strong> numbers for throughput, storage, and bandwidth — the numbers that tell you whether your architecture is even feasible.
@@ -420,7 +420,7 @@ export default function Lesson05() {
           <div className="sd-callout sd-callout-green">
             Resource estimation transforms vague ambitions into architectural requirements. By calculating peak RPS, storage volume, and bandwidth consumption, you define the physical boundaries your system must overcome — boundaries that will directly guide your decisions on{" "}
             <strong className="sd-strong">data partitioning</strong> and{" "}
-            <strong className="sd-strong">communication protocols</strong> in the lessons ahead.
+            <strong className="sd-strong">communication protocols</strong> in the concepts ahead.
           </div>
         </div>
 
@@ -508,7 +508,7 @@ export default function Lesson05() {
             },
             {
               title: "Why Replicate at All",
-              body: "Durability (surviving node loss without data loss) and availability (serving reads from a replica while the primary is down) are the two reasons. Both are non-negotiable at the multi-PB scale this lesson's example lands on.",
+              body: "Durability (surviving node loss without data loss) and availability (serving reads from a replica while the primary is down) are the two reasons. Both are non-negotiable at the multi-PB scale this concept's example lands on.",
             },
             {
               title: "Sizing Order of Operations",

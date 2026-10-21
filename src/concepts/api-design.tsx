@@ -13,7 +13,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -150,22 +150,22 @@ const topologyNodes = [
   { kind: "Server", name: "Public REST API", x: 360, y: 300, w: 210, accent: true },
 ];
 
-export default function Lesson08() {
+export default function Concept08() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("api-design");
+  const nav = getConceptNav("api-design");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="API Design: REST, GraphQL, and gRPC"
+        concept="API Design: REST, GraphQL, and gRPC"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">API Design: REST, GraphQL, and gRPC</h1>
         <LearnedToggle />
@@ -186,7 +186,7 @@ export default function Lesson08() {
         {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
-          <h2 className="sd-h2">The Argument This Lesson Ends</h2>
+          <h2 className="sd-h2">The Argument This Concept Ends</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
@@ -436,7 +436,7 @@ export default function Lesson08() {
 
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
-          Three things the lesson names but does not unpack: a word people use loosely, a format people call fast without saying why, and the pattern GraphQL is usually competing with.
+          Three things the concept names but does not unpack: a word people use loosely, a format people call fast without saying why, and the pattern GraphQL is usually competing with.
         </p>
 
         <PanelSection title="REST vs RESTful: what is the actual difference?" defaultOpen>

@@ -173,7 +173,7 @@ const handoffs = [
   ["7 → 3", "What has to survive a failure", "The diagram gets revised, honestly"],
 ];
 
-const stepLessons = [
+const stepConcepts = [
   ["Clarify Requirements", "Design Requirements & Estimating Resource Needs", "/concepts/requirements-and-estimation"],
   ["Estimate Capacity", "Latency, Throughput & Availability", "/concepts/latency-throughput-availability"],
   ["High-Level Design", "Architectural Styles: Monolith to Event-Driven", "/concepts/architectural-styles"],
@@ -203,7 +203,7 @@ const keyPoints = [
   "*Redundancy is a claim until you say what fails over and how long it takes.* Step 7 is where a design stops being optimistic.",
 ];
 
-/* Not a lesson: it's the order you work in when applying them, so it sits outside
+/* Not a concept: it's the order you work in when applying them, so it sits outside
    the numbered sequence — no group, no prev/next, nothing to mark complete. */
 
 export default function Walkthrough() {
@@ -212,7 +212,7 @@ export default function Walkthrough() {
 
   return (
     <>
-      <Breadcrumb section="The Method" lesson="A 7-Step Walkthrough for Any System Design" />
+      <Breadcrumb section="The Method" concept="A 7-Step Walkthrough for Any System Design" />
 
       <PageLayout>
         {/* Header */}
@@ -553,7 +553,7 @@ export default function Walkthrough() {
           </div>
 
           <div className="sd-stack">
-            {stepLessons.map(([stepName, title, href]) => (
+            {stepConcepts.map(([stepName, title, href]) => (
               <a
                 key={href}
                 href={href}

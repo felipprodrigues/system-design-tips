@@ -42,8 +42,8 @@ export default function Dashboard() {
               {roadmap.next ? (
                 <>
                   <p className={styles.cardHint}>{started ? "Continue" : "Start with"}</p>
-                  <p className={styles.cardValue}>{roadmap.next.lesson.title}</p>
-                  <Link href={`/concepts/${roadmap.next.lesson.slug}`} className={styles.button}>
+                  <p className={styles.cardValue}>{roadmap.next.concept.title}</p>
+                  <Link href={`/concepts/${roadmap.next.concept.slug}`} className={styles.button}>
                     {started ? "Resume" : "Begin"}
                   </Link>
                 </>
@@ -73,25 +73,25 @@ export default function Dashboard() {
                 <>
                   <p className={styles.cardMeta}>
                     <Check />
-                    <span className={styles.cardMetaTitle}>{roadmap.lastVisited.lesson.title}</span>
+                    <span className={styles.cardMetaTitle}>{roadmap.lastVisited.concept.title}</span>
                   </p>
                   <p className={styles.cardHint}>Next</p>
-                  <p className={styles.cardValue}>{roadmap.next.lesson.title}</p>
-                  <Link href={`/concepts/${roadmap.next.lesson.slug}`} className={styles.button}>
+                  <p className={styles.cardValue}>{roadmap.next.concept.title}</p>
+                  <Link href={`/concepts/${roadmap.next.concept.slug}`} className={styles.button}>
                     Open next
                   </Link>
                 </>
               ) : (
                 <>
-                  <p className={styles.cardValue}>{roadmap.lastVisited.lesson.title}</p>
+                  <p className={styles.cardValue}>{roadmap.lastVisited.concept.title}</p>
                   {roadmap.lastVisited.status === "done" ? (
                     <p className={styles.cardHint}>
                       <Check /> Completed, and it was the last one. More ship regularly.
                     </p>
                   ) : (
                     <>
-                      <p className={styles.cardHint}>{roadmap.lastVisited.lesson.minutes} min read</p>
-                      <Link href={`/concepts/${roadmap.lastVisited.lesson.slug}`} className={styles.button}>
+                      <p className={styles.cardHint}>{roadmap.lastVisited.concept.minutes} min read</p>
+                      <Link href={`/concepts/${roadmap.lastVisited.concept.slug}`} className={styles.button}>
                         Open
                       </Link>
                     </>

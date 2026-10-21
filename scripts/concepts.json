@@ -3,7 +3,7 @@
     "title": "Scaling and Trade-offs",
     "basePath": "/concepts"
   },
-  "lessons": [
+  "concepts": [
     {
       "number": 1,
       "slug": "01-horizontal-vs-vertical-scaling",

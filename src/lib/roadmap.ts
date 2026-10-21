@@ -1,10 +1,10 @@
 "use client";
 
-import { groups, reading, type LessonEntry } from "./lessons";
+import { groups, reading, type ConceptEntry } from "./concepts";
 import { statusOf, useLearned, useVisited, type Status } from "./progress";
 
 export interface ConceptProgress {
-  lesson: LessonEntry;
+  concept: ConceptEntry;
   status: Status;
 }
 
@@ -36,9 +36,9 @@ export interface Roadmap {
     can be exercised directly. `useRoadmap` is the hook that feeds it live storage. */
 export function deriveRoadmap(learned: readonly string[], seen: readonly string[]): Roadmap {
   const sections = groups.map((group) => {
-    const concepts = group.lessons.map((lesson) => ({
-      lesson,
-      status: statusOf(lesson.slug, learned, seen),
+    const concepts = group.concepts.map((concept) => ({
+      concept,
+      status: statusOf(concept.slug, learned, seen),
     }));
     const done = concepts.filter((c) => c.status === "done").length;
     return {
@@ -54,7 +54,7 @@ export function deriveRoadmap(learned: readonly string[], seen: readonly string[
   const done = all.filter((c) => c.status === "done").length;
 
   /* Reading order, not group order, so Resume follows the same path prev/next does. */
-  const inOrder = reading.map(({ lesson }) => all.find((c) => c.lesson.slug === lesson.slug)!);
+  const inOrder = reading.map(({ concept }) => all.find((c) => c.concept.slug === concept.slug)!);
   const next = inOrder.find((c) => c.status === "doing") ?? inOrder.find((c) => c.status === "todo");
 
   return {
@@ -62,10 +62,10 @@ export function deriveRoadmap(learned: readonly string[], seen: readonly string[
     done,
     total: all.length,
     percent: all.length ? Math.round((done / all.length) * 100) : 0,
-    totalMinutes: all.reduce((sum, c) => sum + c.lesson.minutes, 0),
-    remainingMinutes: all.filter((c) => c.status !== "done").reduce((sum, c) => sum + c.lesson.minutes, 0),
+    totalMinutes: all.reduce((sum, c) => sum + c.concept.minutes, 0),
+    remainingMinutes: all.filter((c) => c.status !== "done").reduce((sum, c) => sum + c.concept.minutes, 0),
     next,
-    lastVisited: all.find((c) => c.lesson.slug === seen[seen.length - 1]),
+    lastVisited: all.find((c) => c.concept.slug === seen[seen.length - 1]),
   };
 }
 

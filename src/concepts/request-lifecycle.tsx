@@ -14,7 +14,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 /* Single source for every term on this page: the inline <T> tooltips and the
    Key terms glossary both read from here, so the two can't drift apart. */
@@ -187,15 +187,15 @@ const chainNodes = [
   { kind: "DB", name: "Database", x: 800, y: 168, w: 150, accent: true },
 ];
 
-export default function Lesson07() {
+export default function Concept07() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("request-lifecycle");
+  const nav = getConceptNav("request-lifecycle");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="The Lifecycle of a Software Request"
+        concept="The Lifecycle of a Software Request"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
@@ -217,7 +217,7 @@ export default function Lesson07() {
           <p className="sd-eyebrow">
             Why This Exists
           </p>
-          <h2 className="sd-h2">Why This Lesson Comes First</h2>
+          <h2 className="sd-h2">Why This Concept Comes First</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 

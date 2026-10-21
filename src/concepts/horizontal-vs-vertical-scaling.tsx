@@ -13,7 +13,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -135,21 +135,21 @@ function PItem({
   );
 }
 
-export default function Lesson01() {
+export default function Concept01() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("horizontal-vs-vertical-scaling");
+  const nav = getConceptNav("horizontal-vs-vertical-scaling");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="Scalability: Vertical vs Horizontal Scaling"
+        concept="Scalability: Vertical vs Horizontal Scaling"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           Scalability: Vertical vs Horizontal Scaling
@@ -195,7 +195,7 @@ export default function Lesson01() {
           </p>
           <p>
             Most real-world systems don't pick one and ignore the other — they start vertical for simplicity, and shift horizontal as demand outgrows what a single box can handle. Understanding{" "}
-            <span className="sd-hl">why</span> that transition happens, and what it costs, is what this lesson is about.
+            <span className="sd-hl">why</span> that transition happens, and what it costs, is what this concept is about.
           </p>
         </div>
 

@@ -28,7 +28,7 @@ export default function SectionCard({ section, open }: SectionCardProps) {
 
       <div className={styles.conceptGrid}>
         {section.concepts.map((concept) => (
-          <ConceptCard key={concept.lesson.slug} {...concept} />
+          <ConceptCard key={concept.concept.slug} {...concept} />
         ))}
       </div>
     </details>

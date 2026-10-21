@@ -13,7 +13,7 @@ import {
   MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getLessonNav } from "@/lib/lessons";
+import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -167,22 +167,22 @@ const commonMistakes = [
   "Using CAP to argue about normal-operation latency trade-offs. CAP is about partition-time behavior; the latency argument is PACELC.",
 ];
 
-export default function Lesson03() {
+export default function Concept03() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getLessonNav("cap-theorem");
+  const nav = getConceptNav("cap-theorem");
 
   return (
     <>
       <Breadcrumb
         section={nav.sectionTitle}
-        lesson="CAP Theorem & Trade-offs"
+        concept="CAP Theorem & Trade-offs"
         action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
       />
 
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.conceptNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">
           CAP Theorem &amp; Trade-offs
@@ -946,7 +946,7 @@ export default function Lesson03() {
           <h2 className="sd-h2">Choose The Failure You Can Live With</h2>
 
           <div className="sd-callout sd-callout-green">
-            Partitions are not a scenario you opt into, so every distributed system already has an answer for them — the only question is whether that answer was chosen deliberately. Pick CP where being wrong is worse than being down, AP where being down is worse than being briefly wrong, and pick it per workflow rather than once for the whole system. These constraints form the basis for database replication strategies and distributed transaction patterns — topics covered in the lessons ahead.
+            Partitions are not a scenario you opt into, so every distributed system already has an answer for them — the only question is whether that answer was chosen deliberately. Pick CP where being wrong is worse than being down, AP where being down is worse than being briefly wrong, and pick it per workflow rather than once for the whole system. These constraints form the basis for database replication strategies and distributed transaction patterns — topics covered in the concepts ahead.
           </div>
         </div>
 

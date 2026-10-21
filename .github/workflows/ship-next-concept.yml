@@ -1,4 +1,4 @@
-name: Ship Next Lesson
+name: Ship Next Concept
 # registered
 
 on:
@@ -20,6 +20,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: node scripts/ship-next-lesson.mjs
+      - run: node scripts/ship-next-concept.mjs
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}

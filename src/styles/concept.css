@@ -1,9 +1,9 @@
 /*
- * Lesson primitives — the repeated visual patterns every lesson page is built from.
+ * Concept primitives — the repeated visual patterns every concept page is built from.
  *
- * Lesson pages should reach for these classes instead of re-declaring the same
+ * Concept pages should reach for these classes instead of re-declaring the same
  * inline style object. Keep one-off styles inline; only promote a pattern here
- * once it appears in more than one lesson.
+ * once it appears in more than one concept.
  *
  * All values come from tokens.css so light and dark modes follow automatically.
  */
@@ -55,7 +55,7 @@
   margin-bottom: 6px;
 }
 
-/* Accent-coloured eyebrow — lesson number, quiz heading. */
+/* Accent-coloured eyebrow — concept number, quiz heading. */
 .sd-eyebrow-accent {
   font-family: var(--sd-font-mono);
   font-size: 11px;

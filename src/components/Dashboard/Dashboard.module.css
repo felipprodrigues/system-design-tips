@@ -1,0 +1,413 @@
+/* ---- page header ---- */
+
+.header {
+  margin-bottom: 28px;
+}
+
+.pageTitle {
+  font-family: var(--sd-font-display);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.pageSub {
+  margin-top: 6px;
+  max-width: 62ch;
+  color: var(--sd-muted);
+  font-size: 14.5px;
+}
+
+/* ---- stat cards ---- */
+
+.stats {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+}
+
+.progressCard {
+  background: linear-gradient(180deg, var(--sd-accent-wash), transparent 70%), var(--sd-surface);
+}
+
+.cardLabel {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+}
+
+.cardValue {
+  font-family: var(--sd-font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+.cardHint {
+  font-size: 13px;
+  color: var(--sd-muted);
+}
+
+.cardFoot {
+  margin-top: auto;
+  padding-top: 10px;
+  font-family: var(--sd-font-mono);
+  font-size: 11.5px;
+  color: var(--sd-muted);
+}
+
+.progressBody {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--sd-border-strong);
+  border-radius: 7px;
+  background: var(--sd-surface2);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sd-text);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.button:hover {
+  border-color: var(--sd-accent);
+  color: var(--sd-accent);
+}
+
+.figures {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.figures > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.figures dt {
+  font-size: 13px;
+  color: var(--sd-muted);
+}
+
+.figures dd {
+  font-family: var(--sd-font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ---- progress ring ---- */
+
+.ring {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+.ring svg {
+  position: absolute;
+  inset: 0;
+}
+
+.ringValue {
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.ringLabel {
+  font-family: var(--sd-font-mono);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ---- sections ---- */
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.sectionHead::-webkit-details-marker {
+  display: none;
+}
+
+.chevron {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--sd-muted);
+  transition: transform 0.15s ease;
+}
+
+.section[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.sectionTitle {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Takes the slack between the title and the count, so the bar is whatever width
+   is left rather than a fixed size that collides with long section names. */
+.bar {
+  flex: 1;
+  min-width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--sd-border-strong);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--sd-done);
+  transition: width 0.4s ease;
+}
+
+.sectionCount {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  color: var(--sd-muted);
+}
+
+/* ---- concept cards ---- */
+
+.conceptGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 10px;
+  padding: 0 18px 18px;
+}
+
+.concept {
+  display: flex;
+  gap: 11px;
+  padding: 14px;
+  background: var(--sd-bg);
+  border: 1px solid var(--sd-border);
+  border-radius: 10px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.concept:hover {
+  border-color: var(--sd-border-strong);
+  background: var(--sd-surface2);
+}
+
+.conceptBody {
+  min-width: 0;
+}
+
+.conceptNumber {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  color: var(--sd-muted);
+}
+
+.conceptTitle {
+  margin-top: 2px;
+  font-family: var(--sd-font-display);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.conceptDesc {
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--sd-muted);
+  /* Two lines: the descriptions are meta descriptions and run long. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.conceptStatus {
+  margin-top: 8px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  color: var(--sd-muted);
+}
+
+.concept[data-status="done"] .conceptStatus {
+  color: var(--sd-done);
+}
+
+.concept[data-status="doing"] .conceptStatus {
+  color: var(--sd-accent);
+}
+
+.concept:hover .conceptTitle {
+  color: var(--sd-accent);
+}
+
+/* ---- status dot ---- */
+
+.dot {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--sd-muted);
+}
+
+.dot svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dot[data-status="done"] {
+  color: var(--sd-done);
+}
+
+.dot[data-status="doing"] {
+  color: var(--sd-accent);
+}
+
+/* ---- banners ---- */
+
+.banners {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+  transition: border-color 0.15s ease;
+}
+
+.banner:hover {
+  border-color: var(--sd-accent);
+}
+
+.bannerIcon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--sd-accent-wash);
+  color: var(--sd-accent);
+}
+
+.bannerIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.bannerEyebrow {
+  display: block;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+}
+
+.bannerTitle {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--sd-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.bannerSub {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--sd-muted);
+}
+
+.bannerArrow {
+  margin-left: auto;
+  align-self: center;
+  color: var(--sd-accent);
+  font-family: var(--sd-font-mono);
+}
+
+@media (max-width: 1040px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .progressCard {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .stats,
+  .banners {
+    grid-template-columns: 1fr;
+  }
+
+  .pageTitle {
+    font-size: 28px;
+  }
+}

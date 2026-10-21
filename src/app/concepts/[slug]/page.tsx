@@ -11,11 +11,11 @@ export function generateStaticParams() {
   return groups.flatMap((group) => group.lessons.map(({ slug }) => ({ slug })));
 }
 
-export async function generateMetadata({ params }: PageProps<"/lessons/[slug]">) {
+export async function generateMetadata({ params }: PageProps<"/concepts/[slug]">) {
   return lessonMetadata((await params).slug);
 }
 
-export default async function LessonPage({ params }: PageProps<"/lessons/[slug]">) {
+export default async function LessonPage({ params }: PageProps<"/concepts/[slug]">) {
   const { slug } = await params;
   const { default: LessonBody } = await import(`../../../lessons/${slug}.tsx`);
   return <LessonBody />;

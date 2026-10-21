@@ -21,37 +21,37 @@ quiz to check what stuck. No prior background assumed, read them in any order.
 Start here if you are new. How a request actually travels, how systems are shaped, and the
 order to think in when handed a blank page.
 
-- [The Lifecycle of a Software Request](https://systemdesignbits.vercel.app/lessons/request-lifecycle) — How an HTTP request works end to end: DNS lookup, TCP and TLS handshake, load balancer, server, database, and where the round trip time goes.
-- [Architectural Styles: Monolith to Event-Driven](https://systemdesignbits.vercel.app/lessons/architectural-styles) — Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs.
+- [The Lifecycle of a Software Request](https://systemdesignbits.vercel.app/concepts/request-lifecycle) — How an HTTP request works end to end: DNS lookup, TCP and TLS handshake, load balancer, server, database, and where the round trip time goes.
+- [Architectural Styles: Monolith to Event-Driven](https://systemdesignbits.vercel.app/concepts/architectural-styles) — Monolith vs microservices vs event-driven architecture: the modular monolith in between, when to move, and what each step actually costs.
 
 ## Scaling and Trade-offs
 
 What breaks as traffic grows, and what each fix costs you.
 
 <!-- LESSON_LINKS_START -->
-- [Scalability: Vertical vs Horizontal Scaling](https://systemdesignbits.vercel.app/lessons/horizontal-vs-vertical-scaling) — Horizontal vs vertical scaling explained: scale out versus scale up, stateless servers behind a load balancer, and how real systems choose.
-- [Latency, Throughput & Availability](https://systemdesignbits.vercel.app/lessons/latency-throughput-availability) — Latency, throughput and availability explained: what each metric measures, p99 percentiles, how they trade off, and what nines of uptime cost.
-- [CAP Theorem & Trade-offs](https://systemdesignbits.vercel.app/lessons/cap-theorem) — CAP theorem explained: consistency vs availability during a network partition, CP vs AP systems, eventual consistency, quorums, and PACELC.
-- [Core Concepts of Load Balancing](https://systemdesignbits.vercel.app/lessons/load-balancing) — Load balancing explained: layer 4 vs layer 7, round robin and least connections, health checks and failover, and sticky sessions.
-- [Design Requirements & Estimating Resource Needs](https://systemdesignbits.vercel.app/lessons/requirements-and-estimation) — Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing.
+- [Scalability: Vertical vs Horizontal Scaling](https://systemdesignbits.vercel.app/concepts/horizontal-vs-vertical-scaling) — Horizontal vs vertical scaling explained: scale out versus scale up, stateless servers behind a load balancer, and how real systems choose.
+- [Latency, Throughput & Availability](https://systemdesignbits.vercel.app/concepts/latency-throughput-availability) — Latency, throughput and availability explained: what each metric measures, p99 percentiles, how they trade off, and what nines of uptime cost.
+- [CAP Theorem & Trade-offs](https://systemdesignbits.vercel.app/concepts/cap-theorem) — CAP theorem explained: consistency vs availability during a network partition, CP vs AP systems, eventual consistency, quorums, and PACELC.
+- [Core Concepts of Load Balancing](https://systemdesignbits.vercel.app/concepts/load-balancing) — Load balancing explained: layer 4 vs layer 7, round robin and least connections, health checks and failover, and sticky sessions.
+- [Design Requirements & Estimating Resource Needs](https://systemdesignbits.vercel.app/concepts/requirements-and-estimation) — Back of the envelope estimation for system design: functional vs non-functional requirements, QPS, storage capacity, and bandwidth sizing.
 <!-- LESSON_LINKS_END -->
 - Caching Strategies & Cache Invalidation *(coming soon)* — Caching strategies explained: cache-aside, write-through and write-back, TTL vs explicit invalidation, cache stampede, and cache penetration.
-- [Content Delivery Networks (CDNs)](https://systemdesignbits.vercel.app/lessons/content-delivery-networks) — CDNs explained: edge servers and points of presence, origin pull vs origin push, cache hit ratio, content-hashed filenames, edge compute, and why personalized responses barely benefit.
+- [Content Delivery Networks (CDNs)](https://systemdesignbits.vercel.app/concepts/content-delivery-networks) — CDNs explained: edge servers and points of presence, origin pull vs origin push, cache hit ratio, content-hashed filenames, edge compute, and why personalized responses barely benefit.
 
 ## Communication and APIs
 
 How parts of a system talk to each other, and how you expose one to the outside.
 
-- [Choosing a Communication Pattern](https://systemdesignbits.vercel.app/lessons/communication-patterns) — Polling vs webhooks vs WebSockets: long polling and server-sent events compared, and the update rate and latency each pattern really fits.
-- [API Design: REST, GraphQL, and gRPC](https://systemdesignbits.vercel.app/lessons/api-design) — REST vs GraphQL vs gRPC compared: fixed response shapes, over-fetching and under-fetching, the N+1 problem, protobuf, and when to use each.
-- [Rate Limiting](https://systemdesignbits.vercel.app/lessons/rate-limiting) — Rate limiting explained: token bucket, leaky bucket, fixed and sliding windows, 429 responses with Retry-After, per-IP vs per-key limits, and distributed enforcement with Redis.
+- [Choosing a Communication Pattern](https://systemdesignbits.vercel.app/concepts/communication-patterns) — Polling vs webhooks vs WebSockets: long polling and server-sent events compared, and the update rate and latency each pattern really fits.
+- [API Design: REST, GraphQL, and gRPC](https://systemdesignbits.vercel.app/concepts/api-design) — REST vs GraphQL vs gRPC compared: fixed response shapes, over-fetching and under-fetching, the N+1 problem, protobuf, and when to use each.
+- [Rate Limiting](https://systemdesignbits.vercel.app/concepts/rate-limiting) — Rate limiting explained: token bucket, leaky bucket, fixed and sliding windows, 429 responses with Retry-After, per-IP vs per-key limits, and distributed enforcement with Redis.
 
 ## Data Storage and Management Strategies
 
 Choosing a database, then surviving the size of it.
 
-- [Selecting Relational vs NoSQL Database Models](https://systemdesignbits.vercel.app/lessons/relational-vs-nosql) — SQL vs NoSQL explained: ACID transactions and JOINs versus flexible schemas and horizontal scale, and how access patterns decide the choice.
-- [Implementing Database Sharding and Partitioning](https://systemdesignbits.vercel.app/lessons/database-sharding-partitioning) — Database sharding and partitioning explained: shard keys, range vs hash sharding, hot shards, shard maps, and the cost of cross-shard joins.
+- [Selecting Relational vs NoSQL Database Models](https://systemdesignbits.vercel.app/concepts/relational-vs-nosql) — SQL vs NoSQL explained: ACID transactions and JOINs versus flexible schemas and horizontal scale, and how access patterns decide the choice.
+- [Implementing Database Sharding and Partitioning](https://systemdesignbits.vercel.app/concepts/database-sharding-partitioning) — Database sharding and partitioning explained: shard keys, range vs hash sharding, hot shards, shard maps, and the cost of cross-shard joins.
 
 ---
 
@@ -69,7 +69,7 @@ Then open [http://localhost:3000](http://localhost:3000). `pnpm build` runs the 
 | Path | What lives there |
 | --- | --- |
 | `src/lessons/<slug>.tsx` | One lesson, one component |
-| `src/app/lessons/[slug]/page.tsx` | The single route that renders and titles every lesson |
+| `src/app/concepts/[slug]/page.tsx` | The single route that renders and titles every lesson |
 | `src/lib/lessons.ts` | The lesson index: slug, title, description, grouping, and prev/next order |
 | `src/lib/seo.ts` | Canonical URL, site name, and per-lesson metadata |
 | `src/components/` | Shared lesson UI: layout, breadcrumb, quiz carousel, side panel, marker lists |

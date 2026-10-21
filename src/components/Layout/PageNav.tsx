@@ -31,7 +31,7 @@ export default function PageNav({
       )}
 
       <div className={styles.center}>
-        <strong>{label ?? `Lesson ${lessonNumber} of ${totalLessons}`}</strong>
+        <strong>{label ?? `Concept ${lessonNumber} of ${totalLessons}`}</strong>
         {sectionTitle}
       </div>
 

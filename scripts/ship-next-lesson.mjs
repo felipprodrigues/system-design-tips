@@ -1,6 +1,6 @@
 // Run in CI by .github/workflows/ship-next-lesson.yml
 // Finds the first lesson (in scripts/lessons.json order) that doesn't yet exist
-// under src/app/lessons/, ships it from drafts/ on its own branch, opens a PR,
+// under src/app/concepts/, ships it from drafts/ on its own branch, opens a PR,
 // and enables auto-merge. One invocation ships at most one lesson.
 import { execFileSync, execSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
@@ -39,7 +39,7 @@ if (!existsSync(draftPath)) {
 const branch = `lesson/${next.slug}`;
 sh(`git checkout -b ${branch}`);
 
-/* One body per lesson under src/lessons; the /lessons/[slug] route renders and titles it. */
+/* One body per lesson under src/lessons; the /concepts/[slug] route renders and titles it. */
 const bodiesDir = join(root, "src/lessons");
 mkdirSync(bodiesDir, { recursive: true });
 renameSync(draftPath, join(bodiesDir, `${published(next)}.tsx`));
@@ -60,7 +60,7 @@ writeFileSync(lessonsDataPath, lessonsData.replace(marker, entry + marker));
 const readmePath = join(root, "README.md");
 const readme = readFileSync(readmePath, "utf8");
 const readmeMarker = "<!-- LESSON_LINKS_END -->";
-const link = `- [${next.title}](https://systemdesignbits.vercel.app/lessons/${published(next)}) \u2014 ${next.subtitle}\n`;
+const link = `- [${next.title}](https://systemdesignbits.vercel.app/concepts/${published(next)}) \u2014 ${next.subtitle}\n`;
 if (!readme.includes(readmeMarker)) {
   console.error("LESSON_LINKS_END marker not found in README.md");
   process.exit(1);

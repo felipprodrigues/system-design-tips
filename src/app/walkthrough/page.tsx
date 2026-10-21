@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SITE_NAME } from "@/lib/seo";
 import Walkthrough from "./Walkthrough";
 
-/* Outside the (index) group and outside /lessons: the body brings its own Breadcrumb
+/* Outside the (index) group and outside /concepts: the body brings its own Breadcrumb
    and PageLayout, the same shell a lesson page has, but it is not one of them. */
 
 const description =

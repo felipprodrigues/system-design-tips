@@ -12,7 +12,7 @@ export interface LessonGroup {
   lessons: LessonEntry[];
 }
 
-// Kept in sync with what's actually live under src/app/lessons — the
+// Kept in sync with what's actually live under src/app/concepts — the
 // ship-next-lesson workflow appends an entry here the moment a lesson ships.
 export const groups: LessonGroup[] = [
   {
@@ -74,7 +74,7 @@ export function getLessonNav(slug: string): LessonNav {
     lessonNumber: group.lessons.findIndex((l) => l.slug === slug) + 1,
     totalLessons: group.lessons.length,
     sectionTitle: group.title,
-    prevHref: index > 0 ? `/lessons/${reading[index - 1].lesson.slug}` : undefined,
-    nextHref: index < reading.length - 1 ? `/lessons/${reading[index + 1].lesson.slug}` : undefined,
+    prevHref: index > 0 ? `/concepts/${reading[index - 1].lesson.slug}` : undefined,
+    nextHref: index < reading.length - 1 ? `/concepts/${reading[index + 1].lesson.slug}` : undefined,
   };
 }

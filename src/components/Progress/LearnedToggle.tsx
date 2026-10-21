@@ -12,7 +12,7 @@ export default function LearnedToggle() {
   const pathname = usePathname();
   const learned = useLearned();
 
-  const slug = pathname.startsWith("/lessons/") ? pathname.slice("/lessons/".length) : "";
+  const slug = pathname.startsWith("/concepts/") ? pathname.slice("/concepts/".length) : "";
   if (!slug) return null;
 
   const done = learned.includes(slug);

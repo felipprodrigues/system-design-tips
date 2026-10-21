@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./TopNav.module.css";
 
-/* The two top-level sections. Lessons is the roadmap index at the root; anything
-   under /lessons belongs to it too, so a lesson page keeps the tab lit. */
+/* The two top-level sections. Concepts is the roadmap index at the root; anything
+   under /concepts belongs to it too, so a concept page keeps the tab lit. */
 const TABS = [
-  { href: "/", label: "Lessons", owns: (path: string) => path === "/" || path.startsWith("/lessons") },
+  { href: "/", label: "Concepts", owns: (path: string) => path === "/" || path.startsWith("/concepts") },
   { href: "/case-studies", label: "Case studies", owns: (path: string) => path.startsWith("/case-studies") },
 ];
 

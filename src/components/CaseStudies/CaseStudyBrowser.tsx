@@ -76,7 +76,7 @@ export default function CaseStudyBrowser() {
                   ))}
                 </div>
                 {lessonTitle && (
-                  <Link href={`/lessons/${study.lesson}`} className={styles.lesson}>
+                  <Link href={`/concepts/${study.lesson}`} className={styles.lesson}>
                     {lessonTitle}
                   </Link>
                 )}

@@ -22,9 +22,9 @@ export default function CaseStudiesPage() {
   return (
     <>
       <Hero eyebrow="Case Studies" title="How it actually went">
-        The same trade-offs the lessons cover, met by real teams at real scale. Postmortems
+        The same trade-offs the concepts cover, met by real teams at real scale. Postmortems
         where it went wrong, write-ups where it went right. Filter by theme, and follow the
-        lesson link to the concept behind it.
+        concept link to the page behind it.
       </Hero>
 
       <CaseStudyBrowser />

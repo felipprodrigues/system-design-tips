@@ -12,7 +12,7 @@ export default function LessonRow({ lesson }: { lesson: LessonEntry }) {
 
   return (
     <Link
-      href={`/lessons/${lesson.slug}`}
+      href={`/concepts/${lesson.slug}`}
       className={styles.row}
       data-learned={learned || undefined}
       aria-label={learned ? `${lesson.title} (learned)` : undefined}

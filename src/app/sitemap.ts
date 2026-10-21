@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/walkthrough`, changeFrequency: "monthly", priority: 0.9 },
     ...groups.flatMap((group) =>
       group.lessons.map((lesson) => ({
-        url: `${SITE_URL}/lessons/${lesson.slug}`,
+        url: `${SITE_URL}/concepts/${lesson.slug}`,
         changeFrequency: "monthly" as const,
         priority: 0.8,
       })),

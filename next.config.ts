@@ -1,16 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* Lesson URLs used to carry the authoring number (/lessons/07-request-lifecycle).
-     Those links are already out in social posts that can't be edited, so every
-     numbered path permanently redirects to the unnumbered one it became. One rule
-     rather than an entry per lesson: the number is always a two-digit prefix, and
-     what follows it is the slug the lesson kept. */
+  /* Two generations of dead URLs point at every page, and both are already out in
+     social posts that can't be edited, so both redirect permanently.
+
+     The lesson URLs used to carry the authoring number (/lessons/07-request-lifecycle),
+     and the section was renamed from /lessons to /concepts on 2026-10-21. The numbered
+     rule has to come first: the catch-all below would otherwise send the numbered paths
+     to /concepts/07-request-lifecycle, which doesn't exist. One rule each rather than an
+     entry per page — the number is always a two-digit prefix, and the slug after it never
+     changed. */
   async redirects() {
     return [
       {
         source: "/lessons/:number(\\d{2})-:slug([^/]+)",
-        destination: "/lessons/:slug",
+        destination: "/concepts/:slug",
+        permanent: true,
+      },
+      {
+        source: "/lessons/:slug",
+        destination: "/concepts/:slug",
         permanent: true,
       },
     ];

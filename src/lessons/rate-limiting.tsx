@@ -252,7 +252,7 @@ export default function Lesson03RateLimiting() {
       <PageLayout>
         {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Lesson {nav.lessonNumber} · {nav.sectionTitle}
+          Concept {nav.lessonNumber} · {nav.sectionTitle}
         </p>
         <h1 className="sd-h1">Rate Limiting</h1>
         <LearnedToggle />

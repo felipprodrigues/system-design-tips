@@ -18,8 +18,16 @@
   --sd-amber:    #6a76a3;
   --sd-red:      #4a5170;
 
-  /* Genuine red, reserved for "this is a mistake" content. The rest of the
-     palette is deliberately monochrome, so this is the only true hue in it. */
+  /* Completion status, and the only other true hue in the palette besides
+     --sd-danger. Deliberately NOT --sd-green: that one is a desaturated blue
+     used 50-odd times as a diagram hue, and repainting it would turn charts
+     across the library green. In Progress reuses --sd-accent, Not Started
+     --sd-muted, so status costs exactly one new colour. */
+  --sd-done:      #3fb950;
+  --sd-done-wash: rgba(63, 185, 80, 0.12);
+
+  /* Genuine red, reserved for "this is a mistake" content. Apart from this and
+     --sd-done the palette is deliberately monochrome. */
   --sd-danger:      #e5595d;
   --sd-danger-wash: rgba(229, 89, 93, 0.09);
 
@@ -51,6 +59,9 @@
   --sd-green:    #2b4fe0;
   --sd-amber:    #5c6480;
   --sd-red:      #262b47;
+
+  --sd-done:      #1a7f37;
+  --sd-done-wash: rgba(26, 127, 55, 0.1);
 
   --sd-danger:      #c62b30;
   --sd-danger-wash: rgba(198, 43, 48, 0.07);

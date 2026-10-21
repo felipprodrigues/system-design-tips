@@ -14,7 +14,6 @@ export { default as GroupCard } from "./Home/GroupCard";
 export { default as MethodCard } from "./Home/MethodCard";
 export { default as TopicTracks } from "./Home/TopicTracks";
 export { default as CaseStudyBrowser } from "./CaseStudies/CaseStudyBrowser";
-export { default as TopNav } from "./Nav/TopNav";
-export { default as TopBar } from "./Nav/TopBar";
+export { default as AppShell } from "./Shell/AppShell";
 export { default as LearnedToggle } from "./Progress/LearnedToggle";
 export { default as BuyMeACoffee } from "./Support/BuyMeACoffee";

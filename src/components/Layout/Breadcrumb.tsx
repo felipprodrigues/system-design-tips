@@ -1,8 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import BuyMeACoffee from "../Support/BuyMeACoffee";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
-import TopNav from "../Nav/TopNav";
 import styles from "./Breadcrumb.module.css";
 
 interface BreadcrumbProps {
@@ -22,14 +19,7 @@ export default function Breadcrumb({ section, sectionHref = "/", lesson, action 
         <span className={styles.sep}>›</span>
         <span className={styles.lesson}>{lesson}</span>
       </div>
-      <div className={styles.nav}>
-        <TopNav />
-      </div>
-      <div className={styles.action}>
-        {action}
-        <BuyMeACoffee />
-        <ThemeToggle />
-      </div>
+      <div className={styles.action}>{action}</div>
     </nav>
   );
 }

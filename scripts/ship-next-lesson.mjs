@@ -48,7 +48,13 @@ const lessonsDataPath = join(root, "src/lib/lessons.ts");
 const lessonsData = readFileSync(lessonsDataPath, "utf8");
 const esc = (value) => value.replace(/"/g, '\\"');
 /* The description becomes the lesson page's meta description, so it ships with the entry. */
-const entry = `      { slug: "${published(next)}", number: ${next.number}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
+if (typeof next.minutes !== "number") {
+  console.error(`"${next.slug}" has no "minutes" in scripts/lessons.json. Read time is shown on the`);
+  console.error(`dashboard and is not derivable here, so set it before shipping: roughly the`);
+  console.error(`rendered word count divided by 200.`);
+  process.exit(1);
+}
+const entry = `      { slug: "${published(next)}", number: ${next.number}, minutes: ${next.minutes}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
 const marker = "      // LESSON_ENTRIES_END";
 if (!lessonsData.includes(marker)) {
   console.error("LESSON_ENTRIES_END marker not found in src/lib/lessons.ts");

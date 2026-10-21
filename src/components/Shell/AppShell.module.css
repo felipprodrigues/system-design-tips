@@ -1,0 +1,146 @@
+.shell {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 22px 14px 18px;
+  background: var(--sd-surface);
+  border-right: 1px solid var(--sd-border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 8px;
+  font-family: var(--sd-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--sd-text);
+}
+
+.brandMark {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--sd-accent);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--sd-muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.link:hover {
+  background: var(--sd-surface2);
+  color: var(--sd-text);
+}
+
+.link[data-active] {
+  background: var(--sd-accent-wash);
+  color: var(--sd-accent);
+  font-weight: 500;
+}
+
+.icon {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+
+/* Pushed to the bottom of the rail; the note is the no-signup promise, kept
+   visible rather than buried in a footer nobody scrolls to. */
+.footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 8px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  color: var(--sd-muted);
+  opacity: 0.8;
+}
+
+.main {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--sd-border);
+    overflow-x: auto;
+  }
+
+  .nav {
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .note {
+    display: none;
+  }
+
+  .footer {
+    margin-top: 0;
+    margin-left: auto;
+    padding: 0;
+  }
+}
+
+/* Narrow phones: the brand wordmark goes, the mark stays as the home link. */
+@media (max-width: 560px) {
+  .brand {
+    font-size: 0;
+    padding: 0;
+  }
+
+  .link {
+    padding: 8px;
+  }
+
+  .link span {
+    display: none;
+  }
+}

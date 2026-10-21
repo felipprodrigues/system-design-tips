@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from "next/font/google";
 import Script from "next/script";
+import AppShell from "@/components/Shell/AppShell";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -52,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
     >
       <body suppressHydrationWarning>
-        {children}
+        <AppShell>{children}</AppShell>
         <Analytics />
         <Script
           id="theme-init"

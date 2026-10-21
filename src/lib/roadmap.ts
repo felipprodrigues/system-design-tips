@@ -1,6 +1,6 @@
 "use client";
 
-import { bySlug, groups, reading, type LessonEntry } from "./lessons";
+import { groups, reading, type LessonEntry } from "./lessons";
 import { statusOf, useLearned, useVisited, type Status } from "./progress";
 
 export interface ConceptProgress {
@@ -27,17 +27,14 @@ export interface Roadmap {
   remainingMinutes: number;
   /** Where "Resume" goes: the concept in progress, else the first unread one. */
   next?: ConceptProgress;
-  /** Tail of the visited list, which is the most recently opened concept. */
-  lastVisited?: LessonEntry;
+  /** Tail of the visited list, which is the most recently opened concept. Carries
+      its status, because a finished one is a prompt to move on rather than reopen. */
+  lastVisited?: ConceptProgress;
 }
 
-/** Everything the dashboard renders, derived from the two slug lists in localStorage.
-    Before hydration both lists are empty, so this returns an untouched roadmap and the
-    server and client markup agree. */
-export function useRoadmap(): Roadmap {
-  const learned = useLearned();
-  const seen = useVisited();
-
+/** The whole derivation, as a plain function of the two slug lists — no React, so it
+    can be exercised directly. `useRoadmap` is the hook that feeds it live storage. */
+export function deriveRoadmap(learned: readonly string[], seen: readonly string[]): Roadmap {
   const sections = groups.map((group) => {
     const concepts = group.lessons.map((lesson) => ({
       lesson,
@@ -68,8 +65,14 @@ export function useRoadmap(): Roadmap {
     totalMinutes: all.reduce((sum, c) => sum + c.lesson.minutes, 0),
     remainingMinutes: all.filter((c) => c.status !== "done").reduce((sum, c) => sum + c.lesson.minutes, 0),
     next,
-    lastVisited: bySlug.get(seen[seen.length - 1] ?? "")?.lesson,
+    lastVisited: all.find((c) => c.lesson.slug === seen[seen.length - 1]),
   };
+}
+
+/** Everything the dashboard renders. Before hydration both lists are empty, so this
+    returns an untouched roadmap and the server and client markup agree. */
+export function useRoadmap(): Roadmap {
+  return deriveRoadmap(useLearned(), useVisited());
 }
 
 /** "3h 15m" / "45m" — minutes are never shown past an hour. */

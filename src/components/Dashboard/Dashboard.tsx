@@ -34,7 +34,7 @@ export default function Dashboard() {
                   <p className={styles.cardHint}>{started ? "Continue" : "Start with"}</p>
                   <p className={styles.cardValue}>{roadmap.next.lesson.title}</p>
                   <Link href={`/concepts/${roadmap.next.lesson.slug}`} className={styles.button}>
-                    {started ? "Resume" : "Begin"} <span aria-hidden="true">→</span>
+                    {started ? "Resume" : "Begin"}
                   </Link>
                 </>
               ) : (
@@ -56,11 +56,43 @@ export default function Dashboard() {
           <p className={styles.cardLabel}>Last opened</p>
           {roadmap.lastVisited ? (
             <>
-              <p className={styles.cardValue}>{roadmap.lastVisited.title}</p>
-              <p className={styles.cardHint}>{roadmap.lastVisited.minutes} min read</p>
-              <Link href={`/concepts/${roadmap.lastVisited.slug}`} className={styles.button}>
-                Open <span aria-hidden="true">→</span>
-              </Link>
+              {roadmap.lastVisited.status === "done" && roadmap.next ? (
+                /* Finished, so reopening it is the least useful thing on offer. The
+                   concept just read drops to a footnote and the next one takes the
+                   card's headline. */
+                <>
+                  <p className={styles.cardMeta}>
+                    <span className={styles.badge} data-status="done">Completed</span>
+                    <span className={styles.cardMetaTitle}>{roadmap.lastVisited.lesson.title}</span>
+                  </p>
+                  <p className={styles.cardHint}>Next</p>
+                  <p className={styles.cardValue}>{roadmap.next.lesson.title}</p>
+                  <Link href={`/concepts/${roadmap.next.lesson.slug}`} className={styles.button}>
+                    Open next
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <p className={styles.cardValue}>{roadmap.lastVisited.lesson.title}</p>
+                  {roadmap.lastVisited.status === "done" ? (
+                    <>
+                      <p>
+                        <span className={styles.badge} data-status="done">Completed</span>
+                      </p>
+                      <p className={styles.cardHint}>
+                        That was the last one. More ship regularly.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className={styles.cardHint}>{roadmap.lastVisited.lesson.minutes} min read</p>
+                      <Link href={`/concepts/${roadmap.lastVisited.lesson.slug}`} className={styles.button}>
+                        Open
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
             </>
           ) : (
             <>

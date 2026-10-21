@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from "next/font/google";
 import Script from "next/script";
+import AppShell from "@/components/Shell/AppShell";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -25,8 +26,8 @@ const fontMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME}: learn system design one lesson at a time`,
-    /* Lesson pages set only their own title; this frames it for search results. */
+    default: `${SITE_NAME}: learn system design one concept at a time`,
+    /* Concept pages set only their own title; this frames it for search results. */
     template: `%s · ${SITE_NAME}`,
   },
   description:
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: SITE_NAME,
-    title: `${SITE_NAME}: learn system design one lesson at a time`,
+    title: `${SITE_NAME}: learn system design one concept at a time`,
     description:
       "A free, self-study roadmap through system design fundamentals: scaling, databases, caching, APIs, and the trade-offs behind every distributed system.",
   },
@@ -52,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
     >
       <body suppressHydrationWarning>
-        {children}
+        <AppShell>{children}</AppShell>
         <Analytics />
         <Script
           id="theme-init"

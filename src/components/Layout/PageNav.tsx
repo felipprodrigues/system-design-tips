@@ -2,8 +2,8 @@ import Link from "next/link";
 import styles from "./PageNav.module.css";
 
 interface PageNavProps {
-  lessonNumber: number;
-  totalLessons: number;
+  conceptNumber: number;
+  totalConcepts: number;
   prevHref?: string;
   nextHref?: string;
   sectionTitle: string;
@@ -11,8 +11,8 @@ interface PageNavProps {
 }
 
 export default function PageNav({
-  lessonNumber,
-  totalLessons,
+  conceptNumber,
+  totalConcepts,
   prevHref,
   nextHref,
   sectionTitle,
@@ -31,7 +31,7 @@ export default function PageNav({
       )}
 
       <div className={styles.center}>
-        <strong>{label ?? `Lesson ${lessonNumber} of ${totalLessons}`}</strong>
+        <strong>{label ?? `Concept ${conceptNumber} of ${totalConcepts}`}</strong>
         {sectionTitle}
       </div>
 

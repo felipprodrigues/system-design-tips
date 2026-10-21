@@ -1,6 +1,6 @@
 /* Floated rather than wrapped in a flex row: it sits immediately before the lede
    paragraph, so the float lands on the lede's first line at the right edge without
-   any lesson body having to restructure its header. .sd-lede's 40px bottom margin
+   any concept body having to restructure its header. .sd-lede's 40px bottom margin
    keeps a one-line pill clear of the first section. */
 .toggle {
   float: right;

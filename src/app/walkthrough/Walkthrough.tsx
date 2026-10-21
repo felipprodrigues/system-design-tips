@@ -173,14 +173,14 @@ const handoffs = [
   ["7 → 3", "What has to survive a failure", "The diagram gets revised, honestly"],
 ];
 
-const stepLessons = [
-  ["Clarify Requirements", "Design Requirements & Estimating Resource Needs", "/lessons/requirements-and-estimation"],
-  ["Estimate Capacity", "Latency, Throughput & Availability", "/lessons/latency-throughput-availability"],
-  ["High-Level Design", "Architectural Styles: Monolith to Event-Driven", "/lessons/architectural-styles"],
-  ["Database Design", "Selecting Relational vs NoSQL Database Models", "/lessons/relational-vs-nosql"],
-  ["Interface Design", "API Design: REST, GraphQL, and gRPC", "/lessons/api-design"],
-  ["Scalability and Performance", "Caching Strategies & Cache Invalidation", "/lessons/caching-strategies"],
-  ["Reliability and Resiliency", "CAP Theorem & Trade-offs", "/lessons/cap-theorem"],
+const stepConcepts = [
+  ["Clarify Requirements", "Design Requirements & Estimating Resource Needs", "/concepts/requirements-and-estimation"],
+  ["Estimate Capacity", "Latency, Throughput & Availability", "/concepts/latency-throughput-availability"],
+  ["High-Level Design", "Architectural Styles: Monolith to Event-Driven", "/concepts/architectural-styles"],
+  ["Database Design", "Selecting Relational vs NoSQL Database Models", "/concepts/relational-vs-nosql"],
+  ["Interface Design", "API Design: REST, GraphQL, and gRPC", "/concepts/api-design"],
+  ["Scalability and Performance", "Caching Strategies & Cache Invalidation", "/concepts/caching-strategies"],
+  ["Reliability and Resiliency", "CAP Theorem & Trade-offs", "/concepts/cap-theorem"],
 ];
 
 const commonMistakes = [
@@ -203,7 +203,7 @@ const keyPoints = [
   "*Redundancy is a claim until you say what fails over and how long it takes.* Step 7 is where a design stops being optimistic.",
 ];
 
-/* Not a lesson: it's the order you work in when applying them, so it sits outside
+/* Not a concept: it's the order you work in when applying them, so it sits outside
    the numbered sequence — no group, no prev/next, nothing to mark complete. */
 
 export default function Walkthrough() {
@@ -212,7 +212,7 @@ export default function Walkthrough() {
 
   return (
     <>
-      <Breadcrumb section="The Method" lesson="A 7-Step Walkthrough for Any System Design" />
+      <Breadcrumb section="The Method" concept="A 7-Step Walkthrough for Any System Design" />
 
       <PageLayout>
         {/* Header */}
@@ -549,11 +549,11 @@ export default function Walkthrough() {
           <h2 className="sd-h2">Where Each Step Lives In The Roadmap</h2>
 
           <div className="sd-prose">
-            <p>This lesson is the map, not the territory. Each step has a lesson that does the actual work.</p>
+            <p>This walkthrough is the map, not the territory. Each step has a concept that does the actual work.</p>
           </div>
 
           <div className="sd-stack">
-            {stepLessons.map(([stepName, title, href]) => (
+            {stepConcepts.map(([stepName, title, href]) => (
               <a
                 key={href}
                 href={href}
@@ -570,7 +570,7 @@ export default function Walkthrough() {
             <a href="https://github.com/ByteByteGoHq/system-design-101" target="_blank" rel="noreferrer" style={{ color: "var(--sd-accent)" }}>
               system-design-101 repository
             </a>{" "}
-            is the wider reference behind it, and worth reading alongside these lessons.
+            is the wider reference behind it, and worth reading alongside these concepts.
           </div>
         </div>
 

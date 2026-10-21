@@ -1,0 +1,420 @@
+/* ---- page header ---- */
+
+.header {
+  margin-bottom: 28px;
+}
+
+.pageTitle {
+  font-family: var(--sd-font-display);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.pageSub {
+  margin-top: 6px;
+  max-width: 62ch;
+  color: var(--sd-muted);
+  font-size: 14.5px;
+}
+
+/* ---- stat cards ---- */
+
+.stats {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+}
+
+.progressCard {
+  background: linear-gradient(180deg, var(--sd-accent-wash), transparent 70%), var(--sd-surface);
+}
+
+.cardLabel {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+}
+
+.cardValue {
+  font-family: var(--sd-font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+.cardHint {
+  font-size: 13px;
+  color: var(--sd-muted);
+}
+
+/* The concept just finished. Its title is a footnote so the next one keeps the
+   headline; the badge is what carries the eye to it. */
+.cardMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 2px;
+}
+
+.check {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  color: var(--sd-done);
+  /* Used both inside the flex meta row and inline in a sentence; the nudge is
+     for the inline case and is ignored by the flex one. */
+  vertical-align: -2px;
+}
+
+.cardMetaTitle {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--sd-muted);
+}
+
+.badge {
+  display: inline-block;
+  flex: none;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--sd-done-wash);
+  border: 1px solid color-mix(in srgb, var(--sd-done) 35%, transparent);
+  color: var(--sd-done);
+  font-family: var(--sd-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.badge[data-status="doing"] {
+  background: var(--sd-accent-wash);
+  border-color: color-mix(in srgb, var(--sd-accent) 35%, transparent);
+  color: var(--sd-accent);
+}
+
+.cardFoot {
+  margin-top: auto;
+  padding-top: 10px;
+  font-family: var(--sd-font-mono);
+  font-size: 11.5px;
+  color: var(--sd-muted);
+}
+
+.progressBody {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--sd-border-strong);
+  border-radius: 7px;
+  background: var(--sd-surface2);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sd-text);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.button:hover {
+  border-color: var(--sd-accent);
+  color: var(--sd-accent);
+}
+
+.figures {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.figures > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.figures dt {
+  font-size: 13px;
+  color: var(--sd-muted);
+}
+
+.figures dd {
+  font-family: var(--sd-font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ---- progress ring ---- */
+
+.ring {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+.ring svg {
+  position: absolute;
+  inset: 0;
+}
+
+.ringValue {
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.ringLabel {
+  font-family: var(--sd-font-mono);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ---- sections ---- */
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.sectionHead::-webkit-details-marker {
+  display: none;
+}
+
+.chevron {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--sd-muted);
+  transition: transform 0.15s ease;
+}
+
+.section[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.sectionTitle {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Takes the slack between the title and the count, so the bar is whatever width
+   is left rather than a fixed size that collides with long section names. */
+.bar {
+  flex: 1;
+  min-width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--sd-border-strong);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--sd-done);
+  transition: width 0.4s ease;
+}
+
+.sectionCount {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  color: var(--sd-muted);
+}
+
+/* ---- concept cards ---- */
+
+.conceptGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+  padding: 0 18px 18px;
+}
+
+.concept {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--sd-bg);
+  border: 1px solid var(--sd-border);
+  border-radius: 8px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.concept:hover {
+  border-color: var(--sd-border-strong);
+  background: var(--sd-surface2);
+}
+
+.conceptTitle {
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.concept:hover .conceptTitle {
+  color: var(--sd-accent);
+}
+
+/* Nothing started here yet, so the whole pill recedes rather than carrying a
+   badge that says so. */
+.concept[data-status="todo"] .conceptTitle {
+  color: var(--sd-muted);
+}
+
+.concept[data-status="doing"] {
+  border-color: color-mix(in srgb, var(--sd-accent) 45%, transparent);
+}
+
+/* ---- banners ---- */
+
+.banners {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 26px;
+}
+
+/* Each banner sets --tone, and everything tinted inside it reads from that, so a
+   banner is one variable away from a different colour. */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 20px;
+  background: linear-gradient(100deg, var(--tone-wash), transparent 64%), var(--sd-surface);
+  border: 1px solid color-mix(in srgb, var(--tone) 26%, transparent);
+  border-radius: 12px;
+  transition: border-color 0.15s ease;
+}
+
+.banner[data-tone="method"] {
+  --tone: var(--sd-warm);
+  --tone-wash: var(--sd-warm-wash);
+}
+
+.banner[data-tone="cases"] {
+  --tone: var(--sd-accent);
+  --tone-wash: var(--sd-accent-wash);
+}
+
+.banner:hover {
+  border-color: color-mix(in srgb, var(--tone) 60%, transparent);
+}
+
+.bannerIcon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--tone) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
+  color: var(--tone);
+}
+
+.bannerIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.bannerEyebrow {
+  display: block;
+  font-family: var(--sd-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tone);
+}
+
+.bannerTitle {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--sd-font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.bannerSub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--sd-muted);
+}
+
+@media (max-width: 1040px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .progressCard {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .stats,
+  .banners {
+    grid-template-columns: 1fr;
+  }
+
+  .pageTitle {
+    font-size: 28px;
+  }
+}

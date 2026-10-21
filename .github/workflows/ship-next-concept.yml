@@ -1,0 +1,25 @@
+name: Ship Next Concept
+# registered
+
+on:
+  schedule:
+    - cron: "0 15 * * *" # 15:00 UTC daily
+  workflow_dispatch: {}
+
+jobs:
+  ship:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/ship-next-concept.mjs
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}

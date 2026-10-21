@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { caseStudies, lessonTitleFor, THEMES, type Theme } from "@/lib/caseStudies";
+import { caseStudies, conceptTitleFor, THEMES, type Theme } from "@/lib/caseStudies";
 import styles from "./CaseStudyBrowser.module.css";
 
 /* Filtering is client-side: the whole set is a couple of KB and fits in the page,
@@ -45,7 +45,7 @@ export default function CaseStudyBrowser() {
 
       <div className={styles.grid}>
         {shown.map((study) => {
-          const lessonTitle = lessonTitleFor(study);
+          const conceptTitle = conceptTitleFor(study);
           return (
             <article key={study.url} className={styles.card}>
               <div className={styles.head}>
@@ -75,9 +75,9 @@ export default function CaseStudyBrowser() {
                     </button>
                   ))}
                 </div>
-                {lessonTitle && (
-                  <Link href={`/lessons/${study.lesson}`} className={styles.lesson}>
-                    {lessonTitle}
+                {conceptTitle && (
+                  <Link href={`/concepts/${study.concept}`} className={styles.concept}>
+                    {conceptTitle}
                   </Link>
                 )}
               </div>

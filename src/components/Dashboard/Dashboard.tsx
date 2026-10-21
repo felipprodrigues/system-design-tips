@@ -145,7 +145,6 @@ export default function Dashboard() {
               The order to work in when you&rsquo;re handed a blank page and a vague problem.
             </span>
           </span>
-          <span className={styles.bannerArrow} aria-hidden="true">→</span>
         </Link>
 
         <Link href="/case-studies" className={styles.banner} data-tone="cases">
@@ -163,7 +162,6 @@ export default function Dashboard() {
               The same trade-offs, met by real teams at real scale.
             </span>
           </span>
-          <span className={styles.bannerArrow} aria-hidden="true">→</span>
         </Link>
       </div>
     </>

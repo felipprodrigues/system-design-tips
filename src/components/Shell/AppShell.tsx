@@ -24,10 +24,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className={styles.main}>{children}</main>
-
-      <footer className={styles.footer}>
-        <p>Local only · no accounts · nothing sent anywhere</p>
-      </footer>
     </div>
   );
 }

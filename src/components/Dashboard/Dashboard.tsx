@@ -98,8 +98,7 @@ export default function Dashboard() {
             <>
               <p className={styles.cardValue}>Nothing yet</p>
               <p className={styles.cardHint}>
-                Concepts you open are remembered in this browser. No account, nothing sent
-                anywhere.
+                Concepts you open are remembered in this browser, no account needed.
               </p>
             </>
           )}

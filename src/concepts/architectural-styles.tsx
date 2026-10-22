@@ -1,15 +1,12 @@
 "use client";
 
 import {
-  Breadcrumb,
-  QuizCarousel,
-  PageNav,
+  ConceptHeader,
   LearnedToggle,
-  PageLayout,
   MarkerList,
+  QuizCarousel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 import { hl } from "@/lib/highlight";
 
 const quizCards: QuizCard[] = [
@@ -205,18 +202,11 @@ function CompareTable({ spec }: { spec: { left: string; right: string; rows: str
 }
 
 export default function Concept10() {
-  const nav = getConceptNav("architectural-styles");
 
   return (
     <>
-      <Breadcrumb section={nav.sectionTitle} concept="Architectural Styles: Monolith to Event-Driven" />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">Architectural Styles: Monolith to Event-Driven</h1>
+          <ConceptHeader slug="architectural-styles" />
         <LearnedToggle />
         <p className="sd-lede">
           The progression companies actually get forced through, and what each step costs.
@@ -413,9 +403,7 @@ export default function Concept10() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
-      <PageNav {...nav} />
     </>
   );
 }

@@ -8,7 +8,7 @@
   color: var(--sd-muted);
   letter-spacing: 0.04em;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 16px;
   position: sticky;
@@ -43,10 +43,3 @@
   text-decoration: underline;
 }
 
-.action {
-  grid-column: 2;
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}

@@ -1,15 +1,12 @@
 "use client";
 
 import {
-  Breadcrumb,
-  QuizCarousel,
-  PageNav,
+  ConceptHeader,
   LearnedToggle,
-  PageLayout,
   MarkerList,
+  QuizCarousel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 import { hl } from "@/lib/highlight";
 
 const quizCards: QuizCard[] = [
@@ -243,18 +240,11 @@ function BucketCard({ item }: { item: (typeof bucketCompare)[number] }) {
 }
 
 export default function Concept03RateLimiting() {
-  const nav = getConceptNav("rate-limiting");
 
   return (
     <>
-      <Breadcrumb section={nav.sectionTitle} concept="Rate Limiting" />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">Rate Limiting</h1>
+          <ConceptHeader slug="rate-limiting" />
         <LearnedToggle />
         <p className="sd-lede">
           Why the algorithm behind a limit decides how forgiving it is, not just what number is printed on it.
@@ -599,9 +589,7 @@ export default function Concept03RateLimiting() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
-      <PageNav {...nav} />
     </>
   );
 }

@@ -2,16 +2,12 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
   DeepDiveButton,
-  SidePanel,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  PageLayout,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -111,14 +107,8 @@ export default function Concept06() {
 
   return (
     <>
-      <Breadcrumb
-        section="Foundations of Distributed Architectures"
-        concept="Webhooks vs. Polling: Choosing a Communication Pattern"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
-
-      <PageLayout>
-        {/* Header */}
+      {/* Header. Chrome — breadcrumb, layout, footer nav — belongs to the
+          /concepts/[slug] route now; a body is its content and nothing else. */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           Concept 6 · Foundations
         </p>
@@ -126,8 +116,9 @@ export default function Concept06() {
           Webhooks vs. Polling: Choosing a Communication Pattern
         </h1>
         <p style={{ color: "var(--sd-muted)", fontSize: 14, marginBottom: 40 }}>
-          How a system finds out about changes it didn't initiate.
+          How a system finds out about changes it didn&rsquo;t initiate.
         </p>
+        <DeepDiveButton onClick={() => setPanelOpen(true)} />
 
         {/* Intro */}
         <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
@@ -286,7 +277,6 @@ export default function Concept06() {
           <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -445,10 +435,6 @@ export default function Concept06() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav
-        {...getConceptNav("06-webhooks-vs-polling")}
-        sectionTitle="Foundations of Distributed Architectures"
-      />
     </>
   );
 }

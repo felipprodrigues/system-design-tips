@@ -200,3 +200,9 @@ const publishedConcepts = new Map(
 export function conceptTitleFor(study: CaseStudy) {
   return study.concept ? publishedConcepts.get(study.concept) : undefined;
 }
+
+/** The case studies backing one concept, for its page's rail. Most concepts have
+    none — only seven of the fourteen are covered — so callers must handle empty. */
+export function studiesForConcept(slug: string) {
+  return caseStudies.filter((study) => study.concept === slug);
+}

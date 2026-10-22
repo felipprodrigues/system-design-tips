@@ -3,7 +3,7 @@
    dashboard points at next, and that is pure array logic over two slug lists. */
 
 import assert from "node:assert/strict";
-import { reading } from "./concepts";
+import { bySlug, reading } from "./concepts";
 import { deriveRoadmap } from "./roadmap";
 
 const order = reading.map(({ concept }) => concept.slug);
@@ -60,6 +60,26 @@ const [first, second, third] = order;
   assert.equal(r.done, 0);
   assert.equal(r.lastVisited, undefined);
   assert.equal(r.next?.concept.slug, first);
+}
+
+{
+  // Authored relations: a typo here is invisible in the UI, the rail just drops
+  // the entry, so the wiring is checked rather than eyeballed.
+  for (const { concept } of reading) {
+    assert.ok(concept.related.length > 0, `${concept.slug} has no related concepts`);
+    assert.ok(
+      !concept.related.includes(concept.slug),
+      `${concept.slug} lists itself as related`,
+    );
+    assert.equal(
+      new Set(concept.related).size,
+      concept.related.length,
+      `${concept.slug} repeats a related slug`,
+    );
+    for (const slug of concept.related) {
+      assert.ok(bySlug.has(slug), `${concept.slug} points at unknown slug "${slug}"`);
+    }
+  }
 }
 
 console.log("roadmap: all checks passed");

@@ -2,18 +2,14 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
+  MarkerList,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
-  MarkerList,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -152,22 +148,11 @@ const topologyNodes = [
 
 export default function Concept08() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("api-design");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="API Design: REST, GraphQL, and gRPC"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">API Design: REST, GraphQL, and gRPC</h1>
+          <ConceptHeader slug="api-design" />
         <LearnedToggle />
         <p className="sd-lede">
           Three ways to expose a system, and the caller each one is built for.
@@ -432,7 +417,6 @@ export default function Concept08() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
@@ -524,7 +508,6 @@ export default function Concept08() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

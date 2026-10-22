@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -73,23 +69,11 @@ const quizCards: QuizCard[] = [
 
 export default function Concept02() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("latency-throughput-availability");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Latency, Throughput & Availability"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Latency, Throughput &amp; Availability
-        </h1>
+        <ConceptHeader slug="latency-throughput-availability" />
         <LearnedToggle />
         <p className="sd-lede">
           The three pillars of system observability — if you can't measure these, you can't operate.
@@ -372,7 +356,6 @@ export default function Concept02() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="How can a system have high throughput but poor latency?">
@@ -434,7 +417,6 @@ export default function Concept02() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

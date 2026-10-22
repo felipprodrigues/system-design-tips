@@ -1,0 +1,136 @@
+/* Three columns so the prose is centred on the VIEWPORT, not on content-plus-rail.
+   The rail lives in the right gutter and takes none of the content's width, which
+   means adding it moved nothing: the measure and the horizontal position of every
+   concept page are identical to before. */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, var(--sd-page-max)) 1fr;
+  padding: var(--sd-page-pad-y) var(--sd-page-pad-x) 72px;
+}
+
+.content {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.rail {
+  grid-column: 3;
+  justify-self: start;
+  width: 252px;
+  margin-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* Clears the sticky breadcrumb, which is 41px tall. */
+  position: sticky;
+  top: 60px;
+  align-self: start;
+}
+
+.railCard {
+  padding: 15px 16px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 11px;
+}
+
+.railTitle {
+  font-family: var(--sd-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+  margin-bottom: 10px;
+}
+
+.railList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+}
+
+.railLink {
+  display: block;
+  padding: 7px 8px;
+  margin: 0 -8px;
+  border-radius: 7px;
+  transition: background 0.14s ease;
+}
+
+.railLink:hover {
+  background: var(--sd-surface2);
+}
+
+.railLinkTitle {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.railLink:hover .railLinkTitle {
+  color: var(--sd-accent);
+}
+
+.railLinkMeta {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--sd-font-mono);
+  font-size: 10.5px;
+  color: var(--sd-muted);
+}
+
+.railMore {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--sd-accent);
+}
+
+.railMore:hover {
+  text-decoration: underline;
+}
+
+/* ---- header ---- */
+
+.eyebrow {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sd-accent);
+  margin-bottom: 10px;
+}
+
+.dot {
+  margin: 0 7px;
+  color: var(--sd-muted);
+}
+
+/* The gutter has to hold 252px of rail plus its 32px gap, which needs roughly
+   1470px of viewport once the 900px measure is centred. Narrower than that the
+   rail drops below the content and lays its cards out side by side, rather than
+   squeezing the prose to make room. */
+@media (max-width: 1470px) {
+  .layout {
+    grid-template-columns: minmax(0, var(--sd-page-max));
+    justify-content: center;
+    gap: 28px;
+  }
+
+  .content,
+  .rail {
+    grid-column: 1;
+  }
+
+  .rail {
+    width: auto;
+    margin-left: 0;
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}

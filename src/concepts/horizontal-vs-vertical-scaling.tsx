@@ -2,18 +2,14 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
+  MarkerList,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
-  MarkerList,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -137,23 +133,11 @@ function PItem({
 
 export default function Concept01() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("horizontal-vs-vertical-scaling");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Scalability: Vertical vs Horizontal Scaling"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Scalability: Vertical vs Horizontal Scaling
-        </h1>
+        <ConceptHeader slug="horizontal-vs-vertical-scaling" />
         <LearnedToggle />
         <p className="sd-lede">
           Understanding how systems grow — and the trade-offs each approach demands.
@@ -419,7 +403,6 @@ export default function Concept01() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="When to make the switch">
@@ -483,7 +466,6 @@ export default function Concept01() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

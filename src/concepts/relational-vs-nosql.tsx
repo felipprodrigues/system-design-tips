@@ -2,18 +2,14 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
+  MarkerList,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
-  MarkerList,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -135,7 +131,6 @@ const exercises = [
 
 export default function Concept01Module02() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("relational-vs-nosql");
   const [activePanelSection, setActivePanelSection] = useState<string | null>(null);
 
   function openPanelSection(id: string) {
@@ -145,20 +140,8 @@ export default function Concept01Module02() {
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Selecting Relational vs NoSQL Database Models"
-        action={<DeepDiveButton onClick={() => { setActivePanelSection(null); setPanelOpen(true); }} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Selecting Relational vs NoSQL Database Models
-        </h1>
+          <ConceptHeader slug="relational-vs-nosql" />
         <LearnedToggle />
         <p className="sd-lede">
           Two philosophies for storing data — integrity-first structure versus flexible, horizontally scalable performance.
@@ -544,7 +527,6 @@ export default function Concept01Module02() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => { setPanelOpen(false); setActivePanelSection(null); }} title="Going further">
@@ -713,7 +695,6 @@ export default function Concept01Module02() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

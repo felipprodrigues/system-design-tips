@@ -2,19 +2,15 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
+  MarkerList,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
+  SidePanel,
   Term,
-  MarkerList,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 /* Single source for every term on this page: the inline <T> tooltips and the
    Key terms glossary both read from here, so the two can't drift apart. */
@@ -189,24 +185,11 @@ const chainNodes = [
 
 export default function Concept07() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("request-lifecycle");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="The Lifecycle of a Software Request"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Prologue
-        </p>
-        <h1 className="sd-h1">
-          The Lifecycle of a Software Request
-        </h1>
+          <ConceptHeader slug="request-lifecycle" />
         <LearnedToggle />
         <p className="sd-lede">
           Tracing an HTTP request from client click to rendered response — and every hand-off in between.
@@ -554,7 +537,6 @@ export default function Concept07() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -653,7 +635,6 @@ export default function Concept07() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} label="Prologue" />
     </>
   );
 }

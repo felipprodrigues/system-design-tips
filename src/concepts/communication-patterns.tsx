@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -150,24 +146,11 @@ const comparisonRows = [
 
 export default function Concept06() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("communication-patterns");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Choosing a Communication Pattern"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Choosing a Communication Pattern
-        </h1>
+          <ConceptHeader slug="communication-patterns" />
         <LearnedToggle />
         <p className="sd-lede">
           How a system finds out about changes it didn't initiate.
@@ -390,7 +373,6 @@ export default function Concept06() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -549,7 +531,6 @@ export default function Concept06() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

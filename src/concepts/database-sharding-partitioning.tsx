@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -116,24 +112,11 @@ const tradeoffs = [
 
 export default function Concept02DatabaseSharding() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("database-sharding-partitioning");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Implementing Database Sharding and Partitioning"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Implementing Database Sharding and Partitioning
-        </h1>
+          <ConceptHeader slug="database-sharding-partitioning" />
         <LearnedToggle />
         <p className="sd-lede">
           Decomposing a single, massive dataset into smaller chunks spread across nodes — trading query simplicity for horizontal scale.
@@ -406,7 +389,6 @@ export default function Concept02DatabaseSharding() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -530,7 +512,6 @@ export default function Concept02DatabaseSharding() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

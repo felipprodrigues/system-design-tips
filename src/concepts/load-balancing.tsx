@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -111,24 +107,11 @@ const comparisonRows = [
 
 export default function Concept04() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("load-balancing");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Core Concepts of Load Balancing"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Core Concepts of Load Balancing
-        </h1>
+          <ConceptHeader slug="load-balancing" />
         <LearnedToggle />
         <p className="sd-lede">
           Distribute traffic, eliminate single points of failure, and scale without downtime.
@@ -380,7 +363,6 @@ export default function Concept04() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -574,7 +556,6 @@ export default function Concept04() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

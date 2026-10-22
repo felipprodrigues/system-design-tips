@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import styles from "./Breadcrumb.module.css";
 
@@ -6,10 +5,9 @@ interface BreadcrumbProps {
   section: string;
   sectionHref?: string;
   concept: string;
-  action?: React.ReactNode;
 }
 
-export default function Breadcrumb({ section, sectionHref = "/", concept, action }: BreadcrumbProps) {
+export default function Breadcrumb({ section, sectionHref = "/", concept }: BreadcrumbProps) {
   return (
     <nav className={styles.breadcrumb}>
       <div className={styles.left}>
@@ -19,7 +17,6 @@ export default function Breadcrumb({ section, sectionHref = "/", concept, action
         <span className={styles.sep}>›</span>
         <span className={styles.concept}>{concept}</span>
       </div>
-      <div className={styles.action}>{action}</div>
     </nav>
   );
 }

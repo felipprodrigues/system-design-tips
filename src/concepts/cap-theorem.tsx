@@ -2,18 +2,14 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
+  MarkerList,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
-  MarkerList,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -169,24 +165,11 @@ const commonMistakes = [
 
 export default function Concept03() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("cap-theorem");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="CAP Theorem & Trade-offs"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          CAP Theorem &amp; Trade-offs
-        </h1>
+          <ConceptHeader slug="cap-theorem" />
         <LearnedToggle />
         <p className="sd-lede">
           When the network fails, you must choose — and there is no middle ground.
@@ -958,7 +941,6 @@ export default function Concept03() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -1082,7 +1064,6 @@ export default function Concept03() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

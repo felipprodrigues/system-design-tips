@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import {
-  Breadcrumb,
-  DeepDiveButton,
-  SidePanel,
+  ConceptHeader,
+  LearnedToggle,
   PanelSection,
   QuizCarousel,
-  PageNav,
-  LearnedToggle,
-  PageLayout,
+  SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
-import { getConceptNav } from "@/lib/concepts";
 
 const quizCards: QuizCard[] = [
   {
@@ -111,24 +107,11 @@ const storagePipeline = [
 
 export default function Concept05() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const nav = getConceptNav("requirements-and-estimation");
 
   return (
     <>
-      <Breadcrumb
-        section={nav.sectionTitle}
-        concept="Design Requirements & Estimating Resource Needs"
-        action={<DeepDiveButton onClick={() => setPanelOpen(true)} />}
-      />
 
-      <PageLayout>
-        {/* Header */}
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
-          Concept {nav.conceptNumber} · {nav.sectionTitle}
-        </p>
-        <h1 className="sd-h1">
-          Design Requirements &amp; Estimating Resource Needs
-        </h1>
+          <ConceptHeader slug="requirements-and-estimation" />
         <LearnedToggle />
         <p className="sd-lede">
           Turning vague product goals into concrete, quantifiable engineering constraints.
@@ -432,7 +415,6 @@ export default function Concept05() {
           <p className="sd-quiz-title">Check your understanding</p>
           <QuizCarousel cards={quizCards} />
         </div>
-      </PageLayout>
 
       {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
@@ -555,7 +537,6 @@ export default function Concept05() {
         </PanelSection>
       </SidePanel>
 
-      <PageNav {...nav} />
     </>
   );
 }

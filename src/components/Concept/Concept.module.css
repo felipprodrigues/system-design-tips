@@ -112,13 +112,14 @@
 
 /* The gutter has to hold 252px of rail plus its 32px gap, which needs roughly
    1470px of viewport once the 900px measure is centred. Narrower than that the
-   rail drops below the content and lays its cards out side by side, rather than
-   squeezing the prose to make room. */
+   rail stops being a gutter and becomes a band across the end of the page: the
+   prose keeps its width and stays centred on the viewport, which is what giving
+   the rail a column of its own would have cost on every laptop. */
 @media (max-width: 1470px) {
   .layout {
     grid-template-columns: minmax(0, var(--sd-page-max));
     justify-content: center;
-    gap: 28px;
+    gap: 44px;
   }
 
   .content,
@@ -128,9 +129,52 @@
 
   .rail {
     width: auto;
+    /* Without this the rail keeps the gutter's justify-self: start and
+       shrink-wraps into a narrow stack instead of filling the measure. */
+    justify-self: stretch;
     margin-left: 0;
     position: static;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    /* 340px rather than the card's own 252px: two cards split the measure
+       evenly instead of leaving a third track's worth of hole on the right,
+       and a concept with no case studies collapses the empty track and spans. */
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  }
+}
+
+/* On a phone the band goes above the closing quiz rather than after it, which
+   it can only do if the quiz and the rail are items of the same grid: the
+   content wrapper stops being a box so the body's blocks place themselves, and
+   the quiz — the last in-flow block of every concept body — is ordered after
+   the rail. The cost is that blocks become grid items, which blockifies the
+   floated Complete pill; at this width it reads fine on its own line. */
+@media (max-width: 760px) {
+  .layout {
+    gap: 0;
+  }
+
+  .content {
+    display: contents;
+  }
+
+  /* The blocks are grid items now, and a grid item's automatic minimum size is
+     its min-content width — which the comparison tables are wider than. Without
+     this they widen the column past the viewport, the job .content's own
+     min-width: 0 used to do. */
+  .content > * {
+    min-width: 0;
+  }
+
+  .content > :global(.sd-quiz) {
+    order: 1;
+  }
+
+  .content > button {
+    justify-self: end;
+  }
+
+  .rail {
+    /* Sections carry 32px below them; this is the rest of the breathing room. */
+    margin-top: 12px;
   }
 }

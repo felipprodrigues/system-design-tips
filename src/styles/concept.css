@@ -254,3 +254,23 @@
   font-weight: 700;
   margin-bottom: 20px;
 }
+
+/* ---- Stepped diagrams -------------------------------------------------- */
+
+/* A node in a diagram that reveals itself stage by stage. The browser owns the
+   animation and the reduced-motion opt-out, so the component only has to say
+   whether a node belongs to the current stage. */
+.sd-reveal {
+  transition: opacity 340ms ease, transform 340ms ease;
+}
+
+.sd-reveal[data-on="false"] {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-reveal {
+    transition: none;
+  }
+}

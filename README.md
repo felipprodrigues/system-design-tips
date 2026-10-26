@@ -53,6 +53,13 @@ Choosing a database, then surviving the size of it.
 - [Selecting Relational vs NoSQL Database Models](https://systemdesignbits.vercel.app/concepts/relational-vs-nosql) — SQL vs NoSQL explained: ACID transactions and JOINs versus flexible schemas and horizontal scale, and how access patterns decide the choice.
 - [Implementing Database Sharding and Partitioning](https://systemdesignbits.vercel.app/concepts/database-sharding-partitioning) — Database sharding and partitioning explained: shard keys, range vs hash sharding, hot shards, shard maps, and the cost of cross-shard joins.
 
+## System Design 101
+
+One app grown from a single server to a million users, with every piece introduced by the break
+that makes it necessary.
+
+- [Scaling a Photo App to a Million Users](https://systemdesignbits.vercel.app/concepts/scaling-a-photo-app) — A practical system design walkthrough: growing one photo-sharing app from a single server to a million users, and the break that makes each of the ten pieces necessary.
+
 ---
 
 ## Running it locally

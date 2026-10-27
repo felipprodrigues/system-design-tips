@@ -62,6 +62,15 @@ export const groups: ConceptGroup[] = [
       { slug: "database-sharding-partitioning", number: 2, minutes: 9, related: ["relational-vs-nosql", "cap-theorem", "horizontal-vs-vertical-scaling"], title: "Implementing Database Sharding and Partitioning", description: "Database sharding and partitioning explained: shard keys, range vs hash sharding, hot shards, shard maps, and the cost of cross-shard joins." },
     ],
   },
+  {
+    /* One page, not a queue of them: the whole point is that the ten pieces only
+       make sense in one continuous story, and each one already has its own concept
+       to link out to. Last in the order, so nothing here is a forward reference. */
+    title: "System Design 101",
+    concepts: [
+      { slug: "scaling-a-photo-app", number: 1, minutes: 18, label: "Capstone", related: ["horizontal-vs-vertical-scaling", "caching-strategies", "database-sharding-partitioning"], title: "Scaling a Photo App to a Million Users", description: "A practical system design walkthrough: growing one photo-sharing app from a single server to a million users, and the break that makes each of the ten pieces necessary." },
+    ],
+  },
 ];
 
 /** Reading order across every group, so prev/next flows past a group boundary. */

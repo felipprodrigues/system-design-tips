@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { STATUS_LABEL } from "@/lib/progress";
 import { formatMinutes, useRoadmap } from "@/lib/roadmap";
 import ProgressRing from "./ProgressRing";
 import SectionCard from "./SectionCard";
@@ -19,9 +20,15 @@ function Check() {
   );
 }
 
+/* The group the roadmap builds up to. Pulled out of the collapsible list: it holds a
+   single page, so a section that can hide it hides the whole thing. */
+const CAPSTONE = "System Design 101";
+
 export default function Dashboard() {
   const roadmap = useRoadmap();
   const started = roadmap.done > 0 || roadmap.lastVisited !== undefined;
+  const capstone = roadmap.sections.find((section) => section.title === CAPSTONE);
+  const sections = roadmap.sections.filter((section) => section !== capstone);
 
   return (
     <>
@@ -129,10 +136,48 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.sections}>
-        {roadmap.sections.map((section) => (
+        {sections.map((section) => (
           <SectionCard key={section.title} section={section} open={section.done < section.total} />
         ))}
       </div>
+
+      {capstone && (
+        <section className={styles.capstone}>
+          <h2 className={styles.capstoneLabel}>
+            {capstone.title}
+            <span className={styles.capstoneRule} aria-hidden="true" />
+          </h2>
+          {capstone.concepts.map(({ concept, status }) => (
+            <Link
+              key={concept.slug}
+              href={`/concepts/${concept.slug}`}
+              className={styles.banner}
+              data-tone="capstone"
+            >
+              <span className={styles.bannerIcon} aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                  <path d="M3.5 16.5h13" />
+                  <rect x="4" y="11" width="3.2" height="4" rx="0.6" />
+                  <rect x="8.4" y="7.5" width="3.2" height="7.5" rx="0.6" />
+                  <rect x="12.8" y="4" width="3.2" height="11" rx="0.6" />
+                </svg>
+              </span>
+              <span className={styles.bannerBody}>
+                <span className={styles.bannerEyebrow}>{concept.label ?? capstone.title}</span>
+                <span className={styles.bannerTitle}>{concept.title}</span>
+                <span className={styles.bannerSub}>{concept.description}</span>
+              </span>
+              {/* Not aria-hidden like the grid's badge: here the link keeps its own
+                  visible label, so the status can just be read out alongside it. */}
+              {status !== "todo" && (
+                <span className={styles.badge} data-status={status}>
+                  {STATUS_LABEL[status]}
+                </span>
+              )}
+            </Link>
+          ))}
+        </section>
+      )}
 
       <div className={styles.banners}>
         <Link href="/walkthrough" className={styles.banner} data-tone="method">

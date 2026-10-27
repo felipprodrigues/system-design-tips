@@ -418,3 +418,54 @@
     font-size: 28px;
   }
 }
+
+/* ---- capstone ---- */
+
+/* A plain titled block rather than a <details>: one page lives here and it is the
+   end of the road, so nothing about it should be collapsible. */
+.capstone {
+  margin-top: 26px;
+}
+
+/* Same mono eyebrow as a section head, minus the chevron, with the rule taking the
+   leftover width so the title reads as a divider across the page. */
+.capstoneLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.capstoneRule {
+  flex: 1;
+  min-width: 40px;
+  height: 1px;
+  background: var(--sd-border-strong);
+}
+
+/* The banner language of The Method and Case Studies, one step louder: full width,
+   and its own hue, so the roadmap ends on a destination rather than a row.
+   Violet because the other two already own blue and gold — three banners, three
+   hues, told apart without reading them. */
+.banner[data-tone="capstone"] {
+  --tone: var(--sd-violet);
+  --tone-wash: var(--sd-violet-wash);
+  padding: 20px 22px;
+  /* Unlike the half-width pair, the tint carries the whole way across rather than
+     fading out at 64% — at full width a wash that dies mid-card just looks unfinished. */
+  background:
+    linear-gradient(100deg, var(--tone-wash), color-mix(in srgb, var(--tone-wash) 45%, transparent)),
+    var(--sd-surface);
+}
+
+/* Takes the slack between icon and status badge; without it the long sub line
+   pushes the badge off the edge instead of wrapping. */
+.bannerBody {
+  flex: 1;
+  min-width: 0;
+}

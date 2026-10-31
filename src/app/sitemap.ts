@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/case-studies`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/walkthrough`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE_URL}/about`, changeFrequency: "yearly", priority: 0.5 },
     ...groups.flatMap((group) =>
       group.concepts.map((concept) => ({
         url: `${SITE_URL}/concepts/${concept.slug}`,

@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/", label: "Roadmap", owns: (p: string) => p === "/" || p.startsWith("/concepts") },
   { href: "/walkthrough", label: "The Method", owns: (p: string) => p.startsWith("/walkthrough") },
   { href: "/case-studies", label: "Case studies", owns: (p: string) => p.startsWith("/case-studies") },
+  { href: "/about", label: "About", owns: (p: string) => p.startsWith("/about") },
 ];
 
 export default function TopTabs() {

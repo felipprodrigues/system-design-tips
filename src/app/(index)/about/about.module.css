@@ -1,0 +1,200 @@
+/* Two equal columns that stack on narrow screens. The shared .sd-grid-2 is a
+   fixed 1fr 1fr with no collapse, which squeezes two prose columns on a phone. */
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 760px) {
+  .cols {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+.col h2 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.col p {
+  color: var(--sd-muted);
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+.col p:last-child {
+  margin-bottom: 0;
+}
+
+/* Availability card. Two panes: a rail that carries the status at a glance, and
+   a body with the ask, the filters (remote, stack, timezone) and the contact
+   buttons. Stacks to one column on narrow screens. */
+.status {
+  display: grid;
+  grid-template-columns: 196px 1fr;
+  border: 1px solid var(--sd-border-strong);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.rail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 20px;
+  background: var(--sd-accent-wash);
+  border-right: 1px solid var(--sd-border);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: var(--sd-done);
+  background: var(--sd-done-wash);
+  border-radius: 999px;
+  padding: 5px 11px;
+  margin-bottom: 14px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sd-done);
+}
+
+/* Decorative mark, drawn inline so every colour is a token and the thing
+   survives the light/dark flip. A raster would not. */
+.art {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 118px;
+}
+
+.art svg {
+  width: 100%;
+  max-width: 168px;
+  height: auto;
+}
+
+.body {
+  padding: 26px 30px 28px;
+}
+
+/* Its own class, not `.body p`: an element selector here outranks every single
+   class in the card (.pill silently lost its font-size and colour to exactly
+   that), so anything later added to the body would inherit body copy. */
+.lede {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--sd-muted);
+  margin-bottom: 18px;
+}
+
+/* One row, no wrapping: the three filters read as a single line of facts. */
+.facts {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--sd-text);
+  background: var(--sd-surface2);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+.fact svg {
+  color: var(--sd-accent);
+  flex-shrink: 0;
+}
+
+.links {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--sd-border);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sd-text);
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border);
+  border-radius: 9px;
+  padding: 7px 11px;
+  text-decoration: none;
+}
+
+.link:hover {
+  border-color: var(--sd-accent);
+  color: var(--sd-accent);
+}
+
+.link svg {
+  flex-shrink: 0;
+}
+
+.arrow {
+  color: var(--sd-muted);
+}
+
+.link:hover .arrow {
+  color: var(--sd-accent);
+}
+
+@media (max-width: 760px) {
+  .status {
+    grid-template-columns: 1fr;
+  }
+
+  .rail {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--sd-border);
+  }
+
+  /* The illustration is decoration; the status pill is the point. */
+  .art {
+    display: none;
+  }
+
+  .body {
+    padding: 22px 20px 24px;
+  }
+
+  /* Below the breakpoint there is no room for one line, so let them wrap. */
+  .facts,
+  .links {
+    flex-wrap: wrap;
+  }
+}

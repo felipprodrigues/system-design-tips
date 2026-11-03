@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts"
+    "test": "node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

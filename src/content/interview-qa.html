@@ -1,0 +1,2003 @@
+<h2 id="s1">1. setTimeout, built out of a Promise</h2>
+
+<p class="ask">Write a <code>setTimeout</code> polyfill using the Promise constructor — and make it cancellable, like the real one.</p>
+
+<div class="say"><strong>Plain version:</strong> a promise is a receipt. It says "I'll tell you the moment this is done" — but a receipt cannot count seconds. Something else has to own the clock. Working out <em>what</em> owns the clock is the whole exercise.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>What does <code>setTimeout</code> actually do?</strong> Three things: it waits, it calls your function, and it hands back an id so you can cancel. Your version needs all three, so three things to solve.</li>
+  <li><strong>Can a promise wait?</strong> No. A promise does not count time — it sits there doing nothing until somebody calls <code>resolve</code>. So a promise can never <em>be</em> a timer, it can only wrap one. Say that out loud; it is half the grade.</li>
+  <li><strong>So who waits?</strong> Two possible answers, and asking which one they want is the move: wrap the real <code>setTimeout</code> (usually what they mean), or get the time from somewhere else entirely — <code>Date.now()</code>, checked over and over.</li>
+  <li><strong>The wrapping version writes itself.</strong> Put <code>setTimeout</code> inside <code>new Promise</code> and let it call <code>resolve</code>. Then <code>.then()</code> runs the callback.</li>
+  <li><strong>Now the cancel.</strong> Try to cancel a promise — you can't, there is no such button. So you cannot stop the waiting; you can only decide not to act when it finishes. A boolean checked before calling the function does exactly that.</li>
+  <li><strong>The version with no timer at all.</strong> If <code>setTimeout</code> is off the table, you have to keep asking "is it time yet?". A <code>while</code> loop would ask so fast the page freezes — one thread, nothing else gets a turn (§13). <code>requestAnimationFrame</code> asks the same question once per frame and gives the browser its turn in between.</li>
+</ol>
+
+<h3>The code</h3>
+<p><strong>Reading A — wrap it:</strong></p>
+<pre><code>const sleep = ms =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms));
+
+function myTimeout(fn, delay = 0, ...args) {
+  let cancelled = false;
+  sleep(delay).then(() =&gt; { if (!cancelled) fn(...args); });
+  return () =&gt; { cancelled = true; };   // the clearTimeout equivalent
+}</code></pre>
+
+<p><strong>Reading B — no native timer, the real polyfill:</strong></p>
+<pre><code>function myTimeout(fn, delay = 0, ...args) {
+  let cancelled = false;
+  new Promise(resolve =&gt; {
+    const start = Date.now();
+    (function tick() {
+      if (cancelled) return;
+      if (Date.now() - start &gt;= delay) return resolve();
+      requestAnimationFrame(tick);   // yields to the browser, ~16ms granularity
+    })();
+  }).then(() =&gt; { if (!cancelled) fn(...args); });
+  return () =&gt; { cancelled = true; };
+}</code></pre>
+
+<h3>Say these while you type</h3>
+<ul>
+  <li><code>requestAnimationFrame</code>, not a <code>while</code> loop — the loop blocks the single thread and nothing else runs, including the paint.</li>
+  <li>Granularity is about 16ms, so the delay is a floor, never a guarantee. Real <code>setTimeout</code> has the same caveat.</li>
+  <li>The returned cancel function is why the real <code>setTimeout</code> hands back an id in the first place.</li>
+</ul>
+
+
+<h2 id="s2">2. A timer with Start, Pause and Reset</h2>
+
+<p class="ask">Build a React timer component with Start, Pause and Reset buttons.</p>
+
+<div class="say"><strong>Plain version:</strong> a stopwatch is only two facts — a number, and whether it is currently counting. Every button just changes one of those two.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>What has to be remembered?</strong> The elapsed time, and whether it is running. That is two <code>useState</code>. If you reach for a third, you are probably storing something you could compute instead.</li>
+  <li><strong>Who makes the number go up?</strong> Something repeating: <code>setInterval</code>, ticking every 100ms.</li>
+  <li><strong>Where does the interval live?</strong> Not in the Start handler. Starting a timer is a side effect that later has to be torn down, so it belongs in <code>useEffect</code> with <code>running</code> as the dependency: created when running turns true, destroyed when it turns false.</li>
+  <li><strong>Here is the trap.</strong> Write <code>setMs(ms + 100)</code> and the interval callback remembers the <code>ms</code> from the render that created it — forever. The display goes 0 → 100 → 100 → 100. The updater form <code>setMs(m =&gt; m + 100)</code> is handed the current value instead of remembering an old one. <strong>This is the bug they are hunting for.</strong></li>
+  <li><strong>What stops it?</strong> The function you return from the effect. It runs on pause and on unmount. Skip it and the interval keeps ticking after the component is gone — and in dev StrictMode you get two of them.</li>
+  <li><strong>Now the buttons are trivial.</strong> Start sets running true, Pause sets it false, Reset sets it false and the number back to zero.</li>
+</ol>
+
+<h3>The code</h3>
+<pre><code>function Timer() {
+  const [ms, setMs] = useState(0);
+  const [running, setRunning] = useState(false);
+
+  useEffect(() =&gt; {
+    if (!running) return;
+    const id = setInterval(() =&gt; setMs(m =&gt; m + 100), 100);
+    return () =&gt; clearInterval(id);
+  }, [running]);
+
+  const s = (ms / 1000).toFixed(1);
+
+  return (
+    &lt;div&gt;
+      &lt;output aria-live="polite"&gt;{s}s&lt;/output&gt;
+      &lt;button onClick={() =&gt; setRunning(true)}  disabled={running}&gt;Start&lt;/button&gt;
+      &lt;button onClick={() =&gt; setRunning(false)} disabled={!running}&gt;Pause&lt;/button&gt;
+      &lt;button onClick={() =&gt; { setRunning(false); setMs(0); }}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h3>If they ask you to improve it</h3>
+<p>"<code>setInterval</code> drifts — the browser is free to run it late, and the error accumulates. For a real stopwatch I would store <code>startedAt</code> and <code>accumulated</code>, then compute <code>Date.now() - startedAt + accumulated</code> on every tick. The interval becomes a repaint trigger rather than the source of truth, so being late once costs nothing."</p>
+
+
+<h2 id="s3">3. Event loop — the trace</h2>
+
+<div class="say"><strong>Analogy (full version in §13):</strong> one cashier, two lines. The promise line must be <em>completely empty</em> before the cashier even glances at the timer line. Every "what is the output order?" question is that one rule applied.</div>
+
+<p>Memorize the order, then narrate it: <strong>all sync code → drain <em>all</em> microtasks (promise <code>.then</code>, <code>queueMicrotask</code>) → one macrotask (<code>setTimeout</code>) → drain microtasks again → repeat.</strong></p>
+
+<pre><code>console.log('1');
+setTimeout(() =&gt; console.log('2'), 0);
+Promise.resolve().then(() =&gt; console.log('3'));
+(async () =&gt; { console.log('4'); await null; console.log('5'); })();
+console.log('6');</code></pre>
+
+<p>→ <code>1, 4, 6, 3, 5, 2</code></p>
+
+<p><code>4</code> is sync (async function bodies run synchronously until the first <code>await</code>). <code>await null</code> suspends and the rest becomes a microtask, queued <em>after</em> the already-queued <code>3</code>. <code>2</code> is last because timers are macrotasks — <code>0ms</code> means "soonest available turn," not "now."</p>
+
+<p>If they ask about Node: <code>process.nextTick</code> jumps the microtask queue ahead of promises.</p>
+
+
+<h2 id="s4">4. Closures + loops</h2>
+
+<div class="say"><strong>Analogy:</strong> <code>var</code> gives the whole loop <strong>one whiteboard</strong> to write on. By the time anyone gets around to reading it, it says 3. <code>let</code> hands each iteration <strong>its own sticky note</strong>, so each callback reads its own copy.</div>
+
+<pre><code>for (var i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i)); // 3,3,3
+for (let i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i)); // 0,1,2</code></pre>
+
+<p>One shared <code>var</code> binding, mutated to 3 before any callback runs; <code>let</code> creates a fresh binding per iteration. The pre-<code>let</code> fix was an IIFE. Then land a real use:</p>
+
+<pre><code>const debounce = (fn, ms) =&gt; {
+  let id;                       // private state, kept alive by the closure
+  return (...args) =&gt; { clearTimeout(id); id = setTimeout(() =&gt; fn(...args), ms); };
+};</code></pre>
+
+
+<h2 id="s5">5. A list you can add to and delete from</h2>
+
+<p class="ask">Render a list with a text input: typing and submitting adds an item, each row can be deleted.</p>
+
+<div class="say"><strong>Plain version:</strong> the list is a box of cards. Adding an item means making a <em>new</em> box with one more card in it — not scribbling on the box you already have. React only notices new boxes.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>What is state?</strong> Two things: the array of items, and the text currently typed in the input.</li>
+  <li><strong>Every item needs a name tag.</strong> Give each one an id the moment it is created (<code>crypto.randomUUID()</code>). React needs a stable <code>key</code>, and the position in the array is not stable — delete the first row and every other row's position shifts.</li>
+  <li><strong>Why not <code>push</code>?</strong> React decides whether to re-render by comparing the old value to the new one. Push mutates the same array, so the two are the same object, so React sees no change. Build a new array instead: <code>[...prev, item]</code>.</li>
+  <li><strong>Guard the empty input.</strong> Trim the text, bail out if nothing is left. Small, and they are watching for it.</li>
+  <li><strong>Deleting is the same idea in reverse.</strong> <code>filter</code> returns a new array without the matching id. Still no mutation.</li>
+  <li><strong>Use the state updater form</strong> (<code>setItems(prev =&gt; …)</code>) rather than reading <code>items</code> directly — same reason as the timer, it cannot go stale.</li>
+</ol>
+
+<h3>The code</h3>
+<pre><code>const [items, setItems] = useState([]);
+const [text, setText] = useState('');
+
+const add = e =&gt; {
+  e.preventDefault();
+  const v = text.trim();
+  if (!v) return;                     // empty-input guard — say it out loud
+  setItems(prev =&gt; [...prev, { id: crypto.randomUUID(), text: v }]);
+  setText('');
+};
+
+const remove = id =&gt; setItems(prev =&gt; prev.filter(i =&gt; i.id !== id));</code></pre>
+
+<h3>The free points</h3>
+<ul>
+  <li><code>key={item.id}</code>, never the index. With index keys React reuses the wrong DOM node when a row is removed, so anything living in that node — a focused input, a half-typed value — attaches to the wrong row.</li>
+  <li>Wrap it in a <code>&lt;form&gt;</code> and Enter submits for free.</li>
+  <li>An <code>aria-label</code> on each delete button, or the whole list sounds like "button, button, button".</li>
+  <li>Close with: "next I would add a test for add-then-delete."</li>
+</ul>
+
+
+<h2 id="s6">6. Tech Lead breadth round — rapid fire</h2>
+
+<table>
+<tr><th>Topic</th><th>Say this</th></tr>
+<tr><td>Monorepo</td><td>Shared code + one toolchain + atomic cross-package changes; costs are slower CI and tooling complexity. Needs caching (Turborepo/Nx) and affected-only builds to stay viable.</td></tr>
+<tr><td>Promises</td><td><code>all</code> rejects fast, <code>allSettled</code> never rejects, <code>race</code> settles on first, <code>any</code> resolves on first success. Microtask queue. Always <code>.catch</code> — unhandled rejection crashes Node.</td></tr>
+<tr><td>Perf</td><td>Measure first (Profiler, Lighthouse). Then: list virtualization, code-splitting, <code>memo</code>/<code>useMemo</code> only after profiling, debounce inputs, stable keys. Distinguish bundle size from runtime cost.</td></tr>
+<tr><td>Accessibility</td><td>Semantic elements over <code>div</code>+<code>role</code>, keyboard reachable, visible focus, labels on inputs, <code>aria-live</code> for async updates, 4.5:1 contrast. "Native element first" is the answer.</td></tr>
+<tr><td>Unit vs automation</td><td>Unit = pure logic, fast, many. Integration/RTL = component behavior, query by role not class. E2E (Playwright) = few, critical flows only. Test behavior, not implementation.</td></tr>
+<tr><td>Redux</td><td>Single store, pure reducers, RTK <code>createSlice</code> today. When asked "do you need it?" — no for local state; it earns its place with shared cross-route state and cached server data (and RTK Query handles that).</td></tr>
+<tr><td>React patterns</td><td>Composition over inheritance, custom hooks for logic reuse, compound components, container/presentational, controlled vs uncontrolled. HOCs/render props are the legacy answer hooks replaced.</td></tr>
+<tr><td>System design</td><td>Separation of concerns, single responsibility, stateless services behind a load balancer, cache layers, idempotency. Frontend: BFF pattern, SSR vs CSR vs ISR tradeoffs.</td></tr>
+<tr><td>Node</td><td>Single-threaded event loop, non-blocking I/O, CPU-bound work goes to worker threads or a queue. Streams for large payloads.</td></tr>
+<tr><td>AWS</td><td>S3 + CloudFront for static, Lambda for event-driven, ECS/Fargate for containers, RDS vs DynamoDB, IAM least privilege. Do not overclaim — "I have consumed these, less hands-on provisioning" is a fine answer.</td></tr>
+<tr><td>CI/CD</td><td>lint → typecheck → test → build → preview deploy → promote. Fail fast, cache deps, preview per PR, rollback strategy.</td></tr>
+<tr><td>Docker</td><td>Image vs container, layer caching, multi-stage builds to shrink the final image, <code>.dockerignore</code>, non-root user. Consistent environments is the "why."</td></tr>
+<tr><td>AI</td><td>Helps with scaffolding, tests, review, migrations. You stay accountable: read every diff, no secrets pasted, verify output. That posture is what they are checking.</td></tr>
+</table>
+
+
+<h2 id="s7">7. Closures — full answer</h2>
+
+<div class="say"><strong>Analogy:</strong> a closure is a function that <strong>leaves the room carrying a backpack.</strong> Whatever variables were in scope when it was created go with it wherever it is called, and nobody outside can reach into the bag. That is both the feature (private state) and the leak (the bag stays packed as long as the function is alive).</div>
+
+<p><strong>Definition to say verbatim:</strong> "A closure is a function bundled with the scope it was created in. The inner function keeps a live reference to those variables, so they survive after the outer function returns."</p>
+
+<pre><code>function counter() {
+  let count = 0;              // not GC'd — the returned fns reference it
+  return {
+    inc: () =&gt; ++count,
+    get: () =&gt; count,
+  };
+}
+
+const c = counter();
+c.inc(); c.inc();
+c.get();   // 2
+// count is unreachable from outside — closures are JS's original private state</code></pre>
+
+<p>Three points that separate a junior answer from a senior one:</p>
+<ol>
+  <li><strong>Live reference, not a snapshot.</strong> This is the <code>var</code>-in-a-loop bug from §4 — all three callbacks close over the <em>same</em> <code>i</code> and read it after it became 3.</li>
+  <li><strong>Each call creates a new scope.</strong> <code>const a = counter(), b = counter();</code> — <code>a.inc()</code> leaves <code>b</code> at 0. Independent <code>count</code>s.</li>
+  <li><strong>It is a memory tradeoff.</strong> Closures keep their scope alive, so a long-lived closure over something large — a DOM node, a big array — is a leak. That is why you clear timer ids and remove listeners in cleanup.</li>
+</ol>
+
+<p>Real uses, pick two: <code>debounce</code>/<code>throttle</code>, module privacy, memoization, partial application.</p>
+
+<pre><code>const memoize = fn =&gt; {
+  const cache = new Map();                   // private, persists across calls
+  return x =&gt; cache.has(x) ? cache.get(x) : (cache.set(x, fn(x)), cache.get(x));
+};</code></pre>
+
+<div class="say"><strong>Bonus tie-in:</strong> "Every React hook is a closure. <code>useState</code> returns a setter closed over the component's slot, and the stale-closure bug in that Timer is exactly this mechanic."</div>
+
+
+<h2 id="s8">8. Core Web Vitals</h2>
+
+<h3>What they actually are</h3>
+
+<p>Web Vitals are <strong>Google's attempt to turn "does this site feel good to use?" into numbers you can measure.</strong></p>
+
+<p>Before them, people measured things like "page load time" or <code>DOMContentLoaded</code>. The problem: those do not match what users experience. A page can fire <code>load</code> in 800ms and still feel broken — blank for two seconds, then text jumping around while you try to tap a button. The metric said "fast," the human said "garbage."</p>
+
+<p>So Google picked three questions a real user implicitly asks, and defined one metric per question:</p>
+
+<table>
+<tr><th>The user's question</th><th>Metric</th></tr>
+<tr><td>"Is it there yet?"</td><td><strong>LCP</strong> — loading</td></tr>
+<tr><td>"Does it respond when I touch it?"</td><td><strong>INP</strong> — interactivity</td></tr>
+<tr><td>"Will it stop moving so I can read it?"</td><td><strong>CLS</strong> — visual stability</td></tr>
+</table>
+
+<p>Those three are the <strong>Core</strong> Web Vitals. "Web Vitals" is the larger family; the Core three are the subset Google committed to as stable and universally applicable — and the subset that feeds <strong>Google Search ranking</strong> as part of the page experience signal. That last part is why product managers care, and why this question shows up in interviews.</p>
+
+<h3>The three, explained</h3>
+
+<p><strong>LCP — Largest Contentful Paint.</strong> <em>When did the biggest visible thing finish rendering?</em> Not the first pixel, not the full load — the moment the <strong>largest</strong> element in the viewport (usually a hero image, a video poster, or a big block of text) appears. Google's reasoning: that element is a good proxy for "the page is now useful." A spinner appearing fast does not help anyone.</p>
+
+<p><strong>INP — Interaction to Next Paint.</strong> <em>You clicked. How long until the screen changed?</em> It measures the <strong>full</strong> round trip: the delay before your handler could even start, plus the handler running, plus React re-rendering, plus the browser painting the result. It reports roughly the <strong>worst</strong> interaction of the whole visit, because one 900ms freeze is what the user remembers.</p>
+
+<p><strong>CLS — Cumulative Layout Shift.</strong> <em>Did content move after you had started reading it?</em> An unitless score, not a time. It accumulates every unexpected shift — an image loading without reserved dimensions and shoving the paragraph down, a banner injecting itself above the content, a font swapping and reflowing the text. The canonical pain: you go to tap a link, an ad loads, and you tap something else.</p>
+
+<h3>Thresholds</h3>
+
+<table>
+<tr><th>Metric</th><th>Measures</th><th>Good</th><th>Needs work</th><th>Poor</th></tr>
+<tr><td><strong>LCP</strong> Largest Contentful Paint</td><td>Loading — when the biggest element renders</td><td>≤ 2.5s</td><td>≤ 4s</td><td>&gt; 4s</td></tr>
+<tr><td><strong>INP</strong> Interaction to Next Paint</td><td>Responsiveness — worst interaction latency over the visit</td><td>≤ 200ms</td><td>≤ 500ms</td><td>&gt; 500ms</td></tr>
+<tr><td><strong>CLS</strong> Cumulative Layout Shift</td><td>Visual stability — unexpected shifting</td><td>≤ 0.1</td><td>≤ 0.25</td><td>&gt; 0.25</td></tr>
+</table>
+
+<div class="say"><strong>Say this and you sound current:</strong> "INP replaced FID in March 2024. FID only measured the delay before the <em>first</em> handler started — INP measures full input-to-paint time across all interactions, so it actually catches slow rendering."</div>
+
+<p>Supporting metrics: <strong>TTFB</strong> (server/network), <strong>FCP</strong> (first pixel). Not Core Vitals, but they are how you diagnose a bad LCP.</p>
+
+<p>Fixes — have one per metric:</p>
+<ul>
+  <li><strong>LCP</strong> → almost always the hero image or a blocking resource. <code>&lt;img fetchpriority="high"&gt;</code>, preload the LCP asset, modern formats, no lazy-loading above the fold, cut render-blocking CSS/JS, CDN.</li>
+  <li><strong>INP</strong> → long tasks hogging the main thread. Break them up (<code>scheduler.yield</code>), move work off the main thread, debounce input handlers, trim hydration cost.</li>
+  <li><strong>CLS</strong> → reserve space. <code>width</code>/<code>height</code> on images, <code>min-height</code> on ad/embed slots, <code>font-display: optional</code> or preloaded fonts, never inject content above existing content.</li>
+</ul>
+
+<h3>The part people get wrong: field vs lab</h3>
+
+<p><strong>They are real-user metrics, not lab metrics.</strong></p>
+
+<p>When Google evaluates your site it uses the <strong>75th percentile</strong> of actual visits from the Chrome User Experience Report (CrUX) — real people on real devices and real networks, split by mobile and desktop. The 75th percentile means three out of four visits must hit "good." You cannot pass by averaging away the bad sessions, and you cannot pass on your own fast laptop.</p>
+
+<p>That gives you two kinds of data, and knowing the difference separates a memorized answer from an understood one:</p>
+
+<ul>
+  <li><strong>Lab data</strong> — Lighthouse, DevTools, CI. Synthetic, reproducible, great for <em>debugging a cause</em>. But it cannot measure INP properly, because nothing is actually clicking.</li>
+  <li><strong>Field data</strong> — CrUX, the <code>web-vitals</code> npm library, your RUM tool. Messy, real, and the only thing that <em>counts</em>.</li>
+</ul>
+
+<pre><code>import { onLCP, onINP, onCLS } from 'web-vitals';
+onLCP(sendToAnalytics); onINP(sendToAnalytics); onCLS(sendToAnalytics);</code></pre>
+
+<p>So the workflow is: <strong>field data tells you that you have a problem and where; lab data tells you why.</strong> Chasing a Lighthouse score in isolation is the classic mistake — you optimize a number nobody is experiencing.</p>
+
+<h3>Why they are designed this way</h3>
+
+<p>The three are not arbitrary — they are deliberately orthogonal. Each maps to a different failure mode with a different root cause and a different fix:</p>
+
+<ul>
+  <li>LCP is a <strong>network and resource-priority</strong> problem → preload, CDN, compress, do not block the parser.</li>
+  <li>INP is a <strong>main-thread</strong> problem → your JavaScript is doing too much in one task.</li>
+  <li>CLS is a <strong>layout</strong> problem → you did not reserve space for things that arrive late.</li>
+</ul>
+
+<p>You can be perfect at one and terrible at another, which is the point. A single blended "performance score" would hide exactly which of the three is hurting your users.</p>
+
+<div class="say"><strong>The one sentence to say in the interview:</strong> "Web Vitals are standardized, field-measured proxies for perceived user experience — loading, responsiveness and visual stability — scored at the 75th percentile of real users, which is why I measure in production and only use Lighthouse to diagnose."</div>
+
+
+<h2 id="s9">9. WebSockets</h2>
+
+<div class="say"><strong>Analogy:</strong> HTTP is <strong>sending letters.</strong> You write, you wait for a reply, and every letter needs its own envelope, stamp and address. A WebSocket is a <strong>phone call you leave open</strong>: you pay the setup cost once, then either side just talks whenever it has something to say — no envelope, no waiting to be asked.</div>
+
+<p>Full-duplex, persistent, bidirectional connection over a single TCP socket. Starts as an HTTP GET with <code>Upgrade: websocket</code>, the server answers <code>101 Switching Protocols</code>, then both sides send frames whenever they want — no request needed.</p>
+
+<pre><code>const ws = new WebSocket('wss://api.example.com/feed');  // wss = TLS, always
+
+ws.onopen    = () =&gt; ws.send(JSON.stringify({ type: 'subscribe', room: 'general' }));
+ws.onmessage = e =&gt; setMessages(prev =&gt; [...prev, JSON.parse(e.data)]);
+ws.onerror   = err =&gt; console.error(err);
+ws.onclose   = e =&gt; { if (!e.wasClean) reconnect(); };   // they WILL ask about this</code></pre>
+
+<p>In React:</p>
+<pre><code>useEffect(() =&gt; {
+  const ws = new WebSocket(url);
+  ws.onmessage = e =&gt; setMessages(prev =&gt; [...prev, JSON.parse(e.data)]);
+  return () =&gt; ws.close();     // cleanup, same reflex as clearInterval
+}, [url]);</code></pre>
+
+<p>Volunteer these three — it is what they are probing for:</p>
+<ol>
+  <li><strong>Reconnect with exponential backoff</strong> + jitter. Connections die on wifi drops, proxies, mobile sleep. Naive instant retry means you DDoS your own server when it restarts.</li>
+  <li><strong>Heartbeat / ping-pong.</strong> A dead TCP connection can look open for minutes. Ping on an interval, drop and reconnect on no pong.</li>
+  <li><strong>Auth.</strong> The browser <code>WebSocket</code> API cannot set headers, so no bearer token on the handshake — pass a short-lived ticket in the query string, or authenticate in the first message after <code>open</code>.</li>
+</ol>
+
+<p><strong>Scaling is the hard part.</strong> Stateful connections pin users to a server, so you need sticky sessions and a pub/sub backplane (Redis) to fan messages across instances. HTTP is stateless and trivially load-balanced; that is the real cost of WebSockets.</p>
+
+
+<h2 id="s10">10. WebSocket vs HTTP</h2>
+
+<p>Letters versus an open phone line (§9). A product page wants letters — each one is self-contained, so a CDN can photocopy it and hand it to the next thousand people. A chat app wants the phone line, because the other side needs to speak first and you cannot photocopy a conversation.</p>
+
+<table>
+<tr><th></th><th>HTTP (incl. polling)</th><th>WebSocket</th></tr>
+<tr><td>Direction</td><td>Client asks, server answers</td><td>Both sides push any time</td></tr>
+<tr><td>Connection</td><td>Short-lived per request (keep-alive reuses the socket, but the model stays request/response)</td><td>One persistent connection</td></tr>
+<tr><td>Overhead</td><td>Full headers + cookies every request</td><td>~2–14 bytes per frame after handshake</td></tr>
+<tr><td>Server → client push</td><td>Impossible unless the client asks</td><td>Native</td></tr>
+<tr><td>Latency</td><td>One round trip minimum; polling adds up to a full interval</td><td>Near-instant</td></tr>
+<tr><td>State</td><td>Stateless — cache it, load-balance it, retry it</td><td>Stateful — sticky sessions, backplane</td></tr>
+<tr><td>Caching / CDN / REST semantics</td><td>Yes</td><td>None of it</td></tr>
+</table>
+
+<div class="say"><strong>One-sentence answer:</strong> "HTTP is request/response and stateless — the client has to ask. WebSockets keep one connection open so the server can push. I reach for WebSockets when the server needs to initiate, and stay on HTTP otherwise, because statelessness buys caching, CDNs and trivial scaling."</div>
+
+<p>Then show the middle ground — this is the senior signal:</p>
+<ul>
+  <li><strong>Polling</strong> — request every N seconds. Simple, but wasted requests and up-to-N-seconds stale.</li>
+  <li><strong>Long polling</strong> — server holds the request open until there is data. The pre-WebSocket fallback.</li>
+  <li><strong>SSE (<code>EventSource</code>)</strong> — server→client push over plain HTTP. One-directional, auto-reconnects for free, works through any HTTP infrastructure. <em>Say this out loud: if I only need server→client — notifications, live prices, LLM token streaming — SSE is the lazier right answer. WebSockets are for genuinely bidirectional traffic.</em></li>
+  <li><strong>WebRTC</strong> — peer-to-peer, for media.</li>
+</ul>
+
+<p><strong>"Which would you pick?"</strong> Chat / collaborative editing / multiplayer / live cursors → WebSocket. Notifications / feed updates / AI streaming → SSE. CRUD → HTTP. "Updates every 30s is fine" → polling, and do not apologize for it.</p>
+
+
+<h2 id="s11">11. Web Workers</h2>
+
+<div class="say"><strong>Analogy:</strong> your app is a one-person kitchen. The chef (main thread) takes orders, cooks <em>and</em> plates. If the chef starts peeling 10,000 potatoes, nobody gets served — the UI freezes. A Web Worker is a <strong>prep cook in a separate room</strong>: you hand them potatoes through a window (<code>postMessage</code>), they hand back the peeled result. They cannot touch the dining room — no DOM, no <code>window</code> — and they only communicate through the window, never by sharing the same cutting board.</div>
+
+<pre><code>// worker.js
+self.onmessage = e =&gt; self.postMessage(heavyCrunch(e.data));
+
+// main.js
+const w = new Worker('/worker.js');
+w.postMessage(bigArray);
+w.onmessage = e =&gt; setResult(e.data);
+// cleanup: w.terminate()</code></pre>
+
+<p>Key facts: <strong>separate thread, separate global scope.</strong> No DOM/<code>window</code>/<code>document</code>. Data is <strong>copied</strong> via structured clone, not shared — so passing a 100MB array has a cost; use <code>Transferable</code>/<code>ArrayBuffer</code> transfer or <code>SharedArrayBuffer</code> to avoid the copy.</p>
+
+<p>Use for: parsing huge JSON, image/video processing, crypto, heavy computation. <strong>Do not</strong> use for network calls — <code>fetch</code> is already async and non-blocking, a worker adds nothing.</p>
+
+<p>Siblings worth naming: <strong>Service Worker</strong> = a network proxy for offline/caching (different purpose, same thread model). <strong>Worklets</strong> = tiny workers for CSS/audio.</p>
+
+
+<h2 id="s12">12. Webpack</h2>
+
+<div class="say"><strong>Analogy:</strong> a <strong>factory assembly line for your source files.</strong> Raw materials go in one end, a boxed product comes out the other.</div>
+
+<ul>
+  <li><strong>Entry</strong> — where the line starts (<code>src/index.js</code>).</li>
+  <li><strong>Module graph</strong> — Webpack follows every <code>import</code> to build a dependency tree.</li>
+  <li><strong>Loaders</strong> — the stations on the line. Each transforms one file type: <code>babel-loader</code>, <code>css-loader</code>, <code>ts-loader</code>. Loaders work on <em>individual files</em>.</li>
+  <li><strong>Plugins</strong> — the floor supervisors. They hook into the whole build: <code>HtmlWebpackPlugin</code>, <code>MiniCssExtractPlugin</code>, <code>DefinePlugin</code>.</li>
+  <li><strong>Output</strong> — the boxed bundles, hashed for cache-busting (<code>main.[contenthash].js</code>).</li>
+</ul>
+
+<div class="say"><strong>Remember it as:</strong> loaders transform <em>files</em>, plugins transform the <em>build</em>. That one sentence is the most-asked distinction.</div>
+
+<p>Also know: <strong>tree shaking</strong> (dead-code elimination; requires ESM <code>import</code>/<code>export</code> — does not work with CommonJS <code>require</code>), <strong>code splitting</strong> (§23), <strong>HMR</strong> in dev, <strong>source maps</strong> for prod debugging. Have an opinion ready: "Vite/esbuild/Turbopack are faster because they are Go/Rust and use native ESM in dev instead of bundling on every change — Webpack is still what most legacy enterprise builds run on."</p>
+
+
+<h2 id="s13">13. Event loop — the deep version</h2>
+
+<div class="say"><strong>Analogy:</strong> a <strong>single cashier with two lines.</strong> The cashier (call stack) serves one customer at a time. The <strong>VIP line</strong> (microtasks: promises, <code>queueMicrotask</code>, <code>MutationObserver</code>) must be <em>completely empty</em> before the cashier looks at the <strong>regular line</strong> (macrotasks: <code>setTimeout</code>, <code>setInterval</code>, I/O, events). And after serving <em>one</em> regular customer, they check the VIP line again — and drain it fully.</div>
+
+<p>The loop, in order:</p>
+<ol>
+  <li>Run the current script to completion (call stack empties).</li>
+  <li><strong>Drain the entire microtask queue</strong> — including microtasks queued <em>by</em> microtasks. (Infinite microtasks = permanent freeze; the loop never moves on.)</li>
+  <li>Take <strong>one</strong> macrotask. Run it.</li>
+  <li>Drain microtasks again.</li>
+  <li>Render (<code>requestAnimationFrame</code> → style → layout → paint), roughly once per frame.</li>
+  <li>Repeat.</li>
+</ol>
+
+<p>The render step at #5 is why <strong><code>setTimeout(fn, 0)</code> is not "now"</strong> — it is "after this task, its microtasks, and possibly a paint."</p>
+
+<p>Practice trace:</p>
+<pre><code>console.log('A');
+setTimeout(() =&gt; { console.log('B'); Promise.resolve().then(() =&gt; console.log('C')); }, 0);
+Promise.resolve().then(() =&gt; { console.log('D'); setTimeout(() =&gt; console.log('E'), 0); });
+queueMicrotask(() =&gt; console.log('F'));
+console.log('G');</code></pre>
+
+<p>→ <strong><code>A, G, D, F, B, C, E</code></strong></p>
+
+<p>Walk it: <code>A</code>, <code>G</code> sync. Microtasks drain: <code>D</code> (which queues timer E), then <code>F</code>. First macrotask: <code>B</code>, which queues microtask <code>C</code> — drained immediately after that task. Then the next macrotask: <code>E</code>.</p>
+
+<p>Node adds: <code>process.nextTick</code> runs <strong>before</strong> the promise microtask queue, and macrotasks split into phases (timers → pending → poll → check/<code>setImmediate</code> → close).</p>
+
+
+<h2 id="s14">14. Deep vs shallow copy</h2>
+
+<div class="say"><strong>Analogy:</strong> shallow copy = photocopying a page that has <strong>addresses written on it</strong>. You get a new page, but both pages point to the same houses. Deep copy = rebuilding the houses too.</div>
+
+<pre><code>const original = { name: 'a', config: { theme: 'dark' } };
+
+const shallow = { ...original };          // or Object.assign({}, original)
+shallow.name = 'b';                       // OK — original.name unchanged
+shallow.config.theme = 'light';           // BUG — original.config.theme is now 'light'
+
+const deep = structuredClone(original);   // modern, native, use this
+deep.config.theme = 'blue';               // original untouched</code></pre>
+
+<p><strong>Shallow:</strong> spread, <code>Object.assign</code>, <code>slice</code>, <code>Array.from</code>, <code>arr.map(x =&gt; x)</code>. Copies <strong>one level</strong>; nested objects/arrays stay shared by reference.</p>
+
+<p><strong>Deep:</strong> <code>structuredClone()</code> — native, handles <code>Date</code>, <code>Map</code>, <code>Set</code>, <code>RegExp</code>, circular references. The old <code>JSON.parse(JSON.stringify(obj))</code> trick is the one to criticize: it drops <code>undefined</code>, functions and <code>Symbol</code>s, turns <code>Date</code> into a string, throws on circular refs, and mangles <code>NaN</code>/<code>Infinity</code> into <code>null</code>. Lodash <code>cloneDeep</code> if you are on an old target.</p>
+
+<div class="say"><strong>Why React cares:</strong> "React compares by reference. <code>state.items.push(x); setState(state)</code> does nothing — same reference, no re-render. That is why you spread into a new array. But a shallow copy of nested state is not enough either — if I mutate <code>copy.config</code> I have mutated the original and broken time-travel debugging. That is the case for Immer or <code>structuredClone</code>."</div>
+
+
+<h2 id="s15">15. var vs let vs const</h2>
+
+<div class="say"><strong>Analogy:</strong> <code>let</code> and <code>const</code> are a note left <strong>on a desk in one room</strong> — walk out of the <code>{}</code> and it is gone. <code>var</code> ignores rooms entirely and belongs to <strong>the whole floor</strong> (the function), which is why it leaks out of <code>if</code> blocks and surprises people.</div>
+
+<table>
+<tr><th></th><th><code>var</code></th><th><code>let</code></th><th><code>const</code></th></tr>
+<tr><td>Scope</td><td><strong>Function</strong></td><td>Block <code>{}</code></td><td>Block <code>{}</code></td></tr>
+<tr><td>Hoisting</td><td>Hoisted, initialized <code>undefined</code></td><td>Hoisted but in <strong>TDZ</strong></td><td>Hoisted but in <strong>TDZ</strong></td></tr>
+<tr><td>Redeclare in same scope</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>Reassign</td><td>Yes</td><td>Yes</td><td><strong>No</strong></td></tr>
+<tr><td>Attaches to <code>window</code> (global)</td><td>Yes</td><td>No</td><td>No</td></tr>
+</table>
+
+<pre><code>console.log(a); var a = 1;   // undefined — hoisted &amp; initialized
+console.log(b); let b = 1;   // ReferenceError: Cannot access 'b' before initialization
+
+if (true) { var x = 1; let y = 2; }
+x;  // 1 — var leaked out of the block
+y;  // ReferenceError</code></pre>
+
+<p><strong>The <code>const</code> gotcha they always ask:</strong> <code>const</code> freezes the <strong>binding, not the value.</strong></p>
+
+<pre><code>const arr = [1, 2];
+arr.push(3);     // fine — mutating the object, not rebinding
+arr = [];        // TypeError: Assignment to constant variable
+// want immutability? Object.freeze(arr) — and that is shallow too (see §14)</code></pre>
+
+<div class="say"><strong>TDZ in one line:</strong> "<code>let</code>/<code>const</code> are hoisted, but reading them before the declaration throws instead of giving <code>undefined</code>. That gap is the Temporal Dead Zone — it turns a silent bug into a loud one."</div>
+
+<p>Default to <code>const</code>, use <code>let</code> when you must reassign, never <code>var</code>.</p>
+
+
+<h2 id="s16">16. Writing a polyfill</h2>
+
+<p class="ask">What is a polyfill, and how would you write one — say <code>Array.prototype.flat</code> or <code>Function.prototype.bind</code>?</p>
+
+<div class="say"><strong>Plain version:</strong> a polyfill is a travel plug adapter. Your device expects a socket shape this country does not have, so you carry a small part that provides it. Transpiling is a different thing — that is rebuilding the device to run on the local voltage.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>First decide what is actually missing.</strong> A missing <em>thing</em> (<code>Promise</code>, <code>fetch</code>, <code>.includes</code>) needs a polyfill. Unsupported <em>grammar</em> (arrow functions, <code>async/await</code>) needs Babel. Babel cannot polyfill <code>Promise</code> — there is no syntax to rewrite, the object simply is not there. Saying this split out loud is most of the answer.</li>
+  <li><strong>Where does the new method go?</strong> On the prototype, so every array (or every function) gets it — that is what <code>Array.prototype.flat</code> means.</li>
+  <li><strong>Check before you write.</strong> <code>if (!Array.prototype.flat)</code>. Never clobber a native implementation: it is faster and it is correct.</li>
+  <li><strong>Hide it.</strong> A plain assignment creates an <em>enumerable</em> property, so it starts appearing in anyone's <code>for…in</code> loop over an array. <code>Object.defineProperty</code> with <code>enumerable: false</code> is how the real ones are defined.</li>
+  <li><strong>Inside the method, <code>this</code> is the instance</strong> — the array you called it on, or the function being bound. That one fact is the whole trick to <code>bind</code>: capture <code>this</code> in a variable, return a new function that <code>apply</code>s it later with the context you were given.</li>
+  <li><strong>Then the edge cases they are listening for:</strong> sparse arrays have holes, so <code>map</code> must skip indices that do not exist (<code>if (i in this)</code>); and a bound function can still receive more arguments at call time, so the bound ones go first and the rest follow.</li>
+</ol>
+
+<h3>The code</h3>
+<pre><code>if (!Array.prototype.myFlat) {
+  Object.defineProperty(Array.prototype, 'myFlat', {
+    value: function (depth = 1) {
+      return this.reduce((acc, v) =&gt;
+        acc.concat(Array.isArray(v) &amp;&amp; depth &gt; 0 ? v.myFlat(depth - 1) : v), []);
+    },
+    enumerable: false,   // or it shows up in for...in and breaks the world
+  });
+}</code></pre>
+
+<p>The two they ask for most — know them cold:</p>
+<pre><code>Function.prototype.myBind = function (ctx, ...bound) {
+  const fn = this;
+  return function (...args) { return fn.apply(ctx, [...bound, ...args]); };
+};
+
+Array.prototype.myMap = function (cb, thisArg) {
+  const out = [];
+  for (let i = 0; i &lt; this.length; i++)
+    if (i in this) out[i] = cb.call(thisArg, this[i], i, this);   // skip holes
+  return out;
+};</code></pre>
+
+<h3>The production answer</h3>
+<p><code>core-js</code> with <code>@babel/preset-env</code>, <code>useBuiltIns: 'usage'</code> and a <code>browserslist</code> target — so you ship only the polyfills your actual browsers lack, instead of all of them to everyone.</p>
+
+
+<h2 id="s17">17. Frontend vulnerabilities</h2>
+
+<div class="say"><strong>The two big ones in one line each.</strong> <strong>XSS</strong> is a stranger getting to <em>write on your page</em> — once their script runs, it runs with your page's permissions, so it can read the user's token. <strong>CSRF</strong> is a stranger getting the user's browser to <em>sign something on their behalf</em> — the browser helpfully attaches the session cookie to a request it had no idea was hostile. "Their code in my page" versus "my credentials on their request."</div>
+
+<p><strong>XSS (Cross-Site Scripting)</strong> — attacker gets their JS to run in your page, then reads tokens and acts as the user. Three kinds: stored, reflected, DOM-based. <em>Fix:</em> never interpolate untrusted strings into HTML. In React <code>{userInput}</code> is auto-escaped — the holes are <code>dangerouslySetInnerHTML</code> (sanitize with DOMPurify first) and <code>href={userInput}</code> allowing <code>javascript:</code>. Add a <strong>Content Security Policy</strong> as defense-in-depth.</p>
+
+<p><strong>CSRF (Cross-Site Request Forgery)</strong> — a different site makes the browser send an authenticated request using your cookies. <em>Fix:</em> <code>SameSite=Lax/Strict</code> cookies, CSRF tokens, check <code>Origin</code>.</p>
+
+<p><strong>Token storage</strong> — <code>localStorage</code> is readable by any XSS. Prefer <strong><code>httpOnly</code>, <code>Secure</code>, <code>SameSite</code> cookies</strong> for session tokens; keep access tokens short-lived.</p>
+
+<p><strong>Others worth naming:</strong> clickjacking (<code>X-Frame-Options</code>/<code>frame-ancestors</code>), open redirect (validate targets against an allowlist), dependency/supply-chain risk (<code>npm audit</code>, lockfiles, Dependabot), secrets committed to a repo or leaked into a client bundle (anything in <code>NEXT_PUBLIC_*</code> is public), insecure direct object reference — <strong>authorization belongs on the server; hiding a button is not access control.</strong></p>
+
+<div class="say"><strong>The sentence that lands:</strong> "Client-side validation is UX. Server-side validation is security. Never trust the client."</div>
+
+
+<h2 id="s18">18. Virtual DOM — deep</h2>
+
+<div class="say"><strong>Analogy:</strong> you are renovating a room. You do not demolish and rebuild it to move one chair. You draw a <strong>new blueprint</strong>, compare it to the old blueprint, and send the builders a list containing only "move the chair." The blueprints are cheap paper (JS objects); the builders are expensive (DOM writes that trigger layout and paint).</div>
+
+<p>The Virtual DOM is a tree of plain JS objects describing what the UI <em>should</em> look like:</p>
+
+<pre><code>// &lt;button className="x"&gt;Hi&lt;/button&gt; compiles to roughly:
+{ type: 'button', props: { className: 'x', children: 'Hi' } }</code></pre>
+
+<p>The cycle: state changes → your component function re-runs → returns a <strong>new</strong> VDOM tree → React diffs it against the previous tree → computes the minimum set of real DOM mutations → flushes them in one batch.</p>
+
+<p><strong>Why it is faster:</strong> it is <em>not</em> faster than hand-written optimal DOM code. It is faster than the naive alternative (re-render everything) and it <strong>batches</strong> writes to avoid layout thrashing. The real selling point is <strong>declarative programming with acceptable performance</strong> — you describe the end state instead of writing imperative transition steps.</p>
+
+<p>Say this to show range: "Svelte and Solid skip the VDOM entirely — they compile to targeted updates at build time. The VDOM is a tradeoff, not a law of physics."</p>
+
+
+<h2 id="s19">19. Diffing, reconciliation, Fiber</h2>
+
+<div class="say"><strong>Analogy:</strong> §18 was "compare the blueprints." This is <em>how</em> the comparison is run. Imagine the renovation list is huge and the client keeps walking in with urgent changes. The old React read the list <strong>top to bottom without looking up</strong> — once it started, it finished, and the client waited. Fiber turned the list into <strong>individual numbered tickets</strong>, so React can do one, check whether anything more urgent came in, and reshuffle the rest. Same comparison, interruptible delivery.</div>
+
+<p><strong>Reconciliation</strong> is the whole algorithm for syncing the new tree to the old. <strong>Diffing</strong> is the comparison step inside it. <strong>Fiber</strong> is the data structure and scheduler that runs it.</p>
+
+<p><strong>Diffing heuristics</strong> — React does not do a full O(n³) tree diff; it does O(n) using two assumptions:</p>
+<ol>
+  <li><strong>Different element type → destroy and rebuild that whole subtree.</strong> <code>&lt;div&gt;</code> becomes <code>&lt;span&gt;</code>, or <code>&lt;ComponentA&gt;</code> becomes <code>&lt;ComponentB&gt;</code> → the old node and all its state are thrown away. Same type → keep the DOM node, update only the changed props.</li>
+  <li><strong>Keys identify children across renders.</strong> Same key = same component, just moved. This is the real answer to "why not index keys": with index keys, deleting the first item shifts every subsequent key, so React thinks the <em>content</em> changed rather than that one item was removed — it reuses the wrong DOM nodes and your uncontrolled input values land on the wrong rows.</li>
+</ol>
+
+<p><strong>Fiber</strong> (React 16+) — the old reconciler recursed through the tree synchronously and could not be stopped, so a big update blocked the main thread and dropped frames. Fiber restructured the tree into a <strong>linked list of units of work</strong> (<code>child</code>, <code>sibling</code>, <code>return</code> pointers) so the work becomes a loop instead of recursion — meaning React can <strong>pause, resume, reprioritize and abandon</strong> work.</p>
+
+<p>Two phases, worth naming:</p>
+<ul>
+  <li><strong>Render / reconcile phase</strong> — interruptible, builds the work-in-progress tree, no DOM touched, can be thrown away. <em>This is why render must be pure and why StrictMode double-invokes it.</em></li>
+  <li><strong>Commit phase</strong> — synchronous, uncancellable, applies mutations and runs effects.</li>
+</ul>
+
+<p>That split powers <strong>Concurrent features</strong>: <code>useTransition</code>, <code>useDeferredValue</code>, Suspense, time-slicing. A high-priority keystroke can interrupt a low-priority list re-render.</p>
+
+
+<h2 id="s20">20. How HTML and CSS get to the screen</h2>
+
+<div class="say"><strong>Analogy:</strong> building a room. HTML is <strong>the list of furniture</strong>, CSS is <strong>the instructions for how it should look.</strong> The browser will not let anyone in until it has both — that is why CSS is render-blocking; it refuses to show you a half-decorated room. Then it works out where each piece goes (layout), fills in the colours (paint), and finally opens the door (composite).</div>
+
+<p>The <strong>Critical Rendering Path</strong>, in order:</p>
+<ol>
+  <li><strong>HTML → DOM.</strong> The parser streams the bytes and builds the DOM tree incrementally.</li>
+  <li><strong>CSS → CSSOM.</strong> CSS is <strong>render-blocking</strong> — the browser will not paint until it is parsed, because it refuses to show unstyled content (FOUC).</li>
+  <li><strong>Render tree</strong> = DOM + CSSOM, with non-visual nodes dropped (<code>display: none</code> nodes are excluded; <code>visibility: hidden</code> ones stay — they occupy space).</li>
+  <li><strong>Layout / reflow</strong> — compute geometry: position and size of every box.</li>
+  <li><strong>Paint</strong> — fill in pixels: colors, text, shadows, borders.</li>
+  <li><strong>Composite</strong> — assemble layers on the GPU and put them on screen.</li>
+</ol>
+
+<p><strong>The scripts part — most-asked detail:</strong> a plain <code>&lt;script&gt;</code> <strong>blocks HTML parsing</strong> while it downloads and executes (which is why scripts traditionally go before <code>&lt;/body&gt;</code>). <code>defer</code> = download in parallel, execute after parsing, in order. <code>async</code> = download in parallel, execute the moment it arrives, order not guaranteed. <strong>Rule of thumb: <code>defer</code> for anything that touches the DOM, <code>async</code> for independent things like analytics.</strong></p>
+
+<div class="say"><strong>Performance consequence to volunteer:</strong> changing geometry (<code>width</code>, <code>top</code>, <code>margin</code>) triggers <strong>layout → paint → composite</strong>. Changing <code>color</code>/<code>background</code> skips layout. Changing <strong><code>transform</code> and <code>opacity</code> only composites</strong> — GPU, no layout, no paint. "That is why I animate <code>transform</code> instead of <code>left</code>, and why reading <code>offsetHeight</code> in a loop after writing styles causes layout thrashing — each read forces a synchronous recalculation."</div>
+
+
+<h2 id="s21">21. Next.js rendering strategies</h2>
+
+<div class="say"><strong>Analogy — a restaurant.</strong> <strong>SSG</strong> is a cold display case: everything was cooked this morning, you grab it and leave. <strong>ISR</strong> is the same case, but a cook quietly replaces a tray when it gets old. <strong>SSR</strong> is cooked to order when you ask — fresher, but you wait. <strong>CSR</strong> is handing you the raw ingredients and a stove: nothing to wait for from the kitchen, but you do the work.</div>
+
+<table>
+<tr><th>Strategy</th><th>When HTML is built</th><th>Use for</th></tr>
+<tr><td><strong>SSG</strong></td><td>Build time</td><td>Marketing pages, docs, blogs</td></tr>
+<tr><td><strong>ISR</strong></td><td>Build time, then revalidated in the background</td><td>Product pages, catalogs — static speed, fresh-ish data</td></tr>
+<tr><td><strong>SSR</strong></td><td><strong>Per request, on the server</strong></td><td>Personalized or request-dependent pages, auth-gated dashboards</td></tr>
+<tr><td><strong>CSR</strong></td><td>In the browser after load</td><td>Highly interactive, non-SEO internals</td></tr>
+</table>
+
+<p><strong>SSR specifically:</strong> the server runs your component, fetches the data, returns fully-formed HTML. The user sees content on first paint (good LCP, good SEO — crawlers get real markup). Then <strong>hydration</strong>: the JS bundle loads and React attaches event handlers to the existing DOM to make it interactive.</p>
+
+<p><strong>TTFB is the SSR tradeoff</strong> — the user waits for your server's data fetch before any bytes arrive. Static is always faster to first byte.</p>
+
+<p>App Router specifics, if they are on modern Next: <strong>Server Components are the default</strong> and never ship their JS to the client; <code>'use client'</code> opts a subtree into the browser bundle. <code>fetch</code> is cached by default with <code>revalidate</code>/<code>cache</code> options. <strong>Streaming SSR</strong> with Suspense sends the shell immediately and streams slow sections in as they resolve — which fixes the TTFB problem. Pages Router equivalents: <code>getServerSideProps</code> (SSR), <code>getStaticProps</code> + <code>revalidate</code> (SSG/ISR).</p>
+
+<p><strong>Hydration mismatch</strong> is the bug they will ask about: server and client render different HTML — usually <code>Date.now()</code>, <code>Math.random()</code>, or <code>localStorage</code>/<code>window</code> access during render. Fix by reading browser-only values in <code>useEffect</code>.</p>
+
+
+<h2 id="s22">22. useMemo and useCallback</h2>
+
+<div class="say"><strong>Analogy:</strong> both are a <strong>note on the fridge saying "already did this, here is the answer."</strong> Useful when the task was genuinely expensive. Silly when the task was "add two numbers" — now you are paying for the note, the fridge space and the act of reading it, every single time, to avoid doing something that was free. That is most memoization in real codebases.</div>
+
+<p><strong><code>useMemo</code> caches a value. <code>useCallback</code> caches a function reference.</strong> Both are <strong>referential-stability tools first, speed tools second.</strong></p>
+
+<pre><code>const sorted = useMemo(() =&gt; items.sort(cmp), [items]);   // skip expensive recompute
+const onPick = useCallback(id =&gt; setSel(id), []);         // stable identity for children</code></pre>
+
+<div class="say"><strong>The honest answer — lead with this:</strong> "They are not free. Every memo costs memory plus a dependency comparison on each render, and the hook itself has to run regardless. I profile first. Most <code>useCallback</code>s I see in code review are doing nothing because the child is not memoized — so the new function reference would not have caused a re-render anyway."</div>
+
+<p>The three cases where they genuinely earn their place:</p>
+<ol>
+  <li><strong>Passing a callback to a <code>React.memo</code>'d child.</strong> Without <code>useCallback</code>, a fresh function every render breaks the memo entirely — you paid for <code>memo</code> and got nothing.</li>
+  <li><strong>Genuinely expensive computation</strong> — sorting/filtering thousands of rows, parsing, heavy derivation.</li>
+  <li><strong>A value in another hook's dependency array</strong> — an unstable object or function there makes <code>useEffect</code> re-fire every render (a classic infinite-loop source).</li>
+</ol>
+
+<p><code>React.memo</code> completes the trio: it shallow-compares props and skips the re-render. All three only matter together.</p>
+
+<p>Modern coda: "the React Compiler in React 19 auto-memoizes, which makes most manual <code>useMemo</code>/<code>useCallback</code> unnecessary going forward."</p>
+
+
+<h2 id="s23">23. Code splitting</h2>
+
+<div class="say"><strong>Analogy:</strong> you are flying somewhere for the weekend. Code splitting is <strong>not packing your whole wardrobe.</strong> Take what you need on arrival; have the rest shipped only if you actually go somewhere that needs it. The user who only visits the homepage should never download the admin dashboard.</div>
+
+<p>Ship less JavaScript up front. Split along two axes.</p>
+
+<p><strong>By route</strong> — highest value, nearly free:</p>
+<pre><code>const Settings = lazy(() =&gt; import('./Settings'));
+&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;&lt;Settings /&gt;&lt;/Suspense&gt;</code></pre>
+
+<p><strong>By interaction</strong> — load on demand, not at startup:</p>
+<pre><code>const onOpen = async () =&gt; {
+  const { Editor } = await import('./HeavyEditor');  // dynamic import = a split point
+  setEditor(Editor);
+};</code></pre>
+
+<p><code>import()</code> returns a Promise and tells the bundler "make this a separate chunk." Next.js splits by route automatically; <code>next/dynamic</code> adds component-level splitting with <code>ssr: false</code> as an option.</p>
+
+<p>Round it out with: <strong>vendor chunking</strong> (<code>splitChunks</code>) so library code caches separately from app code, <strong>tree shaking</strong> to drop unused exports, <strong><code>contenthash</code> filenames</strong> so a deploy does not bust every cached chunk, and <strong>prefetching</strong> the next likely route on hover/idle so splitting does not trade startup time for click latency. Measure with <code>webpack-bundle-analyzer</code> / <code>@next/bundle-analyzer</code>.</p>
+
+
+<h2 id="s24">24. Measuring React performance</h2>
+
+<p><strong>The rule before any of the tooling:</strong> you cannot fix what you have not located. "The app feels slow" is a symptom with at least three unrelated causes (§34), and guessing between them is how people end up sprinkling <code>useMemo</code> on components that were never the problem. So the answer to this question is a sequence, not a tool.</p>
+
+<p><strong>Order of operations:</strong> React DevTools <strong>Profiler</strong> → record an interaction → read the flamegraph.</p>
+<ul>
+  <li><strong>Flamegraph</strong> — width = render duration. Wide bars are your problem.</li>
+  <li><strong>Ranked view</strong> — slowest components first.</li>
+  <li><strong>"Highlight updates when components render"</strong> — fastest way to spot a component re-rendering for no reason.</li>
+  <li><strong>"Record why each component rendered"</strong> — tells you whether it was props, state, hooks, or a parent re-render. This is the setting that actually finds the bug.</li>
+</ul>
+
+<p>The <code>&lt;Profiler&gt;</code> component for programmatic/CI measurement:</p>
+<pre><code>&lt;Profiler id="List" onRender={(id, phase, actualDuration) =&gt; log({ id, phase, actualDuration })}&gt;</code></pre>
+
+<p>Then <strong>Chrome DevTools Performance</strong> for the full picture — long tasks, main-thread blocking, layout thrashing — plus Lighthouse for Web Vitals (§8) and the bundle analyzer for ship-size.</p>
+
+<p><strong>The three re-render causes to recite:</strong> state changed, props changed, or the parent re-rendered. Common fixes: lift state <em>down</em> (move it to the component that actually uses it so the re-render has a smaller footprint), <code>React.memo</code> the expensive child, split context so unrelated consumers do not wake up, virtualize long lists (<code>react-window</code> / TanStack Virtual), and use <code>useDeferredValue</code>/<code>useTransition</code> to keep typing responsive while a heavy list catches up.</p>
+
+
+<h2 id="s25">25. useRef</h2>
+
+<div class="say"><strong>Analogy:</strong> a ref is a <strong>pocket.</strong> You can put something in it and take it out later, it stays with you across re-renders — and nobody can see what is in it, so putting something in does not change how you look. <code>useState</code> is the opposite: it is what you are <em>wearing</em>, so changing it means everyone sees a new you (a re-render).</div>
+
+<p>Two jobs, one hook.</p>
+
+<p><strong>1. A box for mutable state that must NOT trigger re-renders.</strong></p>
+<pre><code>const timerId = useRef(null);
+timerId.current = setInterval(tick, 1000);   // mutating .current never re-renders</code></pre>
+
+<p><strong>2. A handle on a DOM node.</strong></p>
+<pre><code>const inputRef = useRef(null);
+useEffect(() =&gt; inputRef.current?.focus(), []);
+return &lt;input ref={inputRef} /&gt;;</code></pre>
+
+<div class="say"><strong>The defining comparison:</strong> "<code>useState</code> is for values the UI displays — changing it re-renders. <code>useRef</code> is for values the UI does not display — changing it does not. And unlike a plain local variable, a ref <strong>survives re-renders</strong>, because the same object persists for the component's whole life."</div>
+
+<p>Typical uses: timer/interval ids, <code>AbortController</code>s, WebSocket instances, previous-value tracking, "has this mounted yet" flags, and the escape hatch for the stale-closure problem — a ref always reads the latest value because you read <code>.current</code> at call time rather than closing over a snapshot.</p>
+
+<p><strong>Rules:</strong> never read or write <code>.current</code> during render (it is a side effect and breaks concurrent rendering) — do it in effects and handlers. Refs are populated <em>after</em> the DOM is committed, so a ref is <code>null</code> on the first render pass.</p>
+
+
+<h2 id="s26">26. Throttle (and debounce)</h2>
+
+<p class="ask">Implement <code>throttle</code>. What is the difference between throttling and debouncing, and when do you use each?</p>
+
+<div class="say"><strong>Plain version:</strong> <strong>debounce is an elevator</strong> — someone keeps stepping in, the doors keep reopening, and it only departs once there is a pause. <strong>Throttle is a subway timetable</strong> — a train leaves every five minutes no matter how many people turn up.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>Which one does this situation want?</strong> Only the final value matters → debounce (search box, autosave, validation). The values along the way matter but not all of them → throttle (scroll position, mousemove, drag).</li>
+  <li><strong>What does throttle have to remember?</strong> When it last fired. That has to survive between calls but stay private — so the function returns a function, and the memory lives in the closure between them.</li>
+  <li><strong>The first call.</strong> Nothing has fired yet, so fire immediately. That is the <em>leading edge</em>.</li>
+  <li><strong>A call that comes too soon.</strong> The lazy answer is to drop it. But think about which event that throws away: the very last one of the burst — the position where the user actually stopped scrolling. Dropping it is the bug.</li>
+  <li><strong>So park it instead.</strong> Schedule it for the moment the window reopens. That is the <em>trailing edge</em>.</li>
+  <li><strong>And keep replacing it.</strong> Every early call clears the pending one and schedules itself, so whatever happened last is what eventually fires.</li>
+</ol>
+
+<h3>The code</h3>
+<pre><code>const throttle = (fn, ms) =&gt; {
+  let last = 0, timer;
+  return (...args) =&gt; {
+    const now = Date.now(), remaining = ms - (now - last);
+    if (remaining &lt;= 0) { last = now; fn(...args); }    // leading edge
+    else {                                              // trailing edge:
+      clearTimeout(timer);                              // do not drop the last call
+      timer = setTimeout(() =&gt; { last = Date.now(); fn(...args); }, remaining);
+    }
+  };
+};</code></pre>
+
+<h3>Two things to add unprompted</h3>
+<ul>
+  <li>The <strong>leading vs trailing edge</strong> distinction, as above — a naive throttle silently discards the one event you care about.</li>
+  <li>The native alternative: "for scroll-triggered work I reach for <code>IntersectionObserver</code> before throttling a scroll listener — the browser does that off the main thread."</li>
+</ul>
+
+
+<h2 id="s27">27. call, apply, bind</h2>
+
+<div class="say"><strong>Analogy:</strong> a function like <code>greet()</code> says "Hi, <em>my</em> name is …" without knowing whose mouth it is in. These three decide <strong>who is speaking.</strong> <code>call</code> and <code>apply</code> say it right now on someone's behalf (the only difference is whether you hand over the words loose or in a bag). <code>bind</code> does not say anything — it hands you back a <strong>new function that is permanently that person's</strong>, to use whenever.</div>
+
+<p>All three set <code>this</code>. <strong>Mnemonic: C for Comma, A for Array, B for Bind-later.</strong></p>
+
+<pre><code>const greet = function (greeting, punct) { return `${greeting}, ${this.name}${punct}`; };
+const user = { name: 'Ada' };
+
+greet.call(user, 'Hi', '!');      // 'Hi, Ada!'  — args comma-separated, invokes now
+greet.apply(user, ['Hi', '!']);   // 'Hi, Ada!'  — args as an array, invokes now
+const bound = greet.bind(user, 'Hi');
+bound('!');                       // 'Hi, Ada!'  — new function, call it later</code></pre>
+
+<p><code>call</code>/<code>apply</code> <strong>invoke immediately</strong>. <code>bind</code> <strong>returns a new permanently-bound function</strong> (and supports partial application — pre-filling leading arguments). A bound function cannot be rebound; <code>new</code> on it is the one exception.</p>
+
+<p>Why it still comes up: <strong>arrow functions have no <code>this</code></strong> of their own — they inherit it lexically, which is why <code>this</code> bugs and <code>.bind(this)</code> in constructors mostly vanished with hooks and arrows. Borrowing array methods is the other classic: <code>Array.prototype.slice.call(arguments)</code> to turn <code>arguments</code> into a real array (modern: <code>[...arguments]</code> or just rest params). See the <code>bind</code> polyfill in §16 — writing it proves you understand closures <em>and</em> <code>this</code> in one answer.</p>
+
+
+<h2 id="s28">28. A useDebounce hook, and why cleanup matters</h2>
+
+<p class="ask">Write a <code>useDebounce</code> hook for a search box — one request after the user stops typing, not one per keystroke. Then explain cleanup in React.</p>
+
+<div class="say"><strong>Plain version:</strong> every keystroke restarts a short countdown. Stop typing long enough for a countdown to actually finish, and the value goes through. The restarting is the entire hook.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>What should the hook give back?</strong> A second, slower copy of the value. The input keeps using the fast one so typing never lags; the fetch uses the slow one.</li>
+  <li><strong>What makes the copy slower?</strong> A <code>setTimeout</code> that copies <code>value</code> into the slow state after <code>delay</code> milliseconds.</li>
+  <li><strong>Now the hard part — who cancels the previous countdown?</strong> Instinct says track the timer id yourself and clear it on the next keystroke. You don't have to.</li>
+  <li><strong>React already does it.</strong> An effect's cleanup runs before the <em>next</em> run of that effect, not only on unmount. So returning <code>clearTimeout(id)</code> means every change to <code>value</code> cancels the pending copy and starts a fresh one, with no bookkeeping at all.</li>
+  <li><strong>Which deps?</strong> <code>[value, delay]</code> — a keystroke changes <code>value</code>, so cleanup → new timer. A pause longer than <code>delay</code> is the only way a timer survives to fire.</li>
+  <li><strong>Debouncing alone is still not safe for fetching.</strong> Two requests can be in flight at once and come back out of order, so a stale response overwrites a fresh one. The fix is the same mechanism again: abort the old request in the cleanup.</li>
+</ol>
+
+<h3>The code</h3>
+<pre><code>function useDebounce(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() =&gt; {
+    const id = setTimeout(() =&gt; setDebounced(value), delay);
+    return () =&gt; clearTimeout(id);   // the whole trick
+  }, [value, delay]);
+
+  return debounced;
+}</code></pre>
+
+<p>Used, with the race condition handled:</p>
+<pre><code>const [query, setQuery] = useState('');
+const debouncedQuery = useDebounce(query, 400);
+
+useEffect(() =&gt; {
+  if (!debouncedQuery) return;
+  const ctrl = new AbortController();
+
+  fetch(`/api/search?q=${debouncedQuery}`, { signal: ctrl.signal })
+    .then(r =&gt; r.json())
+    .then(setResults)
+    .catch(e =&gt; { if (e.name !== 'AbortError') setError(e); });
+
+  return () =&gt; ctrl.abort();   // a stale request cannot overwrite fresh results
+}, [debouncedQuery]);</code></pre>
+
+<h3>The cleanup checklist</h3>
+<p>Four things always need one:</p>
+<ol>
+  <li>Timers — <code>clearTimeout</code> / <code>clearInterval</code></li>
+  <li>Listeners and subscriptions — <code>removeEventListener</code>, <code>unsubscribe</code></li>
+  <li>In-flight requests — <code>AbortController</code></li>
+  <li>External instances — <code>ws.close()</code>, <code>observer.disconnect()</code>, <code>worker.terminate()</code></li>
+</ol>
+<p>Without them: memory leaks, state set after unmount, duplicated subscriptions. <strong>StrictMode in dev mounts, unmounts and remounts every component on purpose to expose exactly this</strong> — if your effect misbehaves under StrictMode, your cleanup is wrong.</p>
+
+
+<h2 id="s29">29. React.memo vs useMemo</h2>
+
+<div class="say"><strong>Analogy:</strong> same idea at two different sizes. <code>useMemo</code> is <strong>keeping one ingredient you already chopped.</strong> <code>React.memo</code> is <strong>keeping the whole finished dish</strong> and not cooking it again because the order has not changed. And the catch that trips everyone: if you hand the kitchen a <em>freshly written order ticket</em> every time — even with identical contents — they will cook it again. That is what an inline function prop does to <code>React.memo</code>.</div>
+
+<p><strong>Why either exists.</strong> React's default behaviour is to redo work rather than track what changed: when a component re-renders, React calls the function again from the top — recomputing every value inside it — and re-renders all of its children, whether or not anything those children depend on actually changed. That default is deliberate and usually fine, because calling a function and diffing a small tree is cheap. Memoization is the opt-out for when it isn't: you tell React "if these inputs are unchanged, reuse last time's result instead of doing the work again."</p>
+
+<p>Both APIs apply that one idea, at <strong>different scopes</strong> — and that is the whole distinction.</p>
+
+<p>Different levels of the same idea. <strong><code>React.memo</code> memoizes a component's rendered output. <code>useMemo</code> memoizes a value inside a render.</strong></p>
+
+<table>
+<tr><th></th><th>React.memo</th><th>useMemo</th></tr>
+<tr><td>What it is</td><td>HOC wrapping a component</td><td>Hook called inside a component</td></tr>
+<tr><td>Caches</td><td>the whole render output (the element tree)</td><td>one value / object / array</td></tr>
+<tr><td>Skips</td><td>re-rendering the child when props are shallow-equal</td><td>recomputing an expensive value when deps are equal</td></tr>
+<tr><td>Compares</td><td>props, shallow, <code>Object.is</code> per key (overridable 2nd arg)</td><td>the dependency array</td></tr>
+</table>
+
+<pre><code>const Row = React.memo(function Row({ item, onSelect }) {
+  return &lt;li onClick={() =&gt; onSelect(item.id)}&gt;{item.label}&lt;/li&gt;;
+});
+
+function List({ items, filter }) {
+  // without useMemo this array is a NEW reference every render → memo on Row is useless
+  const visible = useMemo(() =&gt; items.filter(i =&gt; i.type === filter), [items, filter]);
+  const onSelect = useCallback(id =&gt; setSelected(id), []);   // same reason, for the function prop
+
+  return &lt;ul&gt;{visible.map(i =&gt; &lt;Row key={i.id} item={i} onSelect={onSelect} /&gt;)}&lt;/ul&gt;;
+}</code></pre>
+
+<div class="say"><strong>The line that scores:</strong> "They are partners, not alternatives. <code>React.memo</code> only pays off if the props are referentially stable — so <code>useMemo</code>/<code>useCallback</code> exist to keep object, array and function props stable across renders. One <code>React.memo</code> with an inline <code>onClick={() =&gt; ...}</code> prop is dead weight: new function every render, shallow compare fails, it re-renders anyway and you also pay for the comparison."</div>
+
+<p><strong>Why we use them at all:</strong> React's default is "parent re-renders → every child re-renders." That is usually fine; memoization is for when it is not — big lists, expensive subtrees, charts, components doing real work per render. Measure first (§24). And note <strong>React Compiler</strong>: it inserts this memoization automatically, which is the industry direction — say that, it shows currency. Related: §22 for the full <code>useMemo</code>/<code>useCallback</code> answer.</p>
+
+
+<h2 id="s30">30. How React renders UI changes</h2>
+
+<div class="say"><strong>Analogy:</strong> you do not rearrange a room by shoving furniture around while people watch. You <strong>sketch the new arrangement</strong> (render — cheap, on paper, throw it away if you change your mind), <strong>compare it to the room as it is</strong> (diff), and then make <strong>one trip with a short list</strong> (commit — the only part anyone sees).</div>
+
+<p><strong>The real question:</strong> what happens between you calling <code>setState</code> and a pixel changing on the screen? The thing to understand first is that you never update the UI in React. You describe what the UI <em>should look like</em> for the current state, and React works out the smallest set of DOM operations that turn what is on screen now into what you described. That indirection is the whole design — it is why you write declarative code, and it is what lets React interrupt, reorder or throw away work without you knowing.</p>
+
+<p>It does this in three phases, and the separation between them matters more than the names.</p>
+
+<p>Three phases. Name them in order — this is the backbone answer.</p>
+
+<ol>
+  <li><strong>Trigger</strong> — <code>setState</code> (or a parent render) marks the component dirty and schedules work. Updates in the same tick are <strong>batched</strong> into one render.</li>
+  <li><strong>Render (pure)</strong> — React calls your function. It returns a new tree of React elements — plain objects, no DOM touched. React <strong>diffs</strong> that tree against the previous one (reconciliation, §19) and builds a list of mutations. This phase is interruptible in concurrent React: it can be paused, abandoned, or restarted, which is exactly why render must have no side effects.</li>
+  <li><strong>Commit (synchronous)</strong> — React applies the mutation list to the real DOM in one pass (<code>appendChild</code>, attribute writes, text updates), then runs refs and layout effects, paints, then runs passive effects.</li>
+</ol>
+
+<pre><code>setCount(1)  →  schedule  →  render (diff, no DOM)  →  commit (DOM writes)
+                                                        ├─ useLayoutEffect  (before paint, blocking)
+                                                        ├─ browser paints
+                                                        └─ useEffect        (after paint, async)</code></pre>
+
+<div class="say"><strong>The key sentence:</strong> "Rendering in React does not mean touching the DOM. Rendering means calling the component to produce a description of the UI. Only the commit phase writes to the DOM — and React writes only the differences it found, not the whole tree."</div>
+
+<p><strong>The diffing rules that decide what survives:</strong> different element type at the same position → tear down the subtree and rebuild it; same type → keep the DOM node, patch the changed attributes; lists are matched by <strong>key</strong>, which is why index-as-key corrupts state when the list reorders. See §18 (Virtual DOM) and §19 (Fiber) for the deep version.</p>
+
+
+<h2 id="s31">31. useLayoutEffect</h2>
+
+<div class="say"><strong>Analogy:</strong> the stage is set but <strong>the curtain has not gone up yet.</strong> <code>useLayoutEffect</code> is your last chance to walk out and move a chair while the audience still cannot see. <code>useEffect</code> runs <em>after</em> the curtain rises — so if you move the chair there, everyone watched it jump.</div>
+
+<p><strong>What it is.</strong> A hook for running code <em>after</em> React has updated the DOM but <em>before</em> the user can see the result. It is the same hook as <code>useEffect</code> in every visible way — same signature, same dependency array, same cleanup contract. The only thing that differs is <em>when</em> React chooses to run your callback, and that single difference is the entire reason it exists.</p>
+
+<p><strong>The problem it solves.</strong> Some code has to <em>read</em> the DOM before it can decide what the UI should look like. How tall is this tooltip? Did this menu overflow the bottom of the window? How wide is this text? None of those have an answer until the element actually exists in the document — but the moment it exists, the browser is free to paint it, and the user sees it in whatever position you guessed before you had the measurement. You measure, you correct, and the correction arrives one frame late. The visible result is a <strong>flicker</strong>: the element appears in the wrong place, then jumps.</p>
+
+<p><strong>How it solves it.</strong> React runs layout effects <em>inside</em> the commit phase, synchronously, while the browser is still blocked from painting. If you call <code>setState</code> in there, React re-renders and re-commits immediately, still before paint. So the intermediate, wrong-looking state never reaches the screen — the user only ever sees the corrected frame. <code>useEffect</code>, by contrast, is deliberately deferred until after paint, precisely so that ordinary side effects (fetching, logging, subscribing) cannot delay showing the UI.</p>
+
+<pre><code>commit DOM changes
+  ├─ useLayoutEffect runs   ← synchronous, browser is blocked, you can still fix things
+  ├─ browser paints         ← the first thing the user actually sees
+  └─ useEffect runs         ← asynchronous, too late to change this frame invisibly</code></pre>
+
+<p><strong>So the rule is:</strong> if the effect changes something the user would otherwise see wrong for one frame, it is a layout effect. If it does not affect what is on screen right now, it is a normal effect.</p>
+
+<pre><code>function Tooltip({ anchor, children }) {
+  const ref = useRef(null);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useLayoutEffect(() =&gt; {
+    const a = anchor.getBoundingClientRect();
+    const t = ref.current.getBoundingClientRect();
+    setPos({ top: a.top - t.height, left: a.left });   // measured and corrected BEFORE paint
+  }, [anchor]);
+
+  return &lt;div ref={ref} style={{ position: 'fixed', ...pos }}&gt;{children}&lt;/div&gt;;
+}</code></pre>
+
+<p><strong>Use it only for: measure-then-mutate.</strong> Reading <code>getBoundingClientRect</code>/<code>scrollHeight</code> and immediately repositioning — tooltips, popovers, autosizing textareas, restoring scroll position, measuring text to truncate it. With <code>useEffect</code> the user sees one frame in the wrong place, then a jump: <strong>visible flicker</strong>.</p>
+
+<div class="say"><strong>The tradeoff to volunteer:</strong> "It blocks paint. The browser cannot show anything until my callback returns, so slow work here is directly janky frames. It is the exception; <code>useEffect</code> is the default — data fetching, subscriptions, logging, timers. And it does not run during SSR, so it warns on the server — guard it or move the logic."</div>
+
+<p>Related: <code>useInsertionEffect</code> (earlier still, for CSS-in-JS injecting styles) and <code>ResizeObserver</code>, which is often the better answer than measuring in an effect on every render.</p>
+
+
+<h2 id="s32">32. Controlled vs uncontrolled inputs</h2>
+
+<div class="say"><strong>Analogy:</strong> who holds the pen? <strong>Controlled</strong> = you are reading over the user's shoulder and writing every letter into your own notebook as they type; the notebook is the truth, the paper just mirrors it. <strong>Uncontrolled</strong> = you let them fill in the form and only read it when they hand it back at the end.</div>
+
+<p><strong>The underlying problem.</strong> A form input in the browser already holds state of its own: the DOM node remembers what the user typed, with no help from React. So putting React in front of a form creates a duplicate — two places that both think they know the current value. Something has to decide which one is the truth, and the two possible answers are exactly these two patterns.</p>
+
+<p><strong>Who owns the value?</strong> React state → controlled. The DOM node → uncontrolled.</p>
+
+<pre><code>// Controlled — React state is the single source of truth
+const [name, setName] = useState('');
+&lt;input value={name} onChange={e =&gt; setName(e.target.value)} /&gt;
+
+// Uncontrolled — the DOM keeps the value, you read it when you need it
+const ref = useRef(null);
+&lt;input defaultValue="" ref={ref} /&gt;
+// on submit: ref.current.value</code></pre>
+
+<table>
+<tr><th></th><th>Controlled</th><th>Uncontrolled</th></tr>
+<tr><td>Source of truth</td><td><code>useState</code></td><td>the DOM node</td></tr>
+<tr><td>Prop</td><td><code>value</code> + <code>onChange</code></td><td><code>defaultValue</code> / <code>defaultChecked</code></td></tr>
+<tr><td>Re-renders</td><td>every keystroke</td><td>none</td></tr>
+<tr><td>Good for</td><td>live validation, formatting/masking, dependent fields, disabling submit, instant search</td><td>simple forms, file inputs, big forms where per-keystroke renders cost, integrating non-React widgets</td></tr>
+</table>
+
+<div class="say"><strong>Say this:</strong> "Controlled gives me the value on every render, so I can validate, format and derive from it — at the cost of a render per keystroke. Uncontrolled is faster and less code but the value is only readable on demand. <code>&lt;input type=&quot;file&quot;&gt;</code> is <em>always</em> uncontrolled — its value is read-only for security, you cannot set it programmatically."</div>
+
+<p><strong>Two gotchas they probe:</strong> <code>value={undefined}</code> flipping to a string switches an input from uncontrolled to controlled and React warns — initialize with <code>''</code>, not <code>null</code>/<code>undefined</code>. And <code>value</code> without <code>onChange</code> makes a permanently read-only field (use <code>readOnly</code> if that is the intent).</p>
+
+<p><strong>The practical answer:</strong> "In production I use React Hook Form, which is deliberately uncontrolled — it registers refs instead of lifting every keystroke into state, so a 50-field form re-renders only the fields that actually changed."</p>
+
+
+<h2 id="s33">33. Custom hook restrictions</h2>
+
+<div class="say"><strong>Analogy for the rule everyone breaks:</strong> React stores your hooks in <strong>numbered lockers, assigned by the order you asked for them</strong> — not by name. First <code>useState</code> gets locker 1, the next gets locker 2, and so on. Skip one behind an <code>if</code> and every later hook shifts down a locker, so your <code>useEffect</code> opens the state locker and finds somebody else's socks. That is the whole reason for "always call hooks at the top level."</div>
+
+<p><strong>What a custom hook is for.</strong> It is how you take stateful logic out of a component so other components can reuse it — the thing plain functions could never do, because state, effects and lifecycle were locked inside component classes. A custom hook has no special syntax and no React API behind it: it is an ordinary function that happens to call hooks. That is also why it comes with restrictions — it inherits every rule the hooks inside it have, and it has no way to opt out of them.</p>
+
+<p>A custom hook is just a function that calls other hooks — so it inherits the <strong>Rules of Hooks</strong> exactly.</p>
+
+<ol>
+  <li><strong>Name must start with <code>use</code>.</strong> Not cosmetic — it is how the linter and React DevTools know to apply the rules.</li>
+  <li><strong>Call hooks only at the top level.</strong> No hooks inside conditions, loops, nested functions, <code>try/catch</code> or after an early <code>return</code>. React identifies hooks by <strong>call order</strong>, not by name — a skipped hook shifts every later hook onto the wrong state slot.</li>
+  <li><strong>Call hooks only from React functions</strong> — a component or another custom hook. Not from plain utilities, event handlers, class components or module scope.</li>
+  <li><strong>No shared state between callers.</strong> Each call site gets its own independent state. Two components calling <code>useCounter()</code> do not share a counter — if you need that, you need context or an external store (§36).</li>
+  <li><strong>It must be callable unconditionally</strong> by its consumer, which means a custom hook cannot decide at runtime "I will not use state this time."</li>
+</ol>
+
+<pre><code>// WRONG — conditional hook call
+function useThing(id) {
+  if (!id) return null;          // early return before the hook
+  const [data, setData] = useState(null);
+}
+
+// RIGHT — hook always runs, the condition moves inside it
+function useThing(id) {
+  const [data, setData] = useState(null);
+  useEffect(() =&gt; { if (!id) return; fetchIt(id).then(setData); }, [id]);
+  return data;
+}</code></pre>
+
+<div class="say"><strong>Why the rule exists — the mechanism, not the mantra:</strong> "Hooks are stored as a linked list on the fiber, and on every render React walks that list in order. There is no key, just position. So conditionally calling a hook misaligns the list and you get another hook's state — hence 'rendered fewer hooks than expected'."</div>
+
+<p>Not restrictions, but worth adding: a custom hook should return a stable shape (array for positional like <code>useState</code>, object for named), and <code>eslint-plugin-react-hooks</code> enforces all of the above — say you have it on as an error, not a warning.</p>
+
+
+<h2 id="s34">34. How to optimize performance in a React app</h2>
+
+<div class="say"><strong>Analogy:</strong> "the app is slow" is like "the car is making a noise." It could be <strong>too much luggage</strong> (bundle size), <strong>driving in circles</strong> (re-rendering more than needed), or <strong>the engine struggling</strong> (expensive work per render). Three different problems, three different mechanics. Diagnosing before you open the bonnet is the entire answer.</div>
+
+<p><strong>Reframe the question first.</strong> "The app is slow" is not one problem, it is three, and conflating them is the most common weak answer. An app can be slow because it <strong>ships too much JavaScript</strong> before it can do anything; because it <strong>re-renders far more of the tree</strong> than the change justified; or because <strong>each individual render or paint does expensive work</strong>. Those have different causes, different fixes, and different tools for finding them. So the first move is always to measure and find out which one you actually have (§24) — then work the matching bucket.</p>
+
+<p>Answer in <strong>three buckets</strong>, and lead with "measure first — §24" so you do not sound like someone who memoized everything.</p>
+
+<p><strong>1. Ship less JavaScript</strong> (usually the biggest win, and it is not a React problem)</p>
+<ul>
+  <li>Route-level code splitting — <code>React.lazy</code> + <code>Suspense</code>, dynamic <code>import()</code> (§23)</li>
+  <li>Audit the bundle — <code>source-map-explorer</code>; swap heavyweights (moment → date-fns/Temporal, lodash → single imports)</li>
+  <li>Tree shaking, modern build target, compression; move work server-side with SSR/RSC (§21)</li>
+</ul>
+
+<p><strong>2. Render less</strong></p>
+<ul>
+  <li><strong>Keep state local</strong> and as low in the tree as possible — the cheapest fix is a smaller re-render scope, not memoization</li>
+  <li><code>React.memo</code> + <code>useMemo</code>/<code>useCallback</code> for stable props on expensive subtrees (§29)</li>
+  <li><strong>Lift content up / push state down</strong>: pass expensive subtrees as <code>children</code> so they are not recreated by the stateful parent</li>
+  <li>Split bloated context providers — a context value change re-renders every consumer</li>
+  <li><strong>Virtualize long lists</strong> (§35)</li>
+  <li><code>useTransition</code> / <code>useDeferredValue</code> to keep typing responsive while a heavy list filters</li>
+  <li>Debounce/throttle high-frequency handlers (§26)</li>
+</ul>
+
+<p><strong>3. Make each render and each paint cheaper</strong></p>
+<ul>
+  <li>Stable <code>key</code>s, never the array index on reorderable lists</li>
+  <li>Images: correct dimensions, <code>loading="lazy"</code>, modern formats, <code>next/image</code></li>
+  <li>Avoid layout thrash — batch reads then writes; prefer <code>transform</code>/<code>opacity</code> animations (compositor-only)</li>
+  <li>Offload genuinely heavy computation to a <strong>Web Worker</strong> (§11)</li>
+  <li>Cache server state properly — TanStack Query/SWR dedupe and cache requests, which removes renders you never needed</li>
+</ul>
+
+<div class="say"><strong>Close with the honest framing:</strong> "Most 'React is slow' reports are not React. They are a 2MB bundle, an unoptimized image, or a waterfall of requests. So I start with a Lighthouse and a React Profiler trace, fix the biggest number, and only then reach for memoization — which has its own cost and makes code harder to read."</div>
+
+
+<h2 id="s35">35. 1,000 rows without hurting performance → virtualization</h2>
+
+<div class="say"><strong>Analogy:</strong> a spreadsheet with 100,000 rows does not hurt your computer, because the screen only ever holds about 30 of them and the scrollbar is a <em>lie about how much is below.</em> That is exactly the trick: keep roughly the rows you can see, plus a spacer tall enough to make the scrollbar honest.</div>
+
+<p><strong>Why this hurts in the first place, and it is not React.</strong> Every DOM node the browser keeps around costs memory, style recalculation, and a slot in layout. 1,000 rows means the browser computes styles and geometry for thousands of boxes on first paint and again whenever anything shifts — plus React now has 1,000 components to diff on every update. The user can see maybe 20 of them. You are paying for 980 rows nobody is looking at.</p>
+
+<p><strong>The idea behind the fix:</strong> stop creating what cannot be seen.</p>
+
+<p><strong>Answer: virtualization (windowing).</strong> Render only the ~20 rows in the viewport plus a small overscan buffer; as the user scrolls, reuse those nodes and change their content and offset. 1,000 rows, ~25 DOM nodes.</p>
+
+<pre><code>import { useVirtualizer } from '@tanstack/react-virtual';
+
+function Rows({ items }) {
+  const parentRef = useRef(null);
+  const v = useVirtualizer({
+    count: items.length,
+    getScrollElement: () =&gt; parentRef.current,
+    estimateSize: () =&gt; 40,
+    overscan: 5,
+  });
+
+  return (
+    &lt;div ref={parentRef} style={{ height: 600, overflow: 'auto' }}&gt;
+      &lt;div style={{ height: v.getTotalSize(), position: 'relative' }}&gt;
+        {v.getVirtualItems().map(row =&gt; (
+          &lt;div key={row.key} style={{ position: 'absolute', top: 0, transform: `translateY(${row.start}px)`, height: row.size }}&gt;
+            {items[row.index].label}
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<div class="say"><strong>Why the naive version hurts:</strong> "1,000 rows is not a React problem, it is a DOM problem. Every node costs memory, style recalculation and layout, so the first paint is slow and every scroll frame has to lay out thousands of boxes. The fix is to stop creating nodes nobody can see — the spacer div keeps the scrollbar honest while only the visible window exists."</div>
+
+<p><strong>The outer wrapper has a fixed height and its own scroll container — that is mandatory</strong>, the virtualizer needs a measurable viewport. Variable row heights need <code>measureElement</code> (dynamic measurement), which is the follow-up question.</p>
+
+<p><strong>Name the alternatives and when each wins:</strong> pagination or infinite scroll (do not fetch 1,000 rows at all — usually the real answer); <code>content-visibility: auto</code> in CSS as a zero-dependency partial win; <code>IntersectionObserver</code> for simple lazy loading. Libraries: <code>@tanstack/react-virtual</code>, <code>react-window</code>, <code>react-virtuoso</code>, or AG Grid if it is a real data grid.</p>
+
+<p><strong>Trade-offs to mention unprompted:</strong> Ctrl+F stops finding off-screen rows, accessibility needs care (<code>aria-rowcount</code>, focus management), print and "select all" break, and SEO sees only the window — if the content must be indexable, paginate instead.</p>
+
+
+<h2 id="s36">36. Why do we need external state management?</h2>
+
+<div class="say"><strong>Analogy:</strong> prop drilling is <strong>passing a note through six people who do not care what it says</strong> just to reach the person at the end — and every one of them has to be told the note exists, so changing it means bothering all six. An external store is <strong>a whiteboard in the hallway</strong>: whoever needs the number walks over and reads it, and nobody in between is involved.</div>
+
+<p><strong>What "external" means here.</strong> A state manager is simply a place to keep state that lives <em>outside</em> the component tree, with components subscribing to the parts they care about. Normally React state lives <em>in</em> the tree — it belongs to one component, and the only way to share it is to move it up to a common ancestor and pass it down. That mechanism is what eventually breaks, and the breakage has a name.</p>
+
+<p><strong>The problem it removes is <code>prop drilling</code>.</strong> Without it, state lives in the nearest common ancestor and gets threaded down through every intermediate component — components that neither read nor care about that data, but must accept and forward it. Change the shape and you touch ten files.</p>
+
+<pre><code>// prop drilling
+&lt;App user={user}&gt; → &lt;Layout user={user}&gt; → &lt;Header user={user}&gt; → &lt;Avatar user={user} /&gt;
+//                   ^ neither Layout nor Header uses `user`</code></pre>
+
+<p>What external state buys you beyond that: <strong>shared state across sibling branches</strong> (two distant components on the same data), <strong>state that outlives a component</strong> (unmount the page, keep the cart), one place to put <strong>complex update logic</strong>, and <strong>debuggability</strong> — DevTools, action logs, time-travel, replayable bug reports.</p>
+
+<div class="say"><strong>The honest version — what it does NOT solve:</strong> "A global store does not make re-renders free: a careless selector re-renders half the app on any store change. It does not solve server state — caching, deduping, revalidation, out-of-order responses — that is TanStack Query's job, not Redux's. It does not remove the need for local state; a form input in a global store is a mistake. And it does not reduce complexity, it relocates it: more indirection, more boilerplate, a harder first day for a new hire."</div>
+
+<p><strong>The escalation ladder to recite:</strong> local <code>useState</code> → lift it up → <code>children</code>/composition → Context (low-frequency, app-wide: theme, auth, locale) → external store (Zustand/Redux Toolkit/Jotai) for high-frequency or large shared state → and a <strong>server-state library</strong> for anything that came from an API. "Context fixes prop drilling but is not a performance tool — every consumer re-renders when the value changes; that is precisely when I move to a store with selectors."</p>
+
+
+<h2 id="s37">37. The three principles of Redux</h2>
+
+<div class="say"><strong>Analogy:</strong> Redux is a <strong>bank ledger.</strong> You never reach in and edit the balance; you write down a transaction ("deposited 50"), and the balance is whatever you get from replaying the transactions. Annoying compared to just changing the number — and it is the reason you can always answer "how did it get to this amount?", and the reason the bank can rewind.</div>
+
+<p><strong>What Redux is, before the principles.</strong> A predictable state container: one object holding your app state, changed only by dispatching plain description-objects through pure functions. Every constraint it imposes buys one property — you can always answer "how did the state get into this shape?" by replaying a list of actions. The three principles <em>are</em> those constraints, and each trades away some freedom for debuggability.</p>
+
+<ol>
+  <li><strong>Single source of truth</strong> — the whole app state lives in one store, one object tree. Easier to debug, serialize, persist and hydrate (SSR), and no two copies to drift apart.</li>
+  <li><strong>State is read-only</strong> — you never mutate it. The only way to change it is to <strong>dispatch an action</strong>, a plain object describing what happened. Every change funnels through one choke point, so it can be logged and replayed.</li>
+  <li><strong>Changes are made with pure functions</strong> — reducers: <code>(state, action) =&gt; newState</code>. No mutation, no API calls, no <code>Date.now()</code>, no randomness. Same inputs, same output, every time.</li>
+</ol>
+
+<pre><code>// reducer: pure, returns a NEW object
+function todos(state = [], action) {
+  switch (action.type) {
+    case 'todos/added':   return [...state, action.payload];
+    case 'todos/toggled': return state.map(t =&gt; t.id === action.payload ? { ...t, done: !t.done } : t);
+    default:              return state;
+  }
+}</code></pre>
+
+<div class="say"><strong>Why purity is the one that matters:</strong> "Purity is what makes time-travel debugging possible — replay the same action list over the same initial state and you land in exactly the same UI. It is also what makes React's reference-equality check work: a new object means a new reference means a re-render; mutating in place silently renders nothing."</div>
+
+<p><strong>The modern footnote:</strong> "Redux Toolkit is the standard today — <code>createSlice</code> lets me write <code>state.push(x)</code>, but that is <strong>Immer</strong> recording my mutations on a draft proxy and producing a new immutable object. The reducer stays pure; the ergonomics just improved. Side effects live outside reducers, in thunks or middleware."</p>
+
+
+<h2 id="s38">38. Presentational vs container components</h2>
+
+<div class="say"><strong>Analogy:</strong> a <strong>blank form template</strong> versus <strong>the clerk who fills it in.</strong> The template knows nothing about where the data comes from, so you can reuse it or photocopy it for a demo. The clerk knows the filing system, the API, the store. The test tells you which half you are holding: if you would change it because the design changed it is the template; if you would change it because the data source changed it is the clerk.</div>
+
+<p><strong>What the pattern is.</strong> Splitting one component into two, divided by <em>the reason you would edit it</em>. If you would change it because the design changed, that is presentational. If you would change it because the data source or business rule changed, that is container. It is separation of concerns applied at the component level, and its real payoff is that the presentational half becomes trivially reusable and trivially testable — no mocks, no providers, props in and markup out.</p>
+
+<table>
+<tr><th></th><th>Presentational ("dumb")</th><th>Container ("smart")</th></tr>
+<tr><td>Concern</td><td>how things <em>look</em></td><td>how things <em>work</em></td></tr>
+<tr><td>Data</td><td>receives props</td><td>fetches / subscribes / selects from the store</td></tr>
+<tr><td>State</td><td>UI-only (is-open, hover)</td><td>business/server state</td></tr>
+<tr><td>Knows about</td><td>nothing external</td><td>store, router, API, context</td></tr>
+<tr><td>Testing</td><td>trivial — props in, markup out</td><td>needs mocks/providers</td></tr>
+</table>
+
+<pre><code>// presentational — pure, reusable, storybook-able
+const UserCard = ({ name, avatar, onFollow }) =&gt; (
+  &lt;article&gt;&lt;img src={avatar} alt="" /&gt;&lt;h3&gt;{name}&lt;/h3&gt;
+    &lt;button onClick={onFollow}&gt;Follow&lt;/button&gt;&lt;/article&gt;
+);
+
+// container — knows where data comes from
+function UserCardContainer({ id }) {
+  const { data, isLoading } = useQuery({ queryKey: ['user', id], queryFn: () =&gt; getUser(id) });
+  const follow = useFollowMutation(id);
+  if (isLoading) return &lt;Skeleton /&gt;;
+  return &lt;UserCard {...data} onFollow={follow.mutate} /&gt;;
+}</code></pre>
+
+<p><strong>Why it was invented:</strong> separation of concerns, reuse (the same <code>UserCard</code> in a list, a modal, a Storybook story), and testability.</p>
+
+<div class="say"><strong>The current-thinking answer they want to hear:</strong> "Dan Abramov, who popularized the pattern, later walked it back — hooks made the split mostly unnecessary, because a custom hook extracts the logic without needing a wrapper component. So today I keep the <em>principle</em> — separate data access from presentation — but express it as <code>useUser(id)</code> inside the component rather than two component layers. I still use a real container boundary where it pays: route-level data loading, and leaf components I want pure for Storybook or a design system."</div>
+
+<p>The modern incarnation: <strong>React Server Components</strong> — the server component fetches, the client component renders and handles interaction. Same split, enforced by the runtime instead of by convention.</p>
+
+
+<h2 id="s39">39. ECMAScript collection types</h2>
+
+<div class="say"><strong>The one-line map of all six.</strong> <code>Array</code> = a numbered queue. <code>Object</code> = a form with printed labels (labels must be words). <code>Map</code> = a cloakroom: hand in a ticket, get the coat back &mdash; and the ticket can be <em>anything</em>, not just a word. <code>Set</code> = a guest list that refuses duplicates. <code>WeakMap</code>/<code>WeakSet</code> = the same, but written on a sticky note attached to the object, so it disappears when the object does.</div>
+
+<p><strong>Why there are so many.</strong> For years JavaScript had two containers — arrays for sequences, objects for everything else — and both were being used for jobs they are bad at. Object keys can only be strings, so you could not key data by an object or a DOM node. Arrays have no fast membership test, so "is this already in the list?" inside a loop silently became O(n²). ES2015 added four keyed collections to close those gaps, each with a specific job.</p>
+
+<p>Four keyed collections were added in ES2015, plus the older ordered/indexed ones.</p>
+
+<table>
+<tr><th>Type</th><th>Shape</th><th>Keys</th><th>Iterable</th><th>Notes</th></tr>
+<tr><td><code>Array</code></td><td>ordered, index-keyed</td><td>integer indices</td><td>yes</td><td>the default for sequences</td></tr>
+<tr><td><code>Object</code></td><td>key → value</td><td>string / Symbol only</td><td>no (needs <code>Object.entries</code>)</td><td>records, structs, JSON</td></tr>
+<tr><td><code>Map</code></td><td>key → value</td><td><strong>any</strong> type, incl. objects</td><td>yes, insertion order</td><td>true dictionary</td></tr>
+<tr><td><code>Set</code></td><td>unique values</td><td>—</td><td>yes, insertion order</td><td>dedupe, membership</td></tr>
+<tr><td><code>WeakMap</code></td><td>key → value</td><td>objects only, weakly held</td><td><strong>no</strong></td><td>private/metadata, GC-safe</td></tr>
+<tr><td><code>WeakSet</code></td><td>unique objects</td><td>objects only, weakly held</td><td><strong>no</strong></td><td>"have I seen this object"</td></tr>
+</table>
+
+<p>Also fair game: <strong>typed arrays</strong> (<code>Int8Array</code>, <code>Uint8Array</code>, <code>Float64Array</code> …) over an <code>ArrayBuffer</code> — fixed-type binary buffers for canvas pixels, WebGL, WASM, file bytes; and <code>WeakRef</code>/<code>FinalizationRegistry</code> for single weak references.</p>
+
+
+<h2 id="s40">40. What is a Set?</h2>
+
+<p><strong>A Set is just a list that refuses duplicates.</strong> Picture a plain array — same thing, one extra rule: the same value can never go in twice. You have <code>["a", "b", "c"]</code> and you try to add another <code>"b"</code>? Nothing happens. A <code>"b"</code> is already in there, so the Set silently ignores you. That is the entire concept.</p>
+
+<p>Which means you use a Set whenever you want a guarantee that there is no duplicate data — a list of tags, selected ids, email addresses, nodes you have already visited. You never have to check first; the Set keeps itself clean.</p>
+
+<p><strong>The second reason to use one: asking "is X in here?" is instant.</strong> With an array you have to walk it — <code>arr.includes(x)</code> checks every element until it finds a match, so a list of 10,000 items can mean 10,000 comparisons. A Set answers in one step, no matter how big it is. Put <code>arr.includes()</code> inside a loop and you have an O(n²) function; swap in <code>set.has()</code> and it is O(n).</p>
+
+<p>Beyond those two things it behaves like an array you would expect: it keeps insertion order, it is iterable, and it holds values of any type.</p>
+
+<p><strong>A concrete one.</strong> Think of the contacts app on your phone. You import a SIM card, then a Google account, then a CSV your colleague emailed you — and now "Maria" is in there four times. That is an array: it took everything it was handed. If the phone number were the key of a Set, the second, third and fourth Maria would simply never have been added. (Hopefully one day my phone book will be fixed.)</p>
+
+<pre><code>const numbers = ["+55 11 90000", "+55 11 91111", "+55 11 90000"];
+
+numbers.length;              // 3 — Maria is in here twice
+new Set(numbers).size;       // 2 — the duplicate never made it in</code></pre>
+
+<p><strong>So should you avoid arrays and use Sets everywhere?</strong> Absolutely not. A Set is important when you need to ensure there is no duplicate data. When you do not have that need, an array is often preferable: it is cheaper per element, you get index access (<code>arr[0]</code>, which a Set has no concept of), you get the whole <code>map</code>/<code>filter</code>/<code>reduce</code>/<code>sort</code>/<code>slice</code> toolkit, and it survives <code>JSON.stringify</code> (a Set serializes to <code>{}</code> — a classic bug). You have to analyze the needs of your own application and decide which structure is the better fit.</p>
+
+<p class="say"><strong>One nuance, if someone pushes on it.</strong> In the classic textbook version, a set is backed by an array, so every insertion has to scan the whole thing for a duplicate first — O(n) to add, versus O(1) for a plain <code>push</code>. JavaScript's <code>Set</code> is hash-backed, so <code>add</code> is O(1) and that particular penalty does not apply. The lesson still does: uniqueness is never free, it is just paid in memory and overhead here instead of time.</p>
+
+<pre><code>const s = new Set([1, 2, 2, 3]);   // Set(3) {1, 2, 3}
+
+s.add(4);         // chainable, returns the Set
+s.has(2);         // true  — O(1), vs O(n) for arr.includes
+s.delete(2);      // true if it was there
+s.size;           // 3     — property, not a method
+s.clear();
+
+const unique = [...new Set(arr)];                  // the idiom everybody knows
+const unique = Array.from(new Set(arr));
+
+for (const v of s) {}                              // iterable
+s.forEach(v =&gt; {});                                // (value, value, set) — key === value</code></pre>
+
+<p><strong>How does it decide two values are "the same"?</strong> Basically <code>===</code>, with one fix: <code>NaN</code> counts as equal to itself, so a Set can only ever hold one <code>NaN</code>. (The spec name for this rule is <code>SameValueZero</code>.) The trap question is objects: they are compared by identity, not by content, so two objects that look identical are still two different values — <code>new Set([{a:1},{a:1}]).size === 2</code>.</p>
+
+<p>ES2025 added set methods — <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>symmetricDifference</code>, <code>isSubsetOf</code>, <code>isSupersetOf</code>, <code>isDisjointFrom</code>. Mentioning them is cheap currency.</p>
+
+<p><strong>When I reach for it:</strong> deduping, "have I visited this node" in a graph walk, tracking selected ids, tag/permission membership — anywhere I would otherwise write <code>arr.includes()</code> inside a loop and make it O(n²).</p>
+
+
+<h2 id="s41">41. What is a Map?</h2>
+
+<div class="say"><strong>Analogy &mdash; the cloakroom at a theatre.</strong> You hand over your coat and you get a numbered ticket. When you come back, the attendant does not walk down the rail looking at every coat until they spot yours &mdash; they read the number and go straight to hook 47. <strong>Your ticket is the key, your coat is the value, and the whole point of the system is that finding your coat takes the same time whether there are 10 coats or 10,000.</strong> A <code>Map</code> is that cloakroom.</div>
+
+<p><strong>The problem it solves &mdash; start here, because this is the actual purpose.</strong> Say you have 5,000 users and a user id, and you need that user's name. With an array you have to <em>look</em>:</p>
+
+<pre><code>// the slow way: walk the shelf until you spot it
+const user = users.find(u =&gt; u.id === 4211);   // checks up to 5,000 items</code></pre>
+
+<p>Do that once and nobody notices. Do it inside a loop over 5,000 orders and you have just done 25 million comparisons for something that should have been instant. A <code>Map</code> removes the searching entirely: you built the ticket system up front, so now you just read the ticket number.</p>
+
+<pre><code>// the fast way: build the cloakroom once...
+const byId = new Map(users.map(u =&gt; [u.id, u]));   // key = id, value = the user
+
+// ...then every lookup after that is one step, no searching
+byId.get(4211);     // the user, instantly — same speed with 10 users or 10 million</code></pre>
+
+<p>That is the purpose in one sentence: <strong>a Map is a thing you put stuff into under a label of your choosing, so you can get it back later by that label without ever searching for it.</strong> Everything else about Map is a detail hanging off that.</p>
+
+<p><strong>So why not just use an object?</strong> You can! <code>{ 4211: user }</code> does roughly this too, and for simple cases people do exactly that. But an object has one hard limit: <strong>the labels on an object can only be text.</strong> Write <code>obj[4211]</code> and JavaScript quietly turns the number <code>4211</code> into the string <code>"4211"</code> behind your back. Try to use something bigger than text as a label &mdash; an actual object, a function, a button on the page &mdash; and the object mashes it into useless text:</p>
+
+<pre><code>const obj = {};
+obj[document.body] = 'hello';
+Object.keys(obj);        // ["[object HTMLBodyElement]"]  ← the button is gone, it's just text now
+                         // every element you store collides into that SAME one key
+
+const m = new Map();
+m.set(document.body, 'hello');
+m.get(document.body);    // 'hello'  ← the real element is the key, not a description of it</code></pre>
+
+<p>That is the one real difference, and it is why Map exists: <strong>an object's label has to be a word; a Map's label can be the thing itself.</strong> "Remember that <em>this exact button</em> has been clicked 3 times" is a Map job and an object simply cannot do it.</p>
+
+<p><strong>The whole API &mdash; it is five methods and one property:</strong></p>
+
+<pre><code>const m = new Map();                 // or new Map([['a', 1], ['b', 2]]) to start it filled
+
+m.set('a', 1);        // put 1 on the hook labelled 'a'  (returns the map, so it chains)
+m.get('a');           // 1        — undefined if that label was never used
+m.has('a');           // true     — "is there anything on this hook?"
+m.delete('a');        // true if something was there
+m.size;               // 2        — a plain property, no counting needed
+m.clear();            // empty the cloakroom
+
+for (const [key, value] of m) { }    // walk it in the order things were added
+m.keys(); m.values(); m.entries();   // the three views
+
+Object.fromEntries(m);               // Map → plain object (only if the keys are strings)
+new Map(Object.entries(obj));        // plain object → Map</code></pre>
+
+<p><strong>Two small things that get asked.</strong> Keys are compared the way <code>===</code> compares, with one fix: <code>NaN</code> matches itself, so a Map can hold only one <code>NaN</code> key. And objects are compared <em>by identity, not by looks</em> &mdash; <code>m.set({id:1}, 'x').get({id:1})</code> gives <code>undefined</code>, because those are two different objects that merely resemble each other. Same rule as Set (&sect;40).</p>
+
+<p><strong>When I reach for it:</strong> any id&nbsp;&rarr;&nbsp;record index I am about to look up repeatedly; counting occurrences (<code>counts.set(w, (counts.get(w) ?? 0) + 1)</code>); attaching data to DOM nodes or component instances; and any cache whose keys arrive at runtime from outside. If I am about to write <code>.find()</code> inside a loop, I build a Map instead.</p>
+
+
+<h2 id="s42">42. Map vs Object</h2>
+
+<div class="say"><strong>One line:</strong> an <strong>Object is a form with field labels printed on it</strong> &mdash; a known, fixed shape you fill in: <code>name</code>, <code>email</code>, <code>age</code>. A <strong>Map is an empty filing cabinet</strong> &mdash; you add and pull drawers all day and you never knew in advance what the labels would be. Object for a <em>record</em>, Map for a <em>lookup table</em>.</div>
+
+<p><strong>They look like the same tool because both store key&nbsp;&rarr;&nbsp;value.</strong> The difference is what each one was built for. An object's keys are part of your source code &mdash; you typed them, you know them, you read them back with a dot. A Map's keys are <em>data</em> &mdash; they arrive at runtime, from a server, from user input, from the DOM, and you never type them literally anywhere.</p>
+
+<table>
+<tr><th></th><th>Map</th><th>Object</th></tr>
+<tr><td>Key types</td><td><strong>any value</strong> &mdash; objects, DOM nodes, functions, numbers, <code>NaN</code></td><td>strings and Symbols only &mdash; everything else is silently coerced (<code>obj[1]</code> &rarr; <code>obj["1"]</code>)</td></tr>
+<tr><td>Order</td><td>guaranteed insertion order</td><td>mostly insertion order, but <strong>integer-like keys jump to the front, sorted numerically</strong></td></tr>
+<tr><td>Size</td><td><code>map.size</code> &mdash; O(1)</td><td><code>Object.keys(o).length</code> &mdash; builds an array first, O(n)</td></tr>
+<tr><td>Iteration</td><td>directly iterable: <code>for&hellip;of</code>, spread, <code>forEach</code></td><td>needs <code>Object.keys/values/entries</code></td></tr>
+<tr><td>Inherited keys</td><td>none &mdash; nothing in it that you did not put there</td><td>inherits from <code>Object.prototype</code>, so <code>"toString"</code> or <code>"constructor"</code> as a key is a hazard</td></tr>
+<tr><td>Frequent add/delete</td><td>what it is built for</td><td>deoptimizes the engine's hidden class for that object</td></tr>
+<tr><td>JSON</td><td>not serializable &mdash; <code>JSON.stringify(map)</code> gives <code>{}</code></td><td><code>JSON.stringify</code> just works</td></tr>
+<tr><td>Ergonomics</td><td><code>get</code>/<code>set</code> only &mdash; no literal, no dot access, no destructuring</td><td><code>{}</code> literal, <code>obj.key</code>, destructuring, spread</td></tr>
+</table>
+
+<p><strong>The two rows that actually decide it.</strong> The JSON row is why objects win for anything crossing the wire &mdash; a Map has to be converted both ways, which is pure friction for a user record. And the inherited-keys row is the strongest argument the other way: if keys come from outside your program, an object is a security problem, not just an inconvenience.</p>
+
+<pre><code>// user-supplied key lands on a plain object:
+const store = {};
+store[userInput] = 'x';          // userInput === '__proto__'  or  'toString'
+store.toString;                  // was a function, is now 'x' — you broke the object
+if (store[other]) { }            // true for keys you never set: 'constructor', 'valueOf'…
+
+// same thing in a Map: '__proto__' is just four characters
+const store2 = new Map();
+store2.set(userInput, 'x');
+store2.has('toString');          // false. nothing is in there but what I put in there.</code></pre>
+
+<div class="say"><strong>The decision rule, out loud:</strong> "Object for <strong>records</strong> &mdash; a fixed, known set of fields, especially anything that goes over the wire as JSON. Map for a <strong>hash map</strong> &mdash; keys added and removed at runtime, non-string keys, or when I need <code>size</code> and ordered iteration. The practical clincher is prototype collisions: a user-supplied key called <code>__proto__</code> in a plain object is a real vulnerability class, and in a Map it is just a key. If I must use an object for a dynamic dictionary, I reach for <code>Object.create(null)</code> (&sect;46)."</div>
+
+
+<h2 id="s43">43. WeakMap &mdash; and why we need it</h2>
+
+<div class="say"><strong>Analogy &mdash; the lost property office vs. a sticky note.</strong> A normal <code>Map</code> is the <strong>lost property office</strong>: once an umbrella is logged in there, it stays in the building forever, because the office is still holding it. Nobody can ever throw it out &mdash; there is a record. A <code>WeakMap</code> is a <strong>sticky note stuck to the umbrella itself</strong>: the note travels with the umbrella, and the day the umbrella gets thrown away, the note goes in the bin with it. <strong>You remembered something about the umbrella without becoming the reason it can never be thrown away.</strong></div>
+
+<p><strong>First, the thing nobody explains: JavaScript cleans up after you.</strong> You never free memory by hand. Instead the engine runs a <em>garbage collector</em>, and its rule is simple:</p>
+
+<div class="say">If nothing in your program can still reach an object, it is garbage and the engine is free to delete it. If <em>anything at all</em> can still reach it &mdash; one variable, one array slot, one map entry &mdash; it stays in memory.</div>
+
+<pre><code>let node = document.createElement('div');   // something points at it → it lives
+node = null;                                // nothing points at it → the engine can delete it</code></pre>
+
+<p>So "a memory leak in JavaScript" is never "I forgot to free it". It is always <strong>something is still pointing at a thing you are finished with</strong>, and that something is very often a cache you wrote yourself.</p>
+
+<p><strong>Now the actual problem.</strong> You want to remember some data about each row in a table &mdash; its measured height, say &mdash; so you cache it keyed by the element:</p>
+
+<pre><code>const cache = new Map();                 // ← a normal Map
+
+function getHeight(row) {
+  if (!cache.has(row)) cache.set(row, row.getBoundingClientRect().height);
+  return cache.get(row);
+}</code></pre>
+
+<p>This works perfectly and it is also a slow memory leak. Follow the rows:</p>
+
+<pre><code>// user scrolls; the app removes row 1 from the page and forgets about it
+row.remove();
+row = null;                  // you dropped your reference...
+                             // ...but `cache` still has that element as a key.
+                             // The engine sees something pointing at it → it must keep it.
+                             // The element, its children, its event listeners: all still in memory.</code></pre>
+
+<p>Nothing in your app can reach that row any more, nothing will ever call <code>getHeight</code> on it again, and it is still there. Scroll a long list for ten minutes and your cache is now a museum of thousands of dead DOM nodes. <strong>The cache stopped being a cache and became the thing keeping the garbage alive.</strong> That is a real bug with a real symptom: it is the classic "why does this dashboard use 2GB after an hour".</p>
+
+<p><strong>The fix is one word.</strong> Same API, same code, different collection:</p>
+
+<pre><code>const cache = new WeakMap();             // ← the only change
+
+function getHeight(row) {
+  if (!cache.has(row)) cache.set(row, row.getBoundingClientRect().height);
+  return cache.get(row);
+}
+// row.remove(); row = null;  →  nothing else points at it, so the engine deletes
+// the element AND the cache entry disappears with it. No leak, no cleanup code.</code></pre>
+
+<p>A <code>WeakMap</code> holds its <strong>keys weakly</strong>, which means exactly this: <em>the engine does not count a WeakMap entry as a reason to keep something alive.</em> If the WeakMap is the last thing pointing at a key, the key gets collected and the entry vanishes on its own.</p>
+
+<p><strong>Why it looks so crippled &mdash; and why that is the point.</strong> Every missing feature follows from one fact: <strong>you cannot predict when the garbage collector runs.</strong></p>
+
+<table>
+<tr><th>Restriction</th><th>Why it has to be that way</th></tr>
+<tr><td>No <code>size</code>, no <code>keys()</code>, no iteration, no <code>clear()</code></td><td>The contents shrink by themselves at a moment you cannot predict. If <code>size</code> existed it would return a different number depending on whether the collector happened to run &mdash; your program's behaviour would depend on engine timing. So it is simply not exposed.</td></tr>
+<tr><td>Keys must be objects (or Symbols) &mdash; not strings or numbers</td><td>Weakness only means anything for a thing with <em>identity</em> that can go away. The string <code>'hello'</code> is not an item sitting somewhere waiting to be thrown out &mdash; there is nothing to collect, so a weak reference to it would be meaningless.</td></tr>
+<tr><td>Not serializable, not really inspectable</td><td>Same reason: there is no stable snapshot to take.</td></tr>
+</table>
+
+<p>Methods, and that is the whole surface: <code>get</code> / <code>set</code> / <code>has</code> / <code>delete</code>. Note there is no constructor shortcut worth much &mdash; <code>new WeakMap([[obj, 1]])</code> works, but you almost always start empty and fill it as objects arrive.</p>
+
+<div class="say"><strong>Why we need it, out loud:</strong> "A WeakMap lets me attach data to an object <em>without owning its lifetime</em>. A normal Map holds its keys strongly, so using one as a cache keyed by DOM nodes or component instances is a textbook memory leak &mdash; the map keeps every object alive long after the app is done with it. A WeakMap makes the cache <em>follow</em> the object's life instead of extending it: when the object goes, the entry goes. The cost is that I give up <code>size</code> and iteration, and that is deliberate &mdash; the contents change at GC time, which I cannot observe without making my program depend on when the collector ran."</div>
+
+<p><strong>Where it actually shows up:</strong> metadata and caches keyed by DOM nodes or component instances; private fields before <code>#private</code> existed (<code>const _secrets = new WeakMap()</code> &mdash; the data is unreachable without the instance <em>and</em> the module-scoped map); memoizing a function on object identity; cycle detection in a deep clone (&sect;47). React and Immer both use them internally. If you need weakness for a <em>single</em> object rather than a collection, that is <code>WeakRef</code> / <code>FinalizationRegistry</code> (&sect;39).</p>
+
+
+<h2 id="s44">44. WeakSet &mdash; and how it differs from WeakMap</h2>
+
+<div class="say"><strong>Where the line is:</strong> a <strong>WeakMap</strong> remembers <em>something about</em> an object &mdash; "this row is 42px tall". A <strong>WeakSet</strong> remembers only <em>that you have seen</em> an object &mdash; "I already dealt with this one". It is the same split as Map vs Set (&sect;42): key&rarr;value versus bare membership. If the thing you need back is a <strong>piece of data</strong>, WeakMap. If it is a <strong>yes/no</strong>, WeakSet.</div>
+
+<p><strong>What it is.</strong> A group of objects you can add to and ask about, holding its members weakly &mdash; so being in the set is not a reason for an object to stay in memory. Three methods, and that is everything:</p>
+
+<pre><code>const ws = new WeakSet();
+
+ws.add(obj);        // put it in the group   (chainable)
+ws.has(obj);        // true / false — the only question a WeakSet can answer
+ws.delete(obj);     // true if it was in there
+
+// no size, no iteration, no clear, objects only — same reasons as WeakMap (§43)</code></pre>
+
+<p><strong>The problem it solves: a boolean flag that must not pin the object.</strong> You want to wire up each widget exactly once. The obvious move is a flag on the object itself, which is fine until you do not own the object or must not mutate it &mdash; so you track it outside:</p>
+
+<pre><code>const initialised = new Set();            // ← a normal Set: the leak
+
+function setup(widget) {
+  if (initialised.has(widget)) return;    // already done, skip
+  initialised.add(widget);
+  // ...expensive one-time wiring
+}</code></pre>
+
+<p>That <code>Set</code> now holds every widget the app has ever created, forever &mdash; and each entry exists purely to record a single <code>true</code>. You are keeping a whole object alive to remember one bit. Swap the collection and the problem is gone:</p>
+
+<pre><code>const initialised = new WeakSet();        // ← the only change
+// widget destroyed → it drops out of the set by itself, flag and all.</code></pre>
+
+<p><strong>The other classic: cycle detection.</strong> Walking a structure that might point back at itself, you need "have I been here before?" &mdash; and you must not keep the visited objects alive after the walk:</p>
+
+<pre><code>function hasCycle(obj, seen = new WeakSet()) {
+  if (obj === null || typeof obj !== 'object') return false;
+  if (seen.has(obj)) return true;                  // been here → cycle
+  seen.add(obj);
+  return Object.values(obj).some(v =&gt; hasCycle(v, seen));
+}</code></pre>
+
+<p>Note the sibling case: a deep <em>clone</em> uses a <code>WeakMap</code> instead, because it needs "which copy did I already make of this?" &mdash; a piece of data, not a yes/no (&sect;47). That pair is the clearest illustration of the line between the two.</p>
+
+<div class="say"><strong>One line:</strong> "WeakSet is membership without ownership &mdash; 'have I already handled this object?' answered without being the reason it stays in memory. Reach for it for one-time-setup flags, validation marks, and visited-sets during a traversal. The moment I need to store a <em>value</em> against the object rather than a flag, it is a WeakMap."</div>
+
+
+<h2 id="s45">45. Promise methods for multiple parallel requests</h2>
+
+<div class="say"><strong>Analogy — you send three friends out to pick things up.</strong> They all leave at the same time no matter which method you pick; the only question is what you do when one of them fails. <code>all</code>: if anybody fails, the evening is off. <code>allSettled</code>: tell me how each of you did, we work with what we got. <code>race</code>: whoever gets back first, good or bad news, that is what we go with. <code>any</code>: first one with <em>good</em> news wins; I only care if all three strike out.</div>
+
+<p><strong>What they are for.</strong> When several requests do not depend on each other, doing them one after another wastes time equal to the sum of their latencies instead of the slowest one. These four static methods all take a list of promises and return a single promise that represents the whole group. They all start everything at once; the only thing that differs is <strong>what you want to happen when some of them fail</strong> — and that is how you choose between them.</p>
+
+<p><strong>Four combinators.</strong> All four take an iterable and start everything concurrently — the difference is only in <em>when they settle and with what</em>.</p>
+
+<table>
+<tr><th>Method</th><th>Resolves when</th><th>Rejects when</th><th>Result</th></tr>
+<tr><td><code>Promise.all</code></td><td>all fulfil</td><td><strong>first</strong> rejection (fail fast)</td><td>array of values, input order</td></tr>
+<tr><td><code>Promise.allSettled</code></td><td>all settle</td><td><strong>never</strong></td><td><code>{status,value}</code> / <code>{status,reason}</code> per item</td></tr>
+<tr><td><code>Promise.race</code></td><td>first to <strong>settle</strong></td><td>if that first one rejected</td><td>that single outcome</td></tr>
+<tr><td><code>Promise.any</code></td><td>first to <strong>fulfil</strong></td><td>only if all reject → <code>AggregateError</code></td><td>first success</td></tr>
+</table>
+
+<pre><code>// all — I need everything, and partial data is useless
+const [user, posts] = await Promise.all([getUser(id), getPosts(id)]);
+
+// allSettled — dashboard: render what worked, show an error card for what didn't
+const results = await Promise.allSettled([getUser(id), getPosts(id), getAds()]);
+const ok = results.filter(r =&gt; r.status === 'fulfilled').map(r =&gt; r.value);
+
+// race — timeout pattern
+await Promise.race([fetch(url), new Promise((_, rej) =&gt; setTimeout(() =&gt; rej(new Error('timeout')), 5000))]);
+
+// any — first mirror that answers wins
+await Promise.any([fetch(cdn1), fetch(cdn2), fetch(cdn3)]);</code></pre>
+
+<div class="say"><strong>The sentence that shows you understand parallelism:</strong> "Parallelism comes from <em>starting</em> the promises, not from the combinator. <code>await a(); await b();</code> is sequential — b does not start until a resolves. <code>Promise.all([a(), b()])</code> is concurrent because both functions were already called when the array was built. And 'parallel' is loose here: it is concurrent I/O on one thread, not parallel computation — that needs Web Workers (§11)."</div>
+
+<p><strong>Follow-ups to be ready for:</strong> <code>Promise.all</code> fails fast but the <strong>other requests keep running</strong> — it does not cancel them; cancellation needs <code>AbortController</code> (and <code>AbortSignal.any</code>/<code>timeout</code>). Rejections from the losers become unhandled unless caught. For 500 requests, do not fire them all — chunk them or use a concurrency limit (<code>p-limit</code>), or the browser's 6-per-host queue and the server both suffer.</p>
+
+
+<h2 id="s46">46. How do we create an object in JS?</h2>
+
+<div class="say"><strong>Analogy:</strong> an <strong>object literal</strong> is writing one thing by hand. A <strong>class or constructor</strong> is a cookie cutter — stamp out a hundred, and they all share one recipe card (the prototype) rather than each carrying a copy of it. A <strong>factory function</strong> is a person at a workbench handing you a finished item: no cutter, no recipe card, and whatever they keep on the bench stays private. <code>Object.create(null)</code> is a blank sheet with <em>no</em> recipe card at all — which is exactly what you want when the keys come from a stranger.</div>
+
+<p><strong>Why there is more than one way.</strong> All of these produce an object, so the question is never "which one makes an object" but <strong>what ends up on the prototype and how the methods are shared</strong>. A literal gives you a one-off. Constructors and classes give you many instances sharing one set of methods through the prototype chain. Factories give you instances whose "methods" are closures, with no <code>this</code> involved at all. <code>Object.create</code> lets you set the prototype explicitly — including to nothing.</p>
+
+<pre><code>// 1. Object literal — 95% of real code
+const o = { a: 1, greet() { return this.a; } };
+
+// 2. Constructor function + new   (pre-ES6 classes)
+function User(name) { this.name = name; }
+User.prototype.hi = function () { return `hi ${this.name}`; };
+const u = new User('Ada');
+
+// 3. class — same prototype mechanics, better syntax
+class Admin extends User { #secret = 1; hi() { return 'admin ' + super.hi(); } }
+
+// 4. Object.create — explicit prototype control
+const child  = Object.create(parentObj);        // parentObj becomes the prototype
+const pureMap = Object.create(null);            // NO prototype: a safe dictionary
+
+// 5. Factory function — closures instead of `this`, no `new` needed
+const makeUser = name =&gt; ({ name, hi: () =&gt; `hi ${name}` });
+
+// 6. new Object() / Object.assign / spread / structuredClone / Object.fromEntries / JSON.parse
+const merged = { ...a, ...b };
+const fromPairs = Object.fromEntries([['a', 1]]);</code></pre>
+
+<p><strong>What <code>new</code> actually does</strong> — the four steps worth reciting: creates an empty object, sets its <code>[[Prototype]]</code> to the constructor's <code>.prototype</code>, calls the constructor with <code>this</code> bound to it, returns it unless the constructor returns another object.</p>
+
+<div class="say"><strong>Have an opinion:</strong> "Literals for data, <code>class</code> when I need inheritance or many instances with shared methods, <strong>factory functions</strong> as my default when I want encapsulation without <code>this</code> binding headaches, and <code>Object.create(null)</code> when the object is a lookup table built from user input — no prototype means no <code>__proto__</code> or <code>toString</code> collisions."</div>
+
+
+<h2 id="s47">47. Methods to copy an object (shallow and deep)</h2>
+
+<p><strong>Why copying is a question at all.</strong> Objects are held by reference, so <code>const b = a</code> does not copy anything — both names point at the same object, and "changing <code>b</code>" changes what <code>a</code> sees too. Copying means producing a genuinely separate object, and the only real decision is <strong>how deep to go</strong>: just the top level (fast, but nested objects are still shared), or the whole structure (safe, but slower and full of edge cases).</p>
+
+<p>See §14 for the mental model; this is the method list.</p>
+
+<p><strong>Shallow — one level only:</strong></p>
+<pre><code>{ ...obj }                      // spread — the default; own enumerable props
+Object.assign({}, obj)          // same, but mutates the target; triggers setters
+Object.assign({}, a, b, c)      // merge, later wins
+Object.fromEntries(Object.entries(obj))     // lets you filter/transform while copying
+Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj))
+                                // the only shallow copy that preserves getters,
+                                // non-enumerables and the prototype
+// arrays: [...arr], arr.slice(), Array.from(arr), arr.concat(), arr.toSpliced()/with()</code></pre>
+
+<p>Note what spread drops: the <strong>prototype</strong>, non-enumerable properties, and property descriptors — getters are <em>invoked</em> and flattened into plain values. That nuance is §48 territory and the reason the <code>getOwnPropertyDescriptors</code> form exists.</p>
+
+<p><strong>Deep — the approach question:</strong></p>
+<pre><code>structuredClone(obj)            // ✅ native default. Handles nested objects, arrays,
+                                //    Date, RegExp, Map, Set, ArrayBuffer, Blob,
+                                //    and CIRCULAR references.
+                                // ❌ throws on functions, DOM nodes, Symbols;
+                                //    drops the prototype (class instance → plain object)
+                                //    and property descriptors/getters
+
+JSON.parse(JSON.stringify(obj)) // the legacy trick — know its five failures:
+                                // drops undefined/functions/Symbols, Date → string,
+                                // NaN/Infinity → null, throws on cycles, loses prototype
+
+_.cloneDeep(obj)                // lodash — most tolerant, handles functions-by-reference
+                                // and class prototypes; a dependency though
+
+// hand-rolled, when asked to write one:
+function deepClone(value, seen = new WeakMap()) {
+  if (value === null || typeof value !== 'object') return value;   // primitives
+  if (seen.has(value)) return seen.get(value);                     // cycles
+  if (value instanceof Date) return new Date(value);
+  if (value instanceof Map) { const m = new Map(); seen.set(value, m);
+    for (const [k, v] of value) m.set(deepClone(k, seen), deepClone(v, seen)); return m; }
+  const out = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value));
+  seen.set(value, out);                                            // BEFORE recursing
+  for (const k of Reflect.ownKeys(value)) out[k] = deepClone(value[k], seen);
+  return out;
+}</code></pre>
+
+<div class="say"><strong>How to choose, out loud:</strong> "<code>structuredClone</code> unless I need functions or class prototypes preserved, in which case lodash. And in React the real answer is usually neither — I do a <strong>targeted</strong> copy of just the path I am changing, or use Immer. Deep-cloning whole state on every update is both slow and a sign the state shape is wrong."</div>
+
+<p>The <code>WeakMap</code> for cycle tracking (§43) and setting it <em>before</em> recursing is the detail that separates a memorized answer from an understood one.</p>
+
+
+<h2 id="s48">48. Object property descriptors</h2>
+
+<div class="say"><strong>Analogy:</strong> a property is not a value, it is <strong>a file with permission bits on it.</strong> Can it be overwritten (<code>writable</code>)? Does it show up when someone lists the folder (<code>enumerable</code>)? Can it be deleted or have its own permissions changed (<code>configurable</code>)? <code>obj.a = 1</code> just creates the file with all permissions open, which is why most people never find out the bits exist.</div>
+
+<p><strong>What they are.</strong> A property is not just a key pointing at a value. Internally, every property is a small record — a <em>descriptor</em> — holding the value plus metadata about what you are allowed to do with it: can it be reassigned, does it show up when the object is listed or copied, can it be deleted. <code>obj.a = 1</code> hides all of that behind a sensible default.</p>
+
+<p><strong>Why it exists.</strong> "Key to value" is too narrow for everything an object needs to express. Read-only constants, internal fields that should not appear in <code>Object.keys</code> or <code>JSON.stringify</code>, computed properties that run a function when read, frozen configuration — all of those are the same mechanism with different flags. Descriptors are the API for reading and setting them, and they are what <code>freeze</code>, <code>seal</code>, <code>class</code> and <code>Proxy</code> are built on top of.</p>
+
+<p>Every property is not just a value — it is a <strong>descriptor</strong>, an internal record with flags. There are two kinds.</p>
+
+<p><strong>Data descriptor:</strong> <code>value</code>, <code>writable</code>, <code>enumerable</code>, <code>configurable</code>.<br>
+<strong>Accessor descriptor:</strong> <code>get</code>, <code>set</code>, <code>enumerable</code>, <code>configurable</code>. (A property is one or the other, never both.)</p>
+
+<table>
+<tr><th>Flag</th><th>false means</th></tr>
+<tr><td><code>writable</code></td><td>assignment is ignored (throws in strict mode)</td></tr>
+<tr><td><code>enumerable</code></td><td>hidden from <code>for…in</code>, <code>Object.keys</code>, spread and <code>JSON.stringify</code></td></tr>
+<tr><td><code>configurable</code></td><td>cannot be deleted or redefined — one-way door</td></tr>
+</table>
+
+<pre><code>const o = { a: 1 };
+Object.getOwnPropertyDescriptor(o, 'a');
+// { value: 1, writable: true, enumerable: true, configurable: true }  ← literal defaults
+
+Object.defineProperty(o, 'id', { value: 42 });
+// flags DEFAULT TO FALSE when defined this way → read-only, hidden, locked
+Object.keys(o);            // ['a']        — 'id' is non-enumerable
+JSON.stringify(o);         // {"a":1}
+o.id = 99;                 // silently ignored (TypeError in strict mode)
+
+Object.defineProperty(o, 'full', {                  // accessor
+  get() { return `#${this.id}`; },
+  enumerable: true,
+});
+
+Object.getOwnPropertyDescriptors(o);                // all of them, for exact copying
+Object.freeze(o);    // writable:false + configurable:false on every own prop — SHALLOW
+Object.seal(o);      // configurable:false only — values still writable</code></pre>
+
+<div class="say"><strong>The asymmetry worth naming:</strong> "Properties created by a literal or assignment get all three flags <code>true</code>. Properties created with <code>defineProperty</code> default to all <code>false</code>. That bites people constantly — you define a property and then wonder why it vanished from <code>Object.keys</code> and from your spread copy."</div>
+
+<p><strong>Where it actually shows up:</strong> class methods are non-enumerable by design (which is why <code>for…in</code> over an instance does not list them); <code>Object.freeze</code> for immutable config; <code>getOwnPropertyDescriptors</code> is the only correct way to copy getters (§47); and <code>Reflect</code>/<code>Proxy</code> traps are defined in terms of descriptors — the mechanism behind Vue's reactivity and Immer's drafts.</p>
+
+
+<h2 id="s49">49. Generators — and what happens on yield</h2>
+
+<div class="say"><strong>Analogy:</strong> a normal function is a <strong>vending machine that dumps the whole shelf at once</strong> — one press, everything falls out, done. A generator is a <strong>ticket dispenser</strong>: you press it, you get number 1, and it just sits there remembering it is on number 1 until somebody presses again. It can do that forever without ever holding a list of all the numbers.</div>
+
+<p><strong>What a generator is.</strong> An ordinary function has exactly two moments: you call it and it runs, then it returns and everything inside it is gone. A generator breaks that contract — it can <strong>stop partway through</strong>, hand a value back to the caller, and stay frozen in place until someone asks it to continue, with all of its local state still intact.</p>
+
+<p><strong>Why that is useful.</strong> It inverts who is in control. Normally the function decides how long it runs; with a generator the <em>caller</em> decides, pulling one value at a time. That makes it possible to describe a sequence without computing it — including an infinite one — and to compute only as much as the consumer actually consumes. It is the machinery behind custom iterables, lazy evaluation, and (under the hood) <code>async/await</code>.</p>
+
+<p>A <code>function*</code> does not run when you call it. It returns a <strong>generator object</strong> — an iterator you pull values out of. <code>yield</code> <strong>pauses the function and hands a value out, keeping the entire execution context alive</strong>: local variables, the position in the loop, the call stack frame. The next <code>.next()</code> resumes exactly there.</p>
+
+<pre><code>function* idGen() {
+  let id = 0;
+  while (true) {
+    const reset = yield ++id;        // pauses here, hands out ++id
+    if (reset) id = 0;               // ...and `reset` is whatever next() is CALLED with
+  }
+}
+
+const g = idGen();        // nothing has executed yet
+g.next();                 // { value: 1, done: false }   ← runs up to the first yield
+g.next();                 // { value: 2, done: false }
+g.next(true);             // { value: 1, done: false }   ← argument becomes `reset`
+g.return('stop');         // { value: 'stop', done: true }  — terminates it</code></pre>
+
+<p><strong>The outcome of a yield, precisely:</strong> <code>.next()</code> returns <code>{ value, done }</code>. <code>value</code> is the yielded expression, <code>done</code> is <code>false</code> while the function is merely paused. When the function finally <code>return</code>s, you get <code>{ value: returnValue, done: true }</code>, and every call after that gives <code>{ value: undefined, done: true }</code>. Inside the generator, <strong>the <code>yield</code> expression itself evaluates to the argument passed to the <em>next</em> <code>next()</code></strong> — that two-way channel is the part people miss.</p>
+
+<pre><code>function* inner() { yield 'a'; yield 'b'; }
+function* outer() { yield 1; yield* inner(); yield 2; }   // yield* delegates
+[...outer()];                                            // [1, 'a', 'b', 2]
+
+// lazy infinite sequence — no array is ever built
+function* take(n, it) { for (const v of it) { if (n-- &lt;= 0) return; yield v; } }
+[...take(3, idGen())];                                   // [1, 2, 3]</code></pre>
+
+<div class="say"><strong>The one-liner:</strong> "A generator is a function with a pause button. Normal functions run to completion and lose everything; a generator suspends mid-execution with its state intact and lets the caller decide when — and whether — to continue. That is lazy evaluation, and it is also exactly the machinery <code>async/await</code> is built on: <code>await</code> is a <code>yield</code> that the runtime resumes when a promise settles."</div>
+
+<p><strong>Real uses to name:</strong> infinite/lazy sequences and pagination (fetch page by page without loading everything); custom iterables (<code>[Symbol.iterator]*</code>); tree/graph traversal without building an array; <code>redux-saga</code>'s effect model; <code>for await…of</code> over <code>async function*</code> for streaming responses. "In day-to-day product code I rarely write one — but async iterators over a streamed API response are the case where I do."</p>
+
+
+<h2 id="s50">50. What is the console output order?</h2>
+
+<p class="ask">What does this snippet print, and in what order? Walk through it out loud as you go.</p>
+
+<div class="say"><strong>Plain version:</strong> the computer finishes everything already on its desk, then does the sticky notes, and only then picks up one parked job. Three piles, always in that order.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>Draw three piles.</strong> <em>Now</em> (plain statements), <em>sticky notes</em> (promise reactions — microtasks), <em>parked</em> (timers — macrotasks).</li>
+  <li><strong>Walk the code top to bottom and ask one question per line:</strong> does this run now, or does it go on a pile?</li>
+  <li><code>setTimeout</code> → parked. Even at 0ms. It is a request, not a jump.</li>
+  <li><code>new Promise(executor)</code> → <strong>the executor runs now</strong>, immediately, before the next line. This is the trap the question is built around; most people expect it to be async.</li>
+  <li><code>.then</code> / <code>.catch</code> → these only <em>register</em> a handler. Nothing runs; a sticky note goes on the pile.</li>
+  <li><strong>When the last plain statement finishes</strong>, the desk is clear — so every sticky note is done, all of them, in order.</li>
+  <li><strong>Only then</strong> does one parked job get picked up. That is why a 0ms timer still loses to every promise.</li>
+</ol>
+
+
+
+<pre><code>console.log("start");
+
+setTimeout(() =&gt; console.log("timeout"), 0);
+
+new Promise((resolve, reject) =&gt; {
+  console.log("promise constructor");
+  reject();
+})
+  .then(() =&gt; console.log("promise then"))
+  .catch(() =&gt; console.log("promise catch"))
+  .then(() =&gt; console.log("promise second then"));
+
+console.log("final");</code></pre>
+
+<p><strong>Answer:</strong></p>
+<pre><code>start
+promise constructor
+final
+promise catch
+promise second then
+timeout</code></pre>
+
+<p><strong>The walk-through to say out loud:</strong></p>
+<ol>
+  <li><code>"start"</code> — plain synchronous call.</li>
+  <li><code>setTimeout</code> — the callback is handed to the timer API, <strong>not</strong> run. It lands in the macrotask queue when the 0ms elapses.</li>
+  <li><code>"promise constructor"</code> — <strong>the executor runs synchronously</strong>, immediately, inside <code>new Promise</code>. This is the trap: people expect it to be async. It is not. <code>reject()</code> then settles the promise as rejected right away.</li>
+  <li><code>.then().catch().then()</code> — these only <em>register</em> handlers. Nothing runs yet; the reactions are queued as microtasks.</li>
+  <li><code>"final"</code> — last synchronous statement. The call stack is now empty.</li>
+  <li><strong>Microtask queue drains completely:</strong> the first <code>.then()</code> has no rejection handler, so the rejection <strong>passes straight through it</strong> — <code>"promise then"</code> never prints. <code>.catch()</code> catches it → <code>"promise catch"</code>. A <code>catch</code> handler that returns normally produces a <strong>fulfilled</strong> promise, so the chain recovers and the last <code>.then()</code> fires → <code>"promise second then"</code>.</li>
+  <li><strong>Only then</strong> does the event loop take a macrotask → <code>"timeout"</code>.</li>
+</ol>
+
+<div class="say"><strong>The two sentences that win this question:</strong> "The Promise <em>executor</em> is synchronous — only the <code>.then</code>/<code>.catch</code> <em>reactions</em> are asynchronous. And the entire microtask queue is drained before a single macrotask runs, so every promise callback here finishes before <code>setTimeout(…, 0)</code> gets its turn — even though the timer was scheduled first."</div>
+
+<p><strong>Follow-ups to be ready for:</strong></p>
+<ul>
+  <li><em>"Why doesn't <code>promise then</code> print?"</em> — <code>.then(onFulfilled)</code> with one argument has no <code>onRejected</code>, so a rejected promise skips it and propagates down the chain to the nearest rejection handler. <code>.then(f, g)</code> would have caught it in <code>g</code>; <code>.then(f).catch(g)</code> also catches errors thrown <em>inside</em> <code>f</code> — that is the difference between the two forms.</li>
+  <li><em>"What if <code>reject()</code> became <code>resolve()</code>?"</em> → <code>start, promise constructor, final, promise then, promise second then, timeout</code> — the <code>.catch</code> is skipped because nothing rejected.</li>
+  <li><em>"Remove the <code>.catch</code>?"</em> → unhandled rejection warning, and <code>"promise second then"</code> never prints.</li>
+  <li><em>"Where does <code>async/await</code> fit?"</em> — <code>await</code> is a microtask resumption; the code after an <code>await</code> behaves exactly like a <code>.then</code> callback. Related: §3 and §13.</li>
+</ul>
+
+
+<h2 id="s51">51. Which console.log runs, on mount and on click?</h2>
+
+<p class="ask">Which <code>console.log</code> runs — on the first render, and then on a click?</p>
+
+<div class="say"><strong>Plain version:</strong> three effects, three different rules for "should I run again?". The first render is special: there is no previous render to compare with, so everything runs.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>Mount is a freebie.</strong> No previous dependency array exists, so there is nothing to compare and every effect runs — in the order they are written, after the DOM is painted.</li>
+  <li><strong>For every later render, React asks one question per effect:</strong> is this dependency array the same as last time's?</li>
+  <li><strong>No array at all</strong> → nothing to compare → it runs every single time.</li>
+  <li><strong><code>[]</code></strong> → empty compared with empty → always equal → it never runs again.</li>
+  <li><strong><code>[value]</code></strong> → <code>Object.is(0, 1)</code> is false → it runs.</li>
+  <li><strong>Now answer the click:</strong> <code>value</code> changed, so the no-array one and the <code>[value]</code> one run, and the <code>[]</code> one does not.</li>
+</ol>
+
+
+
+<pre><code>export default function Lifecycle() {
+  const [value, setValue] = useState(0);
+
+  useEffect(() =&gt; {
+    console.log("NO DEP");
+  });
+
+  useEffect(() =&gt; {
+    console.log("EMPTY DEP");
+  }, []);
+
+  useEffect(() =&gt; {
+    console.log("VALUE");
+  }, [value]);
+
+  return (
+    &lt;button onClick={() =&gt; { setValue((prev) =&gt; { return ++prev }) }}&gt;{value}&lt;/button&gt;
+  );
+}</code></pre>
+
+<p><strong>1st case — after the first render:</strong></p>
+<pre><code>NO DEP
+EMPTY DEP
+VALUE</code></pre>
+<p>All three. <strong>Every effect runs on mount</strong> regardless of its dependency array — there is no previous render to compare against. They fire in <strong>declaration order</strong>, after the DOM is committed and painted.</p>
+
+<p><strong>2nd case — after clicking the button:</strong></p>
+<pre><code>NO DEP
+VALUE</code></pre>
+<ul>
+  <li><strong>NO DEP</strong> — no dependency array at all → runs after <em>every</em> render. No comparison is ever made.</li>
+  <li><strong>EMPTY DEP</strong> — <code>[]</code> → mount only. The empty array is compared to the empty array, always equal, so it never re-runs.</li>
+  <li><strong>VALUE</strong> — <code>[value]</code> → <code>value</code> went <code>0 → 1</code>, <code>Object.is(0, 1)</code> is false, so it re-runs.</li>
+</ul>
+
+<table>
+<tr><th>Dependency argument</th><th>Mount</th><th>Every re-render</th><th>Only when deps change</th></tr>
+<tr><td>omitted</td><td>✅</td><td>✅</td><td>—</td></tr>
+<tr><td><code>[]</code></td><td>✅</td><td>❌</td><td>—</td></tr>
+<tr><td><code>[value]</code></td><td>✅</td><td>❌</td><td>✅</td></tr>
+</table>
+
+<div class="say"><strong>Say the mechanism, not the table:</strong> "React stores the previous dependency array on the fiber and compares it element by element with <code>Object.is</code>. No array means nothing to compare, so it always runs. An empty array means an empty comparison, which is always equal, so it runs once. That is also why objects and arrays in deps are dangerous — a new reference every render compares unequal and silently turns a dependency-guarded effect back into a run-every-render effect."</div>
+
+<p><strong>The three things to volunteer before they ask:</strong></p>
+<ol>
+  <li><strong>StrictMode in dev double-invokes effects</strong> — on mount you would actually see <code>NO DEP, EMPTY DEP, VALUE, NO DEP, EMPTY DEP, VALUE</code>. It mounts → unmounts → remounts deliberately to expose missing cleanup (§28). In production it logs once. Naming this unprompted is a strong signal.</li>
+  <li><strong><code>++prev</code> is a smell</strong> — it works here only because <code>prev</code> is a number and therefore a copy, but it reads as a mutation of the previous state. <code>prev =&gt; prev + 1</code> is the correct idiom. (The updater form itself is right — see the stale-closure point in §2.)</li>
+  <li><strong>Bail-out:</strong> if an updater returns the <em>same</em> value, React may skip the re-render entirely, and then none of the effects run. Here each click increments, so it always re-renders.</li>
+</ol>
+
+<p><strong>Likely follow-up — "when exactly do these log relative to the paint?"</strong> After commit and after the browser paints; <code>useLayoutEffect</code> would log before paint, synchronously (§31). And if each effect returned a cleanup, on the click you would see <code>cleanup NO DEP</code> → <code>cleanup VALUE</code> → <code>NO DEP</code> → <code>VALUE</code>: <strong>all cleanups for that pass run before any of the new effects.</strong></p>
+
+
+<h2 id="s52">52. The box model and box-sizing</h2>
+
+<p class="ask">What is the CSS box model, and how does the <code>box-sizing</code> property change how width and height are calculated?</p>
+
+<div class="say"><strong>Plain version:</strong> think of a framed picture. The photo is the content, the white mat around it is the padding, the frame is the border, and the empty wall around it is the margin. When you say "make it 300 wide", <code>box-sizing</code> decides whether you meant the photo or the whole frame.</div>
+
+<figure class="fig">
+<svg viewBox="0 0 560 366" role="img" aria-labelledby="bm-title bm-desc" style="width:100%;height:auto">
+  <title id="bm-title">The CSS box model</title>
+  <desc id="bm-desc">Four nested rings — margin, border, padding and content. A bracket under the figure shows that content-box measures only the content ring, while border-box measures content plus padding plus border. Margin sits outside both.</desc>
+
+  <rect x="12" y="24" width="536" height="250" rx="8" fill="none" stroke="var(--sd-border-strong)" stroke-width="1.5" stroke-dasharray="6 5" />
+  <rect x="46" y="58" width="468" height="182" rx="6" fill="var(--sd-accent)" fill-opacity="0.18" stroke="var(--sd-accent)" stroke-width="1.5" />
+  <rect x="64" y="76" width="432" height="146" rx="4" fill="var(--sd-surface2)" stroke="var(--sd-border)" stroke-width="1.5" stroke-dasharray="4 4" />
+  <rect x="90" y="102" width="380" height="94" rx="3" fill="var(--sd-surface)" stroke="var(--sd-border-strong)" stroke-width="1.5" />
+
+  <text x="24" y="45" font-size="12" fill="var(--sd-muted)">margin &#8212; never counted, in either mode</text>
+  <text x="56" y="73" font-size="12" fill="var(--sd-accent)">border</text>
+  <text x="74" y="95" font-size="12" fill="var(--sd-muted)">padding</text>
+  <text x="280" y="155" font-size="13" fill="var(--sd-text)" text-anchor="middle">content</text>
+
+  <path d="M90 288 v10 M90 293 h380 M470 288 v10" fill="none" stroke="var(--sd-border-strong)" stroke-width="1.5" />
+  <text x="280" y="314" font-size="12" fill="var(--sd-text)" text-anchor="middle">content-box measures this &#183; width: 300 &#8594; 344px on screen</text>
+
+  <path d="M46 330 v10 M46 335 h468 M514 330 v10" fill="none" stroke="var(--sd-accent)" stroke-width="1.5" />
+  <text x="280" y="356" font-size="12" fill="var(--sd-accent)" text-anchor="middle">border-box measures this &#183; width: 300 &#8594; 300px on screen</text>
+</svg>
+</figure>
+
+<h3>How it works</h3>
+<p>Four layers, inside out: <strong>content, padding, border, margin</strong>. The default is <code>content-box</code>, where <code>width</code> measures the content only — padding and border are added on top, so the box ends up bigger than the number you wrote.</p>
+<pre><code>width: 300px; padding: 20px; border: 2px solid;
+
+content-box (default) → 300 + 40 + 4 = 344px on screen
+border-box            → 300px on screen, content shrinks to 256px</code></pre>
+<p>So <code>border-box</code> means the number you write is the number you get: padding and border are taken out of the inside instead of added to the outside.</p>
+
+<p><strong>Margin is outside the box either way.</strong> No <code>box-sizing</code> value ever counts it in <code>width</code> — it pushes neighbours around, it is not part of the box. And two stacked vertical margins <em>collapse</em>: 20px below one block and 30px above the next gives one 30px gap, not 50px.</p>
+
+<h3>What teams actually ship</h3>
+<pre><code>*, *::before, *::after { box-sizing: border-box; }</code></pre>
+<p>Not taste — predictability. Under the default, <code>width: 100%</code> plus any padding overflows its parent, which is most of the "where did this horizontal scrollbar come from" bugs.</p>
+
+<h3>If they push</h3>
+<ul>
+  <li><code>min-width</code>, <code>max-width</code> and <code>flex-basis</code> all measure the same box as <code>width</code>.</li>
+  <li><code>outline</code> and <code>box-shadow</code> take up no space in either mode. That is why <code>outline</code> is the right thing for a focus ring: it can't shift the layout.</li>
+  <li><code>getBoundingClientRect()</code> and <code>offsetWidth</code> report the border box; <code>clientWidth</code> drops the border and scrollbar.</li>
+</ul>
+
+
+<h2 id="s53">53. Event order on nested elements</h2>
+
+<p class="ask">When you click on a nested element, how does the browser decide which event handlers run, and in what order?</p>
+
+<div class="say"><strong>Plain version:</strong> a parcel is delivered to a room deep inside a building. It travels down through the lobby and the hallways to reach that room, then back out the same way. Anyone along the route can react as it passes — on the way in, on the way out, or both.</div>
+
+<p>One thing to get out of the way: this is not the event loop. The event loop decides <em>when</em> a task runs; propagation decides <em>which elements</em> get a turn at one click, and all of it happens inside a single task (§13 is the other question).</p>
+
+<h3>The three phases</h3>
+<ol>
+  <li><strong>Capturing</strong> — down from <code>window</code> to the clicked element's parent. Only listeners registered with <code>capture: true</code> fire here.</li>
+  <li><strong>Target</strong> — the clicked element. Its listeners fire in the order they were added.</li>
+  <li><strong>Bubbling</strong> — back up to <code>window</code>. This is where <code>addEventListener</code> puts a listener by default, which is why a parent's handler runs <em>after</em> the child's.</li>
+</ol>
+
+<pre><code>outer.addEventListener("click", () =&gt; console.log("outer capture"), true);
+outer.addEventListener("click", () =&gt; console.log("outer bubble"));
+inner.addEventListener("click", () =&gt; console.log("inner"));
+
+// clicking inner logs: outer capture → inner → outer bubble</code></pre>
+
+<h3>Stopping it</h3>
+<table>
+<tr><th>Call</th><th>Stops</th><th>Does not stop</th></tr>
+<tr><td><code>stopPropagation()</code></td><td>the trip to any other element</td><td>other listeners on this element</td></tr>
+<tr><td><code>stopImmediatePropagation()</code></td><td>that, and the rest of this element's listeners</td><td>the browser's default action</td></tr>
+<tr><td><code>preventDefault()</code></td><td>the default action (navigate, submit, toggle)</td><td>propagation — the event keeps going</td></tr>
+</table>
+<p>Those last two are the pair people mix up. On a link, <code>preventDefault</code> cancels the navigation and the click still reaches <code>document</code>; <code>stopPropagation</code> keeps the navigation and hides the click from every ancestor.</p>
+
+<h3>Event delegation</h3>
+<p>Bubbling put to work: one listener on a parent instead of one per row. It also covers rows added later.</p>
+<pre><code>list.addEventListener("click", (event) =&gt; {
+  const row = event.target.closest("[data-id]");
+  if (row) remove(row.dataset.id);
+});</code></pre>
+
+<h3>If they push</h3>
+<ul>
+  <li><code>event.target</code> is what was clicked; <code>event.currentTarget</code> is the element whose listener is running. Delegation is the reason they differ.</li>
+  <li>Not everything bubbles: <code>focus</code>, <code>blur</code>, <code>mouseenter</code> and <code>mouseleave</code> don't. Their bubbling twins are <code>focusin</code>, <code>focusout</code>, <code>mouseover</code>, <code>mouseout</code>.</li>
+  <li>React adds one listener at the root and replays propagation through your components, so <code>onClick</code> still bubbles parent-after-child — but a native <code>stopPropagation</code> outside React's root can swallow the event entirely.</li>
+</ul>
+
+
+<h2 id="s54">54. A long list that freezes while filtering</h2>
+
+<p class="ask">A page renders 2,000 items and filters them as the user types in a search box. The UI freezes for a moment on every keystroke. What would you investigate, and what would you try first?</p>
+
+<div class="say"><strong>Plain version:</strong> searching 2,000 names is fast — faster than a blink. Redrawing 2,000 rows on screen is the slow part. So the answer is to draw less, not to search faster.</div>
+
+<h3>Measure before guessing</h3>
+<p>Record three keystrokes in the Performance panel and look at what fills the long task:</p>
+<ul>
+  <li><strong>One function hogging it</strong> → the filter really is expensive (a regex or a <code>new Date()</code> per item).</li>
+  <li><strong>React's commit, 2,000 rows wide</strong> → re-rendering the list. This is the usual answer.</li>
+  <li><strong>Layout, Recalculate style, Paint</strong> → the sheer number of DOM nodes.</li>
+</ul>
+<p>The rough arithmetic is the giveaway: 2,000 string comparisons is well under a millisecond, while 2,000 rows re-rendered and laid out is tens of milliseconds — and anything past ~50ms from keypress to paint feels like a stutter. Say that before naming a fix (§24 is the full version).</p>
+
+<h3>Then fix it in this order</h3>
+<ol>
+  <li><strong>Render fewer rows.</strong> The screen holds about 20; mounting 2,000 is the bug. Virtualization renders only the visible slice, and the cost stops growing with the data (§35).</li>
+  <li><strong>Keep typing off the slow path.</strong> <code>useDeferredValue</code> lets the input update instantly and the list catch up a frame later. A debounce does the plain version, and it's the right one when each keystroke would fire a request (§26).</li>
+  <li><strong>Skip work that didn't change.</strong> <code>useMemo</code> the filtered array, <code>React.memo</code> the row — which only pays off if the row's props are stable (§22).</li>
+  <li><strong>Check the keys.</strong> <code>key={index}</code> on a reordering list makes React patch every row instead of moving it.</li>
+</ol>
+
+<p>One thing not to say: "use the Virtual DOM". In React it is always on, and it is the thing doing the work you're trying to avoid.</p>
+
+<p>Mention the UX half too, because it's half the grade: with a debounce the list is briefly stale, so show "Searching…" rather than "No results", and put the result count in an <code>aria-live="polite"</code> region so the change isn't silent to a screen reader.</p>
+
+
+<h2 id="s55">55. Length of the last word</h2>
+
+<p class="ask">Given a string of words separated by one or more spaces, possibly with leading and trailing spaces, return the length of the last word. There is always at least one.</p>
+
+<div class="say"><strong>Plain version:</strong> read it backwards. Skip any spaces at the end, then count letters until you hit the next space. Stop.</div>
+
+<h3>Work it out</h3>
+<ol>
+  <li><strong>What counts as a word here?</strong> A run of characters with spaces (or the end of the string) around it. The <em>last</em> word is the one with nothing but spaces after it.</li>
+  <li><strong>Try the obvious thing and watch it break.</strong> Split on spaces, take the final piece. On <code>"hello world"</code> that gives 5. On <code>"hello world  "</code> the final piece is an empty string, and you return 0. The trailing space is the entire difficulty of this problem.</li>
+  <li><strong>So there are two routes.</strong> Clean the ends first and then cut, or never cut at all and read backwards from the end.</li>
+  <li><strong>If you cut:</strong> <code>trim()</code> first so there is no empty piece at the end, and split on <code>/\s+/</code> rather than <code>" "</code> so a run of several spaces does not leave empty pieces in the middle either.</li>
+  <li><strong>If you read backwards:</strong> walk from the last character towards the front, counting the letters you pass. A space you meet <em>before</em> counting anything is a trailing space, so ignore it; a space you meet <em>after</em> counting means the word just ended, so stop. That single rule handles the trailing spaces without trimming anything, and nothing is allocated.</li>
+</ol>
+
+<h3>The one-liner</h3>
+<pre><code>const lengthOfLastWord = (s) =&gt; s.trim().split(/\s+/).at(-1).length;</code></pre>
+<p>The <code>trim()</code> is doing the real work — without it, trailing spaces make the last element an empty string and you return <code>0</code>. Splitting on <code>/\s+/</code> instead of <code>" "</code> collapses runs of whitespace, so no empty strings land in the middle either.</p>
+
+<h3>The version they ask for next</h3>
+<p>Same idea, no array allocated:</p>
+<pre><code>function lengthOfLastWord(s) {
+  let length = 0;
+
+  for (let i = s.length - 1; i &gt;= 0; i--) {
+    if (s[i] !== " ") length++;        // inside the word: count it
+    else if (length &gt; 0) break;        // the space before it: done
+  }                                    // a space with length still 0 is trailing — keep going
+
+  return length;
+}</code></pre>
+<p>Both are O(n) time. The split builds an array of every word to use one of them; the loop only touches the tail and allocates nothing. At this size it makes no difference — say so, and say you would ship the one-liner unless asked for constant space.</p>
+
+<p>Edge cases worth naming out loud first: trailing spaces (<code>"hello  "</code> → 5), several spaces in the middle, a single word with no spaces, and one letter.</p>
+
+
+<h2 id="s56">56. Client-side routing for a small SPA</h2>
+
+<p class="ask">The app is one giant component that conditionally renders views based on a boolean flag. How would you design basic client-side routing for a handful of pages — Home, Profile, Settings?</p>
+
+<div class="say"><strong>Plain version:</strong> a boolean is a light switch. It changes the room, but the address on the front door never changes, so you can't bookmark the room, you can't go Back to it, and you can't text the address to a friend. A router gives every view its own address.</div>
+
+<p>Reaching for React Router is a fine answer, and file-based routes if the app is on Next.js — where each route also gets its own bundle (§23). Then show you know what the library is doing, because that's the actual question.</p>
+
+<h3>The three browser pieces</h3>
+<ul>
+  <li><code>history.pushState(null, "", "/profile")</code> — changes the URL with no reload. It fires no event, so you re-render yourself right after.</li>
+  <li><code>popstate</code> — fires when the user hits Back or Forward. Forget this one and the URL and the UI drift apart.</li>
+  <li><strong>Intercepting link clicks</strong> — a real <code>&lt;a href&gt;</code> would do a full page load, so the handler calls <code>preventDefault()</code>. Keep the <code>href</code>: it's what makes cmd-click, middle-click and "copy link" work.</li>
+</ul>
+
+<h3>The whole router</h3>
+<pre><code>const routes = { "/": Home, "/profile": Profile, "/settings": Settings };
+
+function useRoute() {
+  const [path, setPath] = useState(() =&gt; location.pathname);
+
+  useEffect(() =&gt; {
+    const onPop = () =&gt; setPath(location.pathname);
+    addEventListener("popstate", onPop);
+    return () =&gt; removeEventListener("popstate", onPop);
+  }, []);
+
+  const navigate = (to) =&gt; {
+    history.pushState(null, "", to);
+    setPath(to);              // pushState fires nothing, so tell React
+  };
+
+  return [path, navigate];
+}
+
+function App() {
+  const [path, navigate] = useRoute();
+  const View = routes[path] ?? NotFound;
+
+  return (
+    &lt;div onClick={(e) =&gt; {
+      const link = e.target.closest("a[href^='/']");
+      if (!link || e.metaKey || e.ctrlKey || e.button !== 0) return;
+      e.preventDefault();
+      navigate(link.getAttribute("href"));
+    }}&gt;
+      &lt;nav&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;a href="/profile"&gt;Profile&lt;/a&gt;&lt;/nav&gt;
+      &lt;View /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+<p>What gets added as it grows: dynamic segments like <code>/profile/:id</code> (the object lookup becomes a match loop), <code>React.lazy</code> per route, nested routes for a shared layout.</p>
+
+<h3>Two things almost nobody mentions</h3>
+<ul>
+  <li><strong>The server has to cooperate.</strong> Refreshing on <code>/profile</code> asks the server for that path, and unless it rewrites unknown paths to <code>index.html</code> the user gets a 404. Hash routing (<code>#/profile</code>) exists to avoid needing that.</li>
+  <li><strong>Navigation has to be announced.</strong> A route change doesn't reset scroll or move focus, so a keyboard user stays parked in the old page and a screen reader says nothing. Scroll to top, focus the new heading, update <code>document.title</code>.</li>
+</ul>
+
+
+<h2 id="s57">57. A shared component library</h2>
+
+<p class="ask">Buttons and inputs are copy-pasted across pages, so styling and behaviour have drifted. How would you structure a simple shared component library — buttons, inputs, cards — for several pages in the same app?</p>
+
+<div class="say"><strong>Plain version:</strong> every page writes the button by hand, so no two are quite alike. You want a stamp instead of a signature: carve it once, press it everywhere, and when the design changes you re-carve one stamp.</div>
+
+<p><strong>The short answer:</strong> one <code>ui/</code> folder inside the app, one folder per component, and a single <code>index.ts</code> that everything imports from. Design tokens — colour, spacing, radius, type — live in CSS variables and are the only place a raw value appears. Every variation a page needs goes through typed props (<code>variant</code>, <code>size</code>), never through a class name passed in from outside, so there is exactly one way to render a secondary button. Accessibility lives inside the components rather than in the pages using them. Then one page that shows every variant side by side, so drift is visible before it ships.</p>
+
+<p>That is the whole design. The rest is how each piece is built.</p>
+
+<h3>The shape on disk</h3>
+<pre><code>src/ui/
+  tokens.css        # the design tokens
+  index.ts          # the only entrance: export { Button } from "./Button";
+  Button/
+    Button.tsx
+    Button.module.css
+    Button.test.tsx</code></pre>
+<p>One folder per component, one barrel file as the public surface. A folder in the app is the right size here — a separate package buys nothing until a second app needs it.</p>
+
+<h3>Tokens, not values</h3>
+<p>Every hardcoded <code>#2d7ff9</code> is a future inconsistency. Declare the raw values once, then give them roles, and let components use only the roles:</p>
+<pre><code>:root {
+  --color-blue-500: #2d7ff9;                /* the raw value */
+  --color-accent: var(--color-blue-500);     /* the role components use */
+  --space-2: 8px;
+  --radius-md: 8px;
+}</code></pre>
+<p>That indirection is what turns a theme or a dark mode into a token swap instead of a find-and-replace.</p>
+
+<h3>Props are the contract</h3>
+<pre><code>type ButtonProps = {
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md";
+} &amp; React.ButtonHTMLAttributes&lt;HTMLButtonElement&gt;;
+
+export const Button = forwardRef&lt;HTMLButtonElement, ButtonProps&gt;(
+  function Button({ variant = "primary", size = "md", ...rest }, ref) {
+    return &lt;button ref={ref} className={`${styles.button} ${styles[variant]} ${styles[size]}`} {...rest} /&gt;;
+  },
+);</code></pre>
+<ul>
+  <li>The <strong>unions</strong> make a wrong variant a type error instead of an unstyled button, and the <strong>defaults</strong> mean a bare <code>&lt;Button&gt;</code> is already right.</li>
+  <li><code>...rest</code> plus the native prop type gives you <code>type="submit"</code>, <code>disabled</code>, <code>onClick</code> and <code>aria-*</code> without listing them.</li>
+  <li><code>forwardRef</code> keeps the element reachable for focus and tooltips. It's the most commonly missed piece in a homegrown library.</li>
+</ul>
+<p>Put the accessible defaults inside the components too: <code>Input</code> owns the label-to-input link and its error wiring, <code>Button</code> owns the focus ring. That's correctness nobody can forget to copy.</p>
+
+<h3>Keeping it from rotting</h3>
+<ul>
+  <li><strong>Nothing app-specific gets in.</strong> No fetching, no store, no router import, no product copy — a component that imports a feature isn't shareable any more.</li>
+  <li><strong>Test behaviour, not markup.</strong> The click fires, the disabled button doesn't, the label points at the input. DOM snapshots only punish restyling.</li>
+  <li><strong>One page showing every variant</strong> — Storybook or a plain <code>/ui</code> route. Side by side is how drift becomes visible.</li>
+</ul>

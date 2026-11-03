@@ -108,6 +108,14 @@
   line-height: 1.6;
 }
 
+/* Names the discipline a destination covers rather than a progress state, so it
+   takes its banner's own tone instead of the green. */
+.badge[data-kind] {
+  background: var(--tone-wash);
+  border-color: color-mix(in srgb, var(--tone) 40%, transparent);
+  color: var(--tone);
+}
+
 .badge[data-status="doing"] {
   background: var(--sd-accent-wash);
   border-color: color-mix(in srgb, var(--sd-accent) 35%, transparent);
@@ -349,6 +357,18 @@
   --tone-wash: var(--sd-accent-wash);
 }
 
+/* Teal has no wash token of its own — it is used as a diagram hue everywhere
+   else — so this one mixes its own. Full-width like the capstone, and tinted the
+   same way across: a wash that dies at 64% looks unfinished at this width. */
+.banner[data-tone="prep"] {
+  --tone: var(--sd-teal);
+  --tone-wash: color-mix(in srgb, var(--sd-teal) 12%, transparent);
+  padding: 20px 22px;
+  background:
+    linear-gradient(100deg, var(--tone-wash), color-mix(in srgb, var(--tone-wash) 45%, transparent)),
+    var(--sd-surface);
+}
+
 .banner:hover {
   border-color: color-mix(in srgb, var(--tone) 60%, transparent);
 }
@@ -419,17 +439,17 @@
   }
 }
 
-/* ---- capstone ---- */
+/* ---- titled full-width destinations ---- */
 
-/* A plain titled block rather than a <details>: one page lives here and it is the
-   end of the road, so nothing about it should be collapsible. */
-.capstone {
+/* A plain titled block rather than a <details>: one page lives behind each of
+   these, so nothing about them should be collapsible. */
+.feature {
   margin-top: 26px;
 }
 
 /* Same mono eyebrow as a section head, minus the chevron, with the rule taking the
    leftover width so the title reads as a divider across the page. */
-.capstoneLabel {
+.featureLabel {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -441,7 +461,7 @@
   text-transform: uppercase;
 }
 
-.capstoneRule {
+.featureRule {
   flex: 1;
   min-width: 40px;
   height: 1px;

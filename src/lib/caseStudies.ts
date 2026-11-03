@@ -129,6 +129,14 @@ export const caseStudies: CaseStudy[] = [
     themes: ["Databases & sharding", "Real-time"],
   },
   {
+    title: "Turbocharging Solr index replication with BitTorrent",
+    company: "Etsy",
+    url: "https://web.archive.org/web/20211201033341/https://codeascraft.com/2012/01/23/solr-bittorrent-index-replication/",
+    takeaway:
+      "Copying a 28 GB search index from one primary to every replica made replication time grow linearly with the fleet and pinned the primary's network card. Letting the replicas seed each other over BitTorrent decoupled the two.",
+    themes: ["Databases & sharding", "Scaling"],
+  },
+  {
     title: "GLB Director, an open source load balancer",
     company: "GitHub",
     url: "https://github.blog/engineering/infrastructure/glb-director-open-source-load-balancer/",
@@ -153,6 +161,26 @@ export const caseStudies: CaseStudy[] = [
       "A permissions change doubled the size of an internally generated config file, it blew past a fixed preallocation, and the proxy panicked. Internal input is still input.",
     themes: ["Availability & resilience"],
     kind: "Postmortem",
+  },
+  {
+    title: "Incident review: API and dashboard outage on 10 October 2017",
+    company: "GoCardless",
+    url: "https://gocardless.com/blog/incident-review-api-and-dashboard-outage-on-10th-october",
+    takeaway:
+      "A primary database node failed and the cluster manager declined to promote any replica, because one Pacemaker colocation rule ranked every candidate at negative infinity. A failover budgeted at two minutes ran for nearly two hours.",
+    themes: ["Availability & resilience", "Databases & sharding"],
+    kind: "Postmortem",
+    concept: "latency-throughput-availability",
+  },
+  {
+    title: "Summary of the EC2 and RDS service disruption in US East",
+    company: "AWS",
+    url: "https://aws.amazon.com/message/65648/",
+    takeaway:
+      "A network change routed EBS traffic onto a secondary network that could not carry it. When connectivity returned, the isolated nodes all tried to re-mirror at once, and the storm filled one zone and then the region's control plane.",
+    themes: ["Availability & resilience", "Scaling"],
+    kind: "Postmortem",
+    concept: "latency-throughput-availability",
   },
   {
     title: "Designing robust and predictable APIs with idempotency",

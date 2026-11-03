@@ -83,3 +83,24 @@ code, pre {
   visibility: visible;
   transform: translate(-50%, 0);
 }
+
+/* ---- view transitions ----
+   Used by the interview Q&A topic sections, which morph between a grid of tiles
+   and an opened full-width section. `height: auto` on the snapshots stops a box
+   that changed size from being stretched during the cross-fade. */
+::view-transition-group(*) {
+  animation-duration: 0.34s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+::view-transition-old(*),
+::view-transition-new(*) {
+  height: auto;
+  overflow: clip;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}

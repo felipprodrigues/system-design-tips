@@ -18,3 +18,4 @@ export { default as CaseStudyBrowser } from "./CaseStudies/CaseStudyBrowser";
 export { default as AppShell } from "./Shell/AppShell";
 export { default as LearnedToggle } from "./Progress/LearnedToggle";
 export { default as BuyMeACoffee } from "./Support/BuyMeACoffee";
+export { default as PrepBrowser } from "./InterviewPrep/PrepBrowser";

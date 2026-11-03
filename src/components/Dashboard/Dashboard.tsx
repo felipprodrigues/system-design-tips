@@ -142,10 +142,10 @@ export default function Dashboard() {
       </div>
 
       {capstone && (
-        <section className={styles.capstone}>
-          <h2 className={styles.capstoneLabel}>
+        <section className={styles.feature}>
+          <h2 className={styles.featureLabel}>
             {capstone.title}
-            <span className={styles.capstoneRule} aria-hidden="true" />
+            <span className={styles.featureRule} aria-hidden="true" />
           </h2>
           {capstone.concepts.map(({ concept, status }) => (
             <Link
@@ -213,6 +213,45 @@ export default function Dashboard() {
           </span>
         </Link>
       </div>
+
+      <section className={styles.feature}>
+        <h2 className={styles.featureLabel}>
+          Interview Q&amp;A
+          <span className={styles.featureRule} aria-hidden="true" />
+        </h2>
+
+        <Link href="/interview-qa" className={styles.banner} data-tone="prep">
+          <span className={styles.bannerIcon} aria-hidden="true">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            >
+              <path d="M4 4.5h12a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H9l-3.4 2.8v-2.8H4a1 1 0 0 1-1-1V5.5a1 1 0 0 1 1-1Z" />
+              <path d="M8.5 7.9a1.6 1.6 0 1 1 1.9 1.9v.9" />
+              <path d="M10.4 12.1h.01" />
+            </svg>
+          </span>
+          <span className={styles.bannerBody}>
+            {/* The divider above already names the section, so the eyebrow counts
+                rather than repeating it — same reason the capstone banner uses its
+                concept label instead of its section title. */}
+            <span className={styles.bannerEyebrow}>57 questions</span>
+            <span className={styles.bannerTitle}>Questions, answered</span>
+            <span className={styles.bannerSub}>
+              JavaScript, React, performance and the browser — each one answered the way you
+              would say it in the room.
+            </span>
+          </span>
+          {/* Everything else on this page is system design; this one is not. */}
+          <span className={styles.badge} data-kind="frontend">
+            Frontend
+          </span>
+        </Link>
+      </section>
     </>
   );
 }

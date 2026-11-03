@@ -92,3 +92,112 @@
     display: none;
   }
 }
+
+/* ---- new-content toast ---- */
+
+/* Fixed under the bar on the right. Above the bar's z-index so it is never
+   clipped by it, below any dialog. */
+.toast {
+  position: fixed;
+  top: 68px;
+  right: 20px;
+  z-index: 70;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 16px 15px;
+  background: var(--sd-surface);
+  border: 1px solid color-mix(in srgb, var(--sd-teal) 40%, transparent);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  animation: toast-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+/* Someone who asked for less motion gets the toast, just not the slide. */
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
+
+.toastHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+
+.toastEyebrow {
+  font-family: var(--sd-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sd-teal);
+}
+
+.toastClose {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: -4px -6px -4px 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--sd-muted);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.toastClose:hover {
+  color: var(--sd-text);
+  background: var(--sd-surface2);
+}
+
+.toastBody {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--sd-muted);
+}
+.toastBody strong {
+  font-weight: 600;
+  color: var(--sd-text);
+}
+
+.toastActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.toastPrimary {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--sd-teal) 45%, transparent);
+  background: color-mix(in srgb, var(--sd-teal) 14%, transparent);
+  color: var(--sd-teal);
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.toastPrimary:hover {
+  border-color: var(--sd-teal);
+}
+
+@media (max-width: 760px) {
+  /* The bar grows a second row for the tabs at this width. */
+  .toast {
+    top: 104px;
+    right: 12px;
+  }
+}

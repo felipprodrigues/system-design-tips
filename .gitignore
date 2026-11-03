@@ -44,3 +44,6 @@ next-env.d.ts
 /TODO.md
 /CONCEPTS.md
 /REQUIREMENTS.md
+
+# local agent config — never committed
+.claude/

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import BuyMeACoffee from "../Support/BuyMeACoffee";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import NewContentToast from "./NewContentToast";
 import TopTabs from "./TopTabs";
 import styles from "./AppShell.module.css";
 
@@ -22,6 +23,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <ThemeToggle />
         </div>
       </header>
+
+      <NewContentToast />
 
       <main className={styles.main}>{children}</main>
     </div>

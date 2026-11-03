@@ -16,6 +16,7 @@ import { useSyncExternalStore } from "react";
 
 const COMPLETED_KEY = "sd-completed";
 const VISITED_KEY = "sd-visited";
+const SAVED_KEY = "sd-saved";
 
 /** Nothing is known as far as the server knows; the real list arrives after hydration. */
 const EMPTY: readonly string[] = [];
@@ -91,6 +92,9 @@ function createSlugStore(key: string) {
 
 const completed = createSlugStore(COMPLETED_KEY);
 const visited = createSlugStore(VISITED_KEY);
+/* Starred interview Q&A questions. Same storage, same cross-tab wiring — only
+   the key and the vocabulary differ: these are bookmarks, not progress. */
+const saved = createSlugStore(SAVED_KEY);
 
 export function useLearned(): readonly string[] {
   return completed.use();
@@ -109,6 +113,46 @@ export function useVisited(): readonly string[] {
 
 export function markVisited(slug: string) {
   visited.touch(slug);
+}
+
+export function useSaved(): readonly string[] {
+  return saved.use();
+}
+
+export function toggleSaved(id: string) {
+  saved.toggle(id);
+}
+
+/* A one-off flag rather than a list: whether a one-time notice has been seen.
+   The server snapshot says "seen" so nothing announces itself during SSR — the
+   notice can only appear once the browser has confirmed it was not dismissed,
+   which is also why there is no hydration mismatch to paper over.
+
+   Nothing subscribes: the value is read once per page view, and a dismissal is
+   reflected by the caller's own state, not by a store notification. */
+const noopSubscribe = () => () => {};
+
+export function useSeen(key: string): boolean {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => {
+      try {
+        return localStorage.getItem(key) !== null;
+      } catch {
+        // Storage off: treat it as seen rather than nagging on every page view.
+        return true;
+      }
+    },
+    () => true,
+  );
+}
+
+export function markSeen(key: string) {
+  try {
+    localStorage.setItem(key, "1");
+  } catch {
+    // It reappears next visit, which beats throwing out of a click handler.
+  }
 }
 
 export type Status = "done" | "doing" | "todo";

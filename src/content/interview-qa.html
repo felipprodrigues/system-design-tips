@@ -1,3 +1,7 @@
+<!-- Code blocks are highlighted by src/lib/syntax.ts at parse time.
+     <pre><code> is JavaScript; add class="css" for a stylesheet, or
+     class="plain" for output, trees and diagrams that are not code. -->
+
 <h2 id="s1">1. setTimeout, built out of a Promise</h2>
 
 <p class="ask">Write a <code>setTimeout</code> polyfill using the Promise constructor — and make it cancellable, like the real one.</p>
@@ -108,21 +112,6 @@ console.log('6');</code></pre>
 <p>If they ask about Node: <code>process.nextTick</code> jumps the microtask queue ahead of promises.</p>
 
 
-<h2 id="s4">4. Closures + loops</h2>
-
-<div class="say"><strong>Analogy:</strong> <code>var</code> gives the whole loop <strong>one whiteboard</strong> to write on. By the time anyone gets around to reading it, it says 3. <code>let</code> hands each iteration <strong>its own sticky note</strong>, so each callback reads its own copy.</div>
-
-<pre><code>for (var i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i)); // 3,3,3
-for (let i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i)); // 0,1,2</code></pre>
-
-<p>One shared <code>var</code> binding, mutated to 3 before any callback runs; <code>let</code> creates a fresh binding per iteration. The pre-<code>let</code> fix was an IIFE. Then land a real use:</p>
-
-<pre><code>const debounce = (fn, ms) =&gt; {
-  let id;                       // private state, kept alive by the closure
-  return (...args) =&gt; { clearTimeout(id); id = setTimeout(() =&gt; fn(...args), ms); };
-};</code></pre>
-
-
 <h2 id="s5">5. A list you can add to and delete from</h2>
 
 <p class="ask">Render a list with a text input: typing and submitting adds an item, each row can be deleted.</p>
@@ -182,7 +171,7 @@ const remove = id =&gt; setItems(prev =&gt; prev.filter(i =&gt; i.id !== id));</
 </table>
 
 
-<h2 id="s7">7. Closures — full answer</h2>
+<h2 id="s7">7. Closures</h2>
 
 <div class="say"><strong>Analogy:</strong> a closure is a function that <strong>leaves the room carrying a backpack.</strong> Whatever variables were in scope when it was created go with it wherever it is called, and nobody outside can reach into the bag. That is both the feature (private state) and the leak (the bag stays packed as long as the function is alive).</div>
 
@@ -203,7 +192,7 @@ c.get();   // 2
 
 <p>Three points that separate a junior answer from a senior one:</p>
 <ol>
-  <li><strong>Live reference, not a snapshot.</strong> This is the <code>var</code>-in-a-loop bug from §4 — all three callbacks close over the <em>same</em> <code>i</code> and read it after it became 3.</li>
+  <li><strong>Live reference, not a snapshot.</strong> This is the <code>var</code>-in-a-loop bug from §15 — all three callbacks close over the <em>same</em> <code>i</code> and read it after it became 3.</li>
   <li><strong>Each call creates a new scope.</strong> <code>const a = counter(), b = counter();</code> — <code>a.inc()</code> leaves <code>b</code> at 0. Independent <code>count</code>s.</li>
   <li><strong>It is a memory tradeoff.</strong> Closures keep their scope alive, so a long-lived closure over something large — a DOM node, a big array — is a leak. That is why you clear timer ids and remove listeners in cleanup.</li>
 </ol>
@@ -460,8 +449,18 @@ deep.config.theme = 'blue';               // original untouched</code></pre>
 console.log(b); let b = 1;   // ReferenceError: Cannot access 'b' before initialization
 
 if (true) { var x = 1; let y = 2; }
-x;  // 1 — var leaked out of the block
-y;  // ReferenceError</code></pre>
+
+console.log(x);   // 1 — var leaked out of the block
+console.log(y);   // ReferenceError: y is not defined</code></pre>
+
+<p><strong>The same leak, in a loop:</strong> this is the closure question they pair it with.</p>
+
+<pre><code>for (var i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i)); // 3,3,3
+for (let i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i)); // 0,1,2</code></pre>
+
+<div class="say"><strong>Analogy:</strong> <code>var</code> gives the whole loop <strong>one whiteboard</strong> to write on. By the time anyone gets around to reading it, it says 3. <code>let</code> hands each iteration <strong>its own sticky note</strong>, so each callback reads its own copy.</div>
+
+<p>One shared <code>var</code> binding, mutated to 3 before any callback runs; <code>let</code> creates a fresh binding per iteration. The pre-<code>let</code> fix was an IIFE. Closures themselves are §7.</p>
 
 <p><strong>The <code>const</code> gotcha they always ask:</strong> <code>const</code> freezes the <strong>binding, not the value.</strong></p>
 
@@ -860,7 +859,7 @@ function List({ items, filter }) {
   <li><strong>Commit (synchronous)</strong> — React applies the mutation list to the real DOM in one pass (<code>appendChild</code>, attribute writes, text updates), then runs refs and layout effects, paints, then runs passive effects.</li>
 </ol>
 
-<pre><code>setCount(1)  →  schedule  →  render (diff, no DOM)  →  commit (DOM writes)
+<pre><code class="plain">setCount(1)  →  schedule  →  render (diff, no DOM)  →  commit (DOM writes)
                                                         ├─ useLayoutEffect  (before paint, blocking)
                                                         ├─ browser paints
                                                         └─ useEffect        (after paint, async)</code></pre>
@@ -880,7 +879,7 @@ function List({ items, filter }) {
 
 <p><strong>How it solves it.</strong> React runs layout effects <em>inside</em> the commit phase, synchronously, while the browser is still blocked from painting. If you call <code>setState</code> in there, React re-renders and re-commits immediately, still before paint. So the intermediate, wrong-looking state never reaches the screen — the user only ever sees the corrected frame. <code>useEffect</code>, by contrast, is deliberately deferred until after paint, precisely so that ordinary side effects (fetching, logging, subscribing) cannot delay showing the UI.</p>
 
-<pre><code>commit DOM changes
+<pre><code class="plain">commit DOM changes
   ├─ useLayoutEffect runs   ← synchronous, browser is blocked, you can still fix things
   ├─ browser paints         ← the first thing the user actually sees
   └─ useEffect runs         ← asynchronous, too late to change this frame invisibly</code></pre>
@@ -1626,7 +1625,7 @@ new Promise((resolve, reject) =&gt; {
 console.log("final");</code></pre>
 
 <p><strong>Answer:</strong></p>
-<pre><code>start
+<pre><code class="plain">start
 promise constructor
 final
 promise catch
@@ -1694,13 +1693,13 @@ timeout</code></pre>
 }</code></pre>
 
 <p><strong>1st case — after the first render:</strong></p>
-<pre><code>NO DEP
+<pre><code class="plain">NO DEP
 EMPTY DEP
 VALUE</code></pre>
 <p>All three. <strong>Every effect runs on mount</strong> regardless of its dependency array — there is no previous render to compare against. They fire in <strong>declaration order</strong>, after the DOM is committed and painted.</p>
 
 <p><strong>2nd case — after clicking the button:</strong></p>
-<pre><code>NO DEP
+<pre><code class="plain">NO DEP
 VALUE</code></pre>
 <ul>
   <li><strong>NO DEP</strong> — no dependency array at all → runs after <em>every</em> render. No comparison is ever made.</li>
@@ -1758,7 +1757,7 @@ VALUE</code></pre>
 
 <h3>How it works</h3>
 <p>Four layers, inside out: <strong>content, padding, border, margin</strong>. The default is <code>content-box</code>, where <code>width</code> measures the content only — padding and border are added on top, so the box ends up bigger than the number you wrote.</p>
-<pre><code>width: 300px; padding: 20px; border: 2px solid;
+<pre><code class="css">width: 300px; padding: 20px; border: 2px solid;
 
 content-box (default) → 300 + 40 + 4 = 344px on screen
 border-box            → 300px on screen, content shrinks to 256px</code></pre>
@@ -1767,7 +1766,7 @@ border-box            → 300px on screen, content shrinks to 256px</code></pre>
 <p><strong>Margin is outside the box either way.</strong> No <code>box-sizing</code> value ever counts it in <code>width</code> — it pushes neighbours around, it is not part of the box. And two stacked vertical margins <em>collapse</em>: 20px below one block and 30px above the next gives one 30px gap, not 50px.</p>
 
 <h3>What teams actually ship</h3>
-<pre><code>*, *::before, *::after { box-sizing: border-box; }</code></pre>
+<pre><code class="css">*, *::before, *::after { box-sizing: border-box; }</code></pre>
 <p>Not taste — predictability. Under the default, <code>width: 100%</code> plus any padding overflows its parent, which is most of the "where did this horizontal scrollbar come from" bugs.</p>
 
 <h3>If they push</h3>
@@ -1958,7 +1957,7 @@ function App() {
 <p>That is the whole design. The rest is how each piece is built.</p>
 
 <h3>The shape on disk</h3>
-<pre><code>src/ui/
+<pre><code class="plain">src/ui/
   tokens.css        # the design tokens
   index.ts          # the only entrance: export { Button } from "./Button";
   Button/
@@ -1969,7 +1968,7 @@ function App() {
 
 <h3>Tokens, not values</h3>
 <p>Every hardcoded <code>#2d7ff9</code> is a future inconsistency. Declare the raw values once, then give them roles, and let components use only the roles:</p>
-<pre><code>:root {
+<pre><code class="css">:root {
   --color-blue-500: #2d7ff9;                /* the raw value */
   --color-accent: var(--color-blue-500);     /* the role components use */
   --space-2: 8px;

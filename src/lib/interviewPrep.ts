@@ -1,7 +1,10 @@
+import { highlight } from "./syntax";
+
 export interface PrepSection {
-  /** Anchor id from the source document: s1 … s51. */
+  /** Anchor id from the source document: s1 … s57. Also what a "§15" means,
+      so an id is never reused or renumbered once it is authored. */
   id: string;
-  /** Display number, as the document numbers them. */
+  /** Display number — the section's position, so dropping one leaves no gap. */
   n: number;
   /** Heading with the leading "12. " stripped. */
   title: string;
@@ -36,7 +39,7 @@ export type Topic = (typeof TOPICS)[number];
 const BY_TOPIC: Record<Topic, number[]> = {
   "Mock round": [52, 53, 54, 56, 57],
   "Code tasks": [1, 2, 5, 16, 26, 28, 50, 51, 55],
-  JavaScript: [4, 7, 14, 15, 27, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49],
+  JavaScript: [7, 14, 15, 27, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49],
   "Async & timers": [3, 13, 45],
   React: [18, 19, 25, 29, 30, 31, 32, 33, 36, 37, 38],
   Performance: [8, 22, 23, 24, 34, 35],
@@ -111,8 +114,9 @@ function linkXrefs(html: string, byNumber: Map<number, PrepSection>) {
 /* Parses the whole authored document. The caller reads the file — this module is
    imported by the client too, so it stays free of node:fs. */
 export function parseSections(raw: string): PrepSection[] {
-  const sections = [...raw.matchAll(SECTION)].map(([, id, heading, body]) => {
-    const n = Number(id.slice(1));
+  const sections = [...raw.matchAll(SECTION)].map(([, id, heading, body], i) => {
+    // The authored number: what BY_TOPIC lists and what a "§15" resolves to.
+    const authored = Number(id.slice(1));
     /* First prose block with something to say: a few sections open on a lead-in
        as short as "Answer:", which makes a useless card. */
     const blocks = [...body.matchAll(/<(?:p|div)(?:\s[^>]*)?>([\s\S]*?)<\/(?:p|div)>/g)].map((m) =>
@@ -122,15 +126,15 @@ export function parseSections(raw: string): PrepSection[] {
 
     return {
       id,
-      n,
+      n: i + 1,
       title: text(heading).replace(/^\d+\.\s*/, ""),
-      topic: topicOf.get(n) ?? "JavaScript",
+      topic: topicOf.get(authored) ?? "JavaScript",
       teaser: teaser.length > 190 ? `${teaser.slice(0, 190).trimEnd()}…` : teaser,
-      html: body.trim(),
+      html: highlight(body.trim()),
     };
   });
 
-  const byNumber = new Map(sections.map((section) => [section.n, section]));
+  const byNumber = new Map(sections.map((section) => [Number(section.id.slice(1)), section]));
   for (const section of sections) {
     section.html = linkXrefs(section.html, byNumber);
   }

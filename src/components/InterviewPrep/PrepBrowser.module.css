@@ -610,6 +610,35 @@
   background: none;
   font-size: 12.5px;
   line-height: 1.65;
+  /* Punctuation and plain identifiers sit one step back, so the tokens below
+     read as emphasis rather than as six competing colours. */
+  color: color-mix(in srgb, var(--sd-text) 80%, transparent);
+}
+
+/* Syntax tokens, written by lib/highlight.ts into the authored HTML. Hues come
+   from the existing palette rather than a borrowed editor theme — the library
+   is near-monochrome on purpose, so these read as lightness steps in one blue
+   family, with the comment dropping back to muted. */
+.prose pre :global(.tok-comment) {
+  color: var(--sd-muted);
+  font-style: italic;
+}
+.prose pre :global(.tok-keyword) {
+  color: var(--sd-accent);
+}
+.prose pre :global(.tok-string) {
+  color: var(--sd-green);
+}
+.prose pre :global(.tok-number) {
+  color: var(--sd-teal);
+}
+.prose pre :global(.tok-fn),
+.prose pre :global(.tok-prop) {
+  color: var(--sd-text);
+  font-weight: 500;
+}
+.prose pre :global(.tok-tag) {
+  color: var(--sd-amber);
 }
 
 /* Tables carry a lot of these answers; they scroll rather than squeeze. */

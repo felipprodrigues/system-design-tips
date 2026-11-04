@@ -75,3 +75,22 @@ console.log(
       ].length
     } cross-references — ok`,
 );
+
+{
+  /* Highlighting: every code block came back tokenised, and nothing lost or
+     double-escaped its entities on the way through. */
+  const all = sections.map((s) => s.html).join("");
+  const blocks = [...all.matchAll(/<pre><code class="(\w+)">([\s\S]*?)<\/code><\/pre>/g)];
+
+  assert.ok(blocks.length > 50, "the document still has its code blocks");
+  for (const [, lang, code] of blocks) {
+    if (lang === "plain") continue;
+    assert.ok(code.includes('<span class="tok-'), `a ${lang} block came back untokenised`);
+    assert.ok(!code.includes("&amp;lt;"), `a ${lang} block was escaped twice`);
+  }
+
+  const tokens = [...all.matchAll(/class="tok-(\w+)"/g)].map((m) => m[1]);
+  for (const kind of ["comment", "string", "keyword", "number", "fn", "tag", "prop"]) {
+    assert.ok(tokens.includes(kind), `nothing was highlighted as ${kind}`);
+  }
+}

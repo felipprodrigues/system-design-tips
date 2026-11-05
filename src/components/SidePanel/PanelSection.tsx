@@ -20,7 +20,6 @@ export default function PanelSection({
   activeId,
 }: PanelSectionProps) {
   const [open, setOpen] = useState(defaultOpen);
-  const [highlight, setHighlight] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -65,10 +64,13 @@ export default function PanelSection({
 
   useEffect(() => {
     if (!id || activeId !== id) return;
+    const root = rootRef.current;
     if (!open) expand();
-    rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setHighlight(true);
-    const t = setTimeout(() => setHighlight(false), 1600);
+    root?.scrollIntoView({ behavior: "smooth", block: "start" });
+    /* A data attribute, not a class: `open` flips in this same effect, so React
+       rewrites className on the re-render and would drop an added class. */
+    root?.setAttribute("data-highlight", "");
+    const t = setTimeout(() => root?.removeAttribute("data-highlight"), 1600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId, id]);
@@ -77,7 +79,7 @@ export default function PanelSection({
     <div
       id={id}
       ref={rootRef}
-      className={`${styles.section} ${open ? styles.open : ""} ${highlight ? styles.highlight : ""}`}
+      className={`${styles.section} ${open ? styles.open : ""}`}
     >
       <button className={styles.head} onClick={toggle}>
         <span className={styles.sectionTitle}>{title}</span>

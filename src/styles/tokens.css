@@ -42,12 +42,10 @@
   --sd-text:     #e9e9ea;
   --sd-muted:    #8a8a8f;
 
-  /* Typography */
   --sd-font: var(--font-body), system-ui, -apple-system, sans-serif;
   --sd-font-display: var(--font-display), var(--sd-font);
   --sd-font-mono: var(--font-mono), 'SF Mono', 'Fira Code', monospace;
 
-  /* Spacing */
   --sd-page-max:   900px;
   --sd-page-pad-x: 24px;
   --sd-page-pad-y: 56px;

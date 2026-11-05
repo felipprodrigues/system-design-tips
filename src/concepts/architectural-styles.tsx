@@ -212,7 +212,6 @@ export default function Concept10() {
           The progression companies actually get forced through, and what each step costs.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -222,14 +221,12 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">Why Teams Move Too Early</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists.map(hl)} />
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">Think Of It Like</p>
           <h2 className="sd-h2">A Kitchen That Keeps Outgrowing Itself</h2>
@@ -248,7 +245,6 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* The five styles */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Concept</p>
           <h2 className="sd-h2">What Each Style Actually Does</h2>
@@ -273,7 +269,6 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* When to move */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Real Signal</p>
           <h2 className="sd-h2">When To Actually Move</h2>
@@ -309,7 +304,6 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* Comparisons */}
         <div className="sd-section">
           <p className="sd-eyebrow">Side By Side</p>
           <h2 className="sd-h2">What You Actually Trade</h2>
@@ -325,7 +319,6 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* Nobody runs just one */}
         <div className="sd-section">
           <p className="sd-eyebrow">In Practice</p>
           <h2 className="sd-h2">Nobody Runs Just One</h2>
@@ -340,7 +333,6 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Terms</p>
           <h2 className="sd-h2">Jargon You&rsquo;ll Hit Next</h2>
@@ -355,28 +347,24 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">Seen In The Wild</p>
           <h2 className="sd-h2">The Progression, As It Actually Happened</h2>
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Forward</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
           <MarkerList mark="✕" color="var(--sd-danger)" bg="var(--sd-danger-wash)" items={commonMistakes} columns={2} />
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">Try It Yourself</p>
           <h2 className="sd-h2">Which Stage Are You Actually At?</h2>
@@ -397,7 +385,6 @@ export default function Concept10() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>

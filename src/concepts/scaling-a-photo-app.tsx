@@ -208,8 +208,6 @@ const furtherReading = [
   },
 ];
 
-/* ---- Diagrams ---------------------------------------------------------- */
-
 const arrowDefs = (
   <defs>
     <marker id="sd-101-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -282,9 +280,7 @@ function Arrow({ x1, y1, x2, y2, label }: { x1: number; y1: number; x2: number; 
   );
 }
 
-/* ---- The growing architecture ------------------------------------------
-
-   One diagram for all ten stages rather than ten diagrams. Every node and edge
+/* One diagram for all ten stages rather than ten diagrams. Every node and edge
    carries the stage it appears at, and `until` for the two that get replaced
    later: the single database becomes a primary and replicas at stage five, and
    those become shards at six. Nothing ever moves, it only arrives, which is the
@@ -634,7 +630,6 @@ export default function Concept01SystemDesign101() {
         Ten pieces, one photo-sharing app, and the exact break that makes each one necessary.
       </p>
 
-      {/* Big idea */}
       <div className="sd-section">
         <p className="sd-eyebrow">Big Idea</p>
         <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -644,14 +639,12 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Why this exists */}
       <div className="sd-section">
         <p className="sd-eyebrow">Why This Exists</p>
         <h2 className="sd-h2">Why A List Of Components Is Not A Design</h2>
         <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists.map(hl)} />
       </div>
 
-      {/* Think of it like */}
       <div className="sd-section">
         <p className="sd-eyebrow">Think Of It Like</p>
         <h2 className="sd-h2">A Food Cart That Became A Chain</h2>
@@ -669,7 +662,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Day one */}
       <div className="sd-section">
         <p className="sd-eyebrow">The Shape Of It</p>
         <h2 className="sd-h2">Day One, And It Is Already Correct</h2>
@@ -691,7 +683,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Watch it grow */}
       <div className="sd-section">
         <p className="sd-eyebrow">Interactive</p>
         <h2 className="sd-h2">Watch It Grow, One Break At A Time</h2>
@@ -712,7 +703,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* The ladder */}
       <div className="sd-section">
         <p className="sd-eyebrow">The Walkthrough</p>
         <h2 className="sd-h2">Ten Breaks, And What Each Fix Costs</h2>
@@ -724,7 +714,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Worked example */}
       <div className="sd-section">
         <p className="sd-eyebrow">Worked Example</p>
         <h2 className="sd-h2">Emma&rsquo;s Photo, And The Replica That Had Not Heard</h2>
@@ -770,7 +759,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Recap */}
       <div className="sd-section">
         <p className="sd-eyebrow">Reference</p>
         <h2 className="sd-h2">The Whole Growth Path</h2>
@@ -791,7 +779,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Counterpoint */}
       <div className="sd-section">
         <p className="sd-eyebrow">Counterpoint</p>
         <h2 className="sd-h2">Most Apps Never Leave Stage Three</h2>
@@ -809,21 +796,18 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Seen in the wild */}
       <div className="sd-section">
         <p className="sd-eyebrow">Seen In The Wild</p>
         <h2 className="sd-h2">Teams That Walked This Exact Ladder</h2>
         <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
       </div>
 
-      {/* Key points */}
       <div className="sd-section">
         <p className="sd-eyebrow">Key Points</p>
         <h2 className="sd-h2">What To Carry Forward</h2>
         <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} columns={2} />
       </div>
 
-      {/* Common mistakes */}
       <div className="sd-section">
         <p className="sd-eyebrow">Common Mistakes</p>
         <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
@@ -834,7 +818,6 @@ export default function Concept01SystemDesign101() {
         </blockquote>
       </div>
 
-      {/* Try it yourself */}
       <div className="sd-section">
         <p className="sd-eyebrow">Try It Yourself</p>
         <h2 className="sd-h2">Find Your Own Stage</h2>
@@ -844,7 +827,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Further reading */}
       <div className="sd-section">
         <p className="sd-eyebrow">Further Reading</p>
         <h2 className="sd-h2">Where To Go Deeper</h2>
@@ -862,7 +844,6 @@ export default function Concept01SystemDesign101() {
         </div>
       </div>
 
-      {/* Quiz */}
       <div className="sd-quiz">
         <p className="sd-eyebrow-accent">Quiz Review</p>
         <p className="sd-quiz-title">Check your understanding</p>

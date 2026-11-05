@@ -84,8 +84,7 @@ code, pre {
   transform: translate(-50%, 0);
 }
 
-/* ---- view transitions ----
-   Used by the interview Q&A topic sections, which morph between a grid of tiles
+/* Used by the interview Q&A topic sections, which morph between a grid of tiles
    and an opened full-width section. `height: auto` on the snapshots stops a box
    that changed size from being stretched during the cross-fade. */
 ::view-transition-group(*) {

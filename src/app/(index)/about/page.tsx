@@ -27,14 +27,12 @@ function AvailabilityArt() {
     <svg viewBox="0 0 168 136" fill="none" aria-hidden="true">
       <ellipse cx="74" cy="80" rx="58" ry="48" fill="var(--sd-accent-wash)" />
 
-      {/* spark lines over the lid */}
       <g stroke="var(--sd-accent)" strokeWidth="3.4" strokeLinecap="round">
         <path d="M50 33 L45 24" />
         <path d="M67 28 L67 18" />
         <path d="M84 33 L89 24" />
       </g>
 
-      {/* dashed hop from the laptop to the briefcase */}
       <path
         d="M104 70 C 116 73 122 66 120 56"
         stroke="var(--sd-accent)"
@@ -44,7 +42,6 @@ function AvailabilityArt() {
         opacity="0.75"
       />
 
-      {/* laptop */}
       <rect
         x="34"
         y="46"
@@ -60,7 +57,6 @@ function AvailabilityArt() {
         fill="var(--sd-text)"
       />
 
-      {/* </> on the screen */}
       <g
         stroke="var(--sd-accent)"
         strokeWidth="4"
@@ -72,7 +68,6 @@ function AvailabilityArt() {
         <path d="M86 64 L94 73 L86 82" />
       </g>
 
-      {/* briefcase badge */}
       <rect
         x="118"
         y="14"

@@ -120,7 +120,6 @@ export default function Concept06() {
         </p>
         <DeepDiveButton onClick={() => setPanelOpen(true)} />
 
-        {/* Intro */}
         <div style={{ marginBottom: 36, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             HTTP is fundamentally a{" "}
@@ -133,7 +132,6 @@ export default function Concept06() {
           </p>
         </div>
 
-        {/* The Pattern */}
         <div style={{ marginBottom: 32 }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             The Big Picture
@@ -148,7 +146,6 @@ export default function Concept06() {
             </p>
           </div>
 
-          {/* Pull vs push diagram */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 24px", marginBottom: 16 }}>
             <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24, textAlign: "center" }}>
               Two shapes for the same problem
@@ -176,7 +173,6 @@ export default function Concept06() {
           </div>
         </div>
 
-        {/* Patterns */}
         <div style={{ marginBottom: 32 }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             The Spectrum
@@ -211,7 +207,6 @@ export default function Concept06() {
           </div>
         </div>
 
-        {/* Reliability */}
         <div style={{ marginBottom: 32 }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Fault Tolerance
@@ -238,7 +233,6 @@ export default function Concept06() {
           </div>
         </div>
 
-        {/* Comparison table */}
         <div style={{ marginBottom: 32 }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-muted)", marginBottom: 6 }}>
             Reference
@@ -269,7 +263,6 @@ export default function Concept06() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div style={{ marginTop: 52 }}>
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 6 }}>
             Quiz Review
@@ -278,7 +271,6 @@ export default function Concept06() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
           Webhooks and polling both move the same information — they just disagree about who's responsible for noticing it changed, and when.

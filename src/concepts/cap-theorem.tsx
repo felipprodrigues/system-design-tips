@@ -175,7 +175,6 @@ export default function Concept03() {
           When the network fails, you must choose — and there is no middle ground.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -186,7 +185,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             The CAP theorem states that in the presence of a network partition, a distributed system can only provide either{" "}
@@ -194,20 +192,18 @@ export default function Concept03() {
             <strong className="sd-strong">Availability</strong> — but not both. It defines the constraints every distributed data store must accept by forcing a choice about how the system behaves when its components cannot communicate.
           </p>
           <p>
-            This is the first theorem in distributed systems that architects internalize as a hard constraint, not a preference. Understanding it doesn't give you a recipe — it gives you a{" "}
+            This is the first theorem in distributed systems that architects internalize as a hard constraint, not a preference. Understanding it doesn’t give you a recipe — it gives you a{" "}
             <span className="sd-hl">lens for evaluating trade-offs</span>{" "}
             every time you choose a data store or design a failure mode.
           </p>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">The Decision You Cannot Opt Out Of</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">Think Of It Like</p>
           <h2 className="sd-h2">Two Stores, One Inventory Count, One Phone Line</h2>
@@ -225,7 +221,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Three pillars */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Framework
@@ -318,7 +313,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* CP vs AP */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Trade-off
@@ -332,7 +326,7 @@ export default function Concept03() {
               <strong className="sd-strong">continue serving requests</strong> with whatever data it currently holds?
             </p>
             <p style={{ marginTop: 10 }}>
-              This is not an engineering oversight — it is a fundamental constraint of distributed computing. The choice you make defines your system's behavior under failure.
+              This is not an engineering oversight — it is a fundamental constraint of distributed computing. The choice you make defines your system’s behavior under failure.
             </p>
           </div>
 
@@ -371,7 +365,6 @@ export default function Concept03() {
             ))}
           </div>
 
-          {/* Decision diagram */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 22px", marginBottom: 16 }}>
             <p className="sd-figure-caption">
               Decision tree during a network partition
@@ -404,7 +397,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Consistency spectrum */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Refining the C
@@ -493,7 +485,6 @@ export default function Concept03() {
             <span className="sd-hl">session consistency</span>.
           </div>
 
-          {/* Comparison table */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
               <thead>
@@ -523,7 +514,6 @@ export default function Concept03() {
             </table>
           </div>
 
-          {/* Replication behavior diagram */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 22px" }}>
             <p className="sd-figure-caption">
               Replication behavior under network partition
@@ -583,7 +573,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* PACELC */}
         <div className="sd-section">
           <p className="sd-eyebrow">Beyond The Partition</p>
           <h2 className="sd-h2">PACELC: The Trade-off That Never Fully Goes Away</h2>
@@ -630,7 +619,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Terms</p>
           <h2 className="sd-h2">The Vocabulary Of The Trade-off</h2>
@@ -645,7 +633,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Quorum & split-brain */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Under the Hood
@@ -734,7 +721,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Real-world example */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Real-World Example
@@ -755,9 +741,9 @@ export default function Concept03() {
                 headerBg: "rgba(76, 110, 245,0.1)",
                 body: (
                   <>
-                    The system <strong className="sd-strong">stops accepting withdrawals</strong>. It cannot guarantee the user hasn't already withdrawn $100 from the other data center, so it errors out to ensure the balance remains correct.
+                    The system <strong className="sd-strong">stops accepting withdrawals</strong>. It cannot guarantee the user hasn’t already withdrawn $100 from the other data center, so it errors out to ensure the balance remains correct.
                     <br /><br />
-                    The user sees a "Service Unavailable" message — but the data remains accurate.
+                    The user sees a “Service Unavailable” message — but the data remains accurate.
                   </>
                 ),
               },
@@ -767,7 +753,7 @@ export default function Concept03() {
                 headerBg: "rgba(127, 147, 242,0.1)",
                 body: (
                   <>
-                    The system <strong className="sd-strong">allows the withdrawal at both data centers simultaneously</strong>. It prioritizes the user's ability to complete the task, even though internal state is now inconsistent — the user effectively withdrew $200 from a $100 balance.
+                    The system <strong className="sd-strong">allows the withdrawal at both data centers simultaneously</strong>. It prioritizes the user’s ability to complete the task, even though internal state is now inconsistent — the user effectively withdrew $200 from a $100 balance.
                     <br /><br />
                     A reconciliation process must resolve this once the partition heals.
                   </>
@@ -788,7 +774,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Conflict resolution */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The AP Side
@@ -807,7 +792,6 @@ export default function Concept03() {
             </p>
           </div>
 
-          {/* LWW */}
           <p className="sd-eyebrow-sub">
             Approach 1 — Last-Write-Wins
           </p>
@@ -818,7 +802,6 @@ export default function Concept03() {
             <strong className="sd-hl-amber">The cost is silent data loss.</strong> LWW trusts physical clocks, and physical clocks drift even under NTP. A node running a few milliseconds fast stamps its write with a higher timestamp and quietly discards a genuinely newer write made elsewhere. Nothing errors and nothing logs — the write is simply gone.
           </div>
 
-          {/* Vector clocks */}
           <p className="sd-eyebrow-sub">
             Approach 2 — Vector Clocks and Version Vectors
           </p>
@@ -842,7 +825,6 @@ export default function Concept03() {
             <strong className="sd-strong">Vector clocks never lose a write, but they never decide for you either.</strong> They convert silent data loss into an explicit conflict that the application layer has to resolve — strictly more work, and strictly safer.
           </div>
 
-          {/* CRDTs */}
           <p className="sd-eyebrow-sub">
             Approach 3 — Conflict-Free Replicated Data Types
           </p>
@@ -888,21 +870,18 @@ export default function Concept03() {
 
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">Seen In The Wild</p>
           <h2 className="sd-h2">Which Side Real Systems Picked</h2>
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Forward</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
@@ -913,7 +892,6 @@ export default function Concept03() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">Try It Yourself</p>
           <h2 className="sd-h2">Two Features, Two Failure Modes</h2>
@@ -923,7 +901,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Summary */}
         <div className="sd-section">
           <p className="sd-eyebrow">Summary</p>
           <h2 className="sd-h2">Choose The Failure You Can Live With</h2>
@@ -933,7 +910,6 @@ export default function Concept03() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -942,11 +918,10 @@ export default function Concept03() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="Why is Partition Tolerance truly non-negotiable?">
           <p className="sd-text-sm">
-            The theorem's name implies a three-way choice, but Partition Tolerance is{" "}
+            The theorem’s name implies a three-way choice, but Partition Tolerance is{" "}
             <strong className="sd-strong">not actually optional</strong>. Abandoning it would mean assuming a perfectly reliable network — which does not exist at any scale.
           </p>
           {[
@@ -975,8 +950,8 @@ export default function Concept03() {
 
         <PanelSection title='What does "eventual consistency" actually mean in AP systems?'>
           <p className="sd-text-sm">
-            AP systems are typically described as "eventually consistent" — meaning all nodes will eventually converge to the same value,{" "}
-            <strong className="sd-strong">given enough time and no new writes</strong>. But "eventually" is often misunderstood.
+            AP systems are typically described as “eventually consistent” — meaning all nodes will eventually converge to the same value,{" "}
+            <strong className="sd-strong">given enough time and no new writes</strong>. But “eventually” is often misunderstood.
           </p>
           {[
             {
@@ -1004,7 +979,7 @@ export default function Concept03() {
 
         <PanelSection title="How do real databases implement CP vs AP?">
           <p className="sd-text-sm">
-            Real databases don't simply flip a "CP" or "AP" switch — they implement{" "}
+            Real databases don’t simply flip a “CP” or “AP” switch — they implement{" "}
             <strong className="sd-strong">specific replication and quorum mechanisms</strong>{" "}
             that land them on one side of the trade-off by default, often with tunable knobs.
           </p>
@@ -1028,7 +1003,7 @@ export default function Concept03() {
             </div>
           ))}
           <div className="sd-panel-note">
-            The right question when choosing a database is not "which theorem does this implement?" but:{" "}
+            The right question when choosing a database is not “which theorem does this implement?” but:{" "}
             <strong className="sd-hl">what is the worst thing that can happen if two nodes disagree, and how will I detect and resolve it?</strong>
           </div>
         </PanelSection>

@@ -215,7 +215,6 @@ export default function Walkthrough() {
       <Breadcrumb section="The Method" concept="A 7-Step Walkthrough for Any System Design" />
 
       <PageLayout>
-        {/* Header */}
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           The Method
         </p>
@@ -224,7 +223,6 @@ export default function Walkthrough() {
           The order to work in when you&rsquo;re handed a blank page and a vague problem.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -234,7 +232,6 @@ export default function Walkthrough() {
           </div>
         </div>
 
-        {/* Interactive walkthrough */}
         <div className="sd-section">
           <p className="sd-eyebrow">Walk It</p>
           <h2 className="sd-h2">Seven Steps, One Diagram</h2>
@@ -475,7 +472,6 @@ export default function Walkthrough() {
             <p className="sd-text-sm-tight">{step.draws}</p>
           </div>
 
-          {/* Active step detail */}
           <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "10px 14px", margin: "16px 0 10px" }}>
             <p className="sd-text-sm-tight" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5 }}>
               {step.asks}
@@ -501,14 +497,12 @@ export default function Walkthrough() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">What Goes Wrong Without An Order</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists.map(hl)} />
         </div>
 
-        {/* Hand-offs */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Mechanism</p>
           <h2 className="sd-h2">What Each Step Hands The Next</h2>
@@ -543,7 +537,6 @@ export default function Walkthrough() {
           </div>
         </div>
 
-        {/* Where each step lives in the roadmap */}
         <div className="sd-section">
           <p className="sd-eyebrow">Going Deeper</p>
           <h2 className="sd-h2">Where Each Step Lives In The Roadmap</h2>
@@ -574,21 +567,18 @@ export default function Walkthrough() {
           </div>
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Ways This Framework Gets Misused</h2>
           <MarkerList mark="✕" color="var(--sd-red)" bg="var(--sd-danger-wash)" items={commonMistakes} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Out Of This</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} />
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>

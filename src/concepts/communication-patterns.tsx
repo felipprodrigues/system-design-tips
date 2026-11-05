@@ -153,23 +153,21 @@ export default function Concept06() {
           <ConceptHeader slug="communication-patterns" />
         <LearnedToggle />
         <p className="sd-lede">
-          How a system finds out about changes it didn't initiate.
+          How a system finds out about changes it didn’t initiate.
         </p>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             HTTP is fundamentally a{" "}
-            <strong className="sd-strong">client-initiated protocol</strong> — a server can't just decide to send a client something. So whenever one system needs to know about a change happening in another, there are really only two shapes the answer can take:{" "}
+            <strong className="sd-strong">client-initiated protocol</strong> — a server can’t just decide to send a client something. So whenever one system needs to know about a change happening in another, there are really only two shapes the answer can take:{" "}
             <span className="sd-hl">the client keeps asking</span>, or{" "}
             <span className="sd-hl">the server is given a way to reach out first</span>.
           </p>
           <p>
-            Every "how do I get real-time updates" design question — order status, chat messages, CI build results, payment confirmations — reduces to picking a point on that spectrum, and accepting the trade-off that comes with it.
+            Every “how do I get real-time updates” design question — order status, chat messages, CI build results, payment confirmations — reduces to picking a point on that spectrum, and accepting the trade-off that comes with it.
           </p>
         </div>
 
-        {/* The Pattern */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Big Picture
@@ -177,14 +175,13 @@ export default function Concept06() {
           <h2 className="sd-h2">Pull vs. Push</h2>
 
           <div className="sd-prose">
-            <p>In a <strong className="sd-strong">pull</strong> model, the client owns the schedule — it asks repeatedly and accepts that most answers will be "nothing changed." In a <strong className="sd-strong">push</strong> model, the server owns the timing — it calls the moment something happens, and the client's job is just to be reachable.</p>
+            <p>In a <strong className="sd-strong">pull</strong> model, the client owns the schedule — it asks repeatedly and accepts that most answers will be “nothing changed.” In a <strong className="sd-strong">push</strong> model, the server owns the timing — it calls the moment something happens, and the client’s job is just to be reachable.</p>
             <p style={{ marginTop: 10 }}>
               Neither is strictly better. Pull is simple and works behind any firewall; push is efficient but demands infrastructure on the receiving end.{" "}
               <strong className="sd-strong">The right choice depends on who can be reached, and how fresh the data needs to be.</strong>
             </p>
           </div>
 
-          {/* Pull vs push diagram */}
           <div className="sd-figure">
             <p className="sd-figure-caption">
               Two shapes for the same problem
@@ -201,18 +198,17 @@ export default function Concept06() {
                 <div style={{ fontSize: 11, fontWeight: 700, color: "var(--sd-amber)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 4 }}>Push (Webhook)</div>
                 <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-teal)", borderRadius: 8, padding: "8px 18px", fontSize: 12, fontWeight: 600, color: "var(--sd-teal)" }}>Server</div>
                 <div className="sd-arrow-sm">→</div>
-                <div style={{ background: "rgba(106, 118, 163,0.1)", border: "1px solid var(--sd-amber)", borderRadius: 8, padding: "8px 18px", fontSize: 12, fontWeight: 600, color: "var(--sd-amber)" }}>Client's endpoint</div>
+                <div style={{ background: "rgba(106, 118, 163,0.1)", border: "1px solid var(--sd-amber)", borderRadius: 8, padding: "8px 18px", fontSize: 12, fontWeight: 600, color: "var(--sd-amber)" }}>Client’s endpoint</div>
                 <div style={{ fontSize: 10, color: "var(--sd-muted)", marginTop: 4, textAlign: "center", maxWidth: 160 }}>Server calls in, the instant something happens</div>
               </div>
             </div>
           </div>
 
           <div className="sd-callout sd-callout-accent">
-            A webhook is really just <strong className="sd-strong">polling with the roles reversed</strong> — the "client" for that one HTTP call is the server that owns the event, and your endpoint is playing server.
+            A webhook is really just <strong className="sd-strong">polling with the roles reversed</strong> — the “client” for that one HTTP call is the server that owns the event, and your endpoint is playing server.
           </div>
         </div>
 
-        {/* Patterns */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Spectrum
@@ -225,7 +221,7 @@ export default function Concept06() {
           </h2>
 
           <div className="sd-prose">
-            <p>Each pattern trades implementation simplicity for freshness and efficiency. The right one depends on whether the receiver can accept inbound connections, how stale the data is allowed to get, and how much infrastructure you're willing to run.</p>
+            <p>Each pattern trades implementation simplicity for freshness and efficiency. The right one depends on whether the receiver can accept inbound connections, how stale the data is allowed to get, and how much infrastructure you’re willing to run.</p>
           </div>
 
           <div className="sd-grid-2">
@@ -247,7 +243,6 @@ export default function Concept06() {
           </div>
         </div>
 
-        {/* Comparison */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Reference
@@ -261,7 +256,6 @@ export default function Concept06() {
             </p>
           </div>
 
-          {/* Shape strip */}
           <div className="sd-figure">
             <p className="sd-figure-caption">
               The shape of each exchange
@@ -296,7 +290,6 @@ export default function Concept06() {
             </div>
           </div>
 
-          {/* Axes table */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflowX: "auto", marginBottom: 16 }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 640 }}>
               <thead>
@@ -338,34 +331,32 @@ export default function Concept06() {
           </div>
         </div>
 
-        {/* Reliability */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Fault Tolerance
           </p>
-          <h2 className="sd-h2">Webhook Delivery Isn't Guaranteed</h2>
+          <h2 className="sd-h2">Webhook Delivery Isn’t Guaranteed</h2>
 
           <div className="sd-prose">
             <p>
-              A webhook call is a single, best-effort HTTP request from someone else's server to yours. If your endpoint is down, slow, or returns a non-2xx status, that event can be{" "}
-              <strong className="sd-strong">retried, delayed, or — eventually — dropped</strong>, depending on the sender's retry policy.
+              A webhook call is a single, best-effort HTTP request from someone else’s server to yours. If your endpoint is down, slow, or returns a non-2xx status, that event can be{" "}
+              <strong className="sd-strong">retried, delayed, or — eventually — dropped</strong>, depending on the sender’s retry policy.
             </p>
             <p style={{ marginTop: 10 }}>
               Because retries happen, the same event can also arrive{" "}
-              <strong className="sd-strong">more than once</strong>. Any receiver that isn't built to handle both of those failure modes will eventually miss an event or double-process one.
+              <strong className="sd-strong">more than once</strong>. Any receiver that isn’t built to handle both of those failure modes will eventually miss an event or double-process one.
             </p>
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
-            <strong className="sd-strong">Treat webhooks as at-most-once, best-effort delivery.</strong> Anything that must not be lost — a payment, an order state change — needs a reconciliation path that doesn't depend on the webhook having fired.
+            <strong className="sd-strong">Treat webhooks as at-most-once, best-effort delivery.</strong> Anything that must not be lost — a payment, an order state change — needs a reconciliation path that doesn’t depend on the webhook having fired.
           </div>
 
           <div className="sd-callout sd-callout-green">
-            That reconciliation path is usually just <span className="sd-hl">polling</span> — a periodic call to the provider's API that lists recent events and repairs anything the webhook silently missed. Push for speed, pull for correctness.
+            That reconciliation path is usually just <span className="sd-hl">polling</span> — a periodic call to the provider’s API that lists recent events and repairs anything the webhook silently missed. Push for speed, pull for correctness.
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -374,16 +365,15 @@ export default function Concept06() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
-          Webhooks and polling both move the same information — they just disagree about who's responsible for noticing it changed, and when.
+          Webhooks and polling both move the same information — they just disagree about who’s responsible for noticing it changed, and when.
         </p>
 
         <PanelSection title="What happens when a webhook delivery fails, and how do good integrations handle it?">
           <p className="sd-text-sm">
             A failed delivery is invisible to the receiver by default — nothing arrived, so nothing looks wrong.{" "}
-            <strong className="sd-strong">The sender's retry policy and the receiver's own safety nets are what stand between that and a silently lost event.</strong>
+            <strong className="sd-strong">The sender’s retry policy and the receiver’s own safety nets are what stand between that and a silently lost event.</strong>
           </p>
           {[
             {
@@ -448,7 +438,7 @@ export default function Concept06() {
 
         <PanelSection title="When does long polling actually beat both short polling and full webhooks?">
           <p className="sd-text-sm">
-            Long polling occupies a specific niche: <strong className="sd-strong">the client can't accept inbound connections, but a slow poll timer isn't good enough either.</strong>
+            Long polling occupies a specific niche: <strong className="sd-strong">the client can’t accept inbound connections, but a slow poll timer isn’t good enough either.</strong>
           </p>
           {[
             {
@@ -470,13 +460,13 @@ export default function Concept06() {
             </div>
           ))}
           <div className="sd-panel-note">
-            Long polling is the <strong className="sd-hl">"good enough" middle ground</strong> when you can't push but can't afford a slow poll timer either.
+            Long polling is the <strong className="sd-hl">“good enough” middle ground</strong> when you can’t push but can’t afford a slow poll timer either.
           </div>
         </PanelSection>
 
         <PanelSection title="Why do production systems that use webhooks almost always also poll?">
           <p className="sd-text-sm">
-            A webhook tells you about an event <em>if</em> it fires and <em>if</em> it's delivered. Neither is certain, and the receiver has no way to detect the gap on its own.
+            A webhook tells you about an event <em>if</em> it fires and <em>if</em> it’s delivered. Neither is certain, and the receiver has no way to detect the gap on its own.
           </p>
           {[
             {
@@ -504,7 +494,7 @@ export default function Concept06() {
 
         <PanelSection title="WebSockets vs. SSE vs. webhooks — how do you actually choose?">
           <p className="sd-text-sm">
-            All three are "push," but they differ in <strong className="sd-strong">direction and who the receiver is</strong> — and that alone usually decides it.
+            All three are “push,” but they differ in <strong className="sd-strong">direction and who the receiver is</strong> — and that alone usually decides it.
           </p>
           {[
             {
@@ -526,7 +516,7 @@ export default function Concept06() {
             </div>
           ))}
           <div className="sd-panel-note">
-            Pick based on <strong className="sd-hl">who needs to talk to whom, and in which direction</strong> — not on which one sounds most "real-time."
+            Pick based on <strong className="sd-hl">who needs to talk to whom, and in which direction</strong> — not on which one sounds most “real-time.”
           </div>
         </PanelSection>
       </SidePanel>

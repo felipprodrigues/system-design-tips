@@ -173,8 +173,6 @@ const keyPoints = [
   "Observability is the only piece that *adds no capability at all*. It is what makes the other nine debuggable, which is why it is the one that should never be last.",
 ];
 
-/* ---- Diagram primitives ------------------------------------------------- */
-
 const arrowDefs = (
   <defs>
     <marker id="sd-msg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -275,9 +273,7 @@ function Arrow({ x1, y1, x2, y2, label, dash, accent, labelDx = 8, labelDy = -5 
   );
 }
 
-/* ---- The growing backend -----------------------------------------------
-
-   One canvas for all ten stages rather than ten pictures. Every node, frame and
+/* One canvas for all ten stages rather than ten pictures. Every node, frame and
    edge carries the stage it appears at, and `until` for the handful that get
    replaced later: the direct phone-to-server call becomes an API call at two, and
    the straight shot into the app servers goes through a balancer at seven.
@@ -603,8 +599,6 @@ function PieceCarousel() {
   );
 }
 
-/* ---- Sequence diagrams -------------------------------------------------- */
-
 interface Lane {
   label: string;
   x: number;
@@ -670,9 +664,7 @@ function Note({ x, y, text, tone = "plain" }: { x: number; y: number; text: stri
   );
 }
 
-/* ---- Trace waterfall ---------------------------------------------------
-
-   The observability piece, as the one picture that answers the question metrics
+/* The observability piece, as the one picture that answers the question metrics
    structurally cannot: not "is anything slow" but "which hop held it". Spans are
    placed from ms offsets on a fixed 32-second scale, so the queue wait dwarfing
    every real unit of work is a property of the data, not of the drawing. */
@@ -738,8 +730,6 @@ function TraceWaterfall() {
   );
 }
 
-/* ---- The page ----------------------------------------------------------- */
-
 const pollLanes: Lane[] = [
   { label: "Nadia", x: 140, icon: Smartphone },
   { label: "Theo", x: 420, icon: Smartphone },
@@ -777,7 +767,6 @@ export default function Concept02BackendAroundOneMessage() {
         only one that can do.
       </p>
 
-      {/* Big idea */}
       <div className="sd-section">
         <p className="sd-eyebrow">Big Idea</p>
         <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -794,7 +783,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Day one */}
       <div className="sd-section">
         <p className="sd-eyebrow">The Shape Of It</p>
         <h2 className="sd-h2">Why The Phones Can&rsquo;t Just Talk To Each Other</h2>
@@ -858,7 +846,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Watch it grow */}
       <div className="sd-section">
         <p className="sd-eyebrow">Interactive</p>
         <h2 className="sd-h2">Watch The Backend Grow, One Piece At A Time</h2>
@@ -880,7 +867,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* The walkthrough */}
       <div className="sd-section">
         <p className="sd-eyebrow">The Walkthrough</p>
         <h2 className="sd-h2">Ten Pieces, And What Each One Charges</h2>
@@ -895,7 +881,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Worked example 1 */}
       <div className="sd-section">
         <p className="sd-eyebrow">Worked Example</p>
         <h2 className="sd-h2">Asking, Versus Being Told</h2>
@@ -952,7 +937,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Worked example 2 */}
       <div className="sd-section">
         <p className="sd-eyebrow">Worked Example</p>
         <h2 className="sd-h2">The Locked Phone, And Whose Outage It Is</h2>
@@ -1010,7 +994,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Worked example 3 */}
       <div className="sd-section">
         <p className="sd-eyebrow">Worked Example</p>
         <h2 className="sd-h2">Ten Servers, And The One Holding The Socket</h2>
@@ -1057,7 +1040,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Worked example 4 */}
       <div className="sd-section">
         <p className="sd-eyebrow">Worked Example</p>
         <h2 className="sd-h2">Thirty Seconds Late, And Every Dashboard Green</h2>
@@ -1092,7 +1074,6 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Recap */}
       <div className="sd-section">
         <p className="sd-eyebrow">Recap</p>
         <h2 className="sd-h2">The Whole Path</h2>
@@ -1130,14 +1111,12 @@ export default function Concept02BackendAroundOneMessage() {
         </div>
       </div>
 
-      {/* Key points */}
       <div className="sd-section">
         <p className="sd-eyebrow">Key Points</p>
         <h2 className="sd-h2">What To Carry Forward</h2>
         <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} columns={2} />
       </div>
 
-      {/* Quiz */}
       <div className="sd-quiz">
         <p className="sd-eyebrow-accent">Quiz Review</p>
         <p className="sd-quiz-title">Check your understanding</p>

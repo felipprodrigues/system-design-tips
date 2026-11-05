@@ -8,8 +8,6 @@
  * All values come from tokens.css so light and dark modes follow automatically.
  */
 
-/* ---- Page header ------------------------------------------------------- */
-
 .sd-h1 {
   font-size: 28px;
   font-weight: 700;
@@ -31,8 +29,6 @@
   font-size: 15px;
   line-height: 1.8;
 }
-
-/* ---- Section scaffolding ----------------------------------------------- */
 
 .sd-section {
   margin-bottom: 32px;
@@ -77,8 +73,6 @@
   margin-bottom: 10px;
 }
 
-/* ---- Surfaces ---------------------------------------------------------- */
-
 /* Primary explanatory block — the raised card that carries body prose. */
 .sd-prose {
   background: var(--sd-surface);
@@ -116,8 +110,6 @@
   text-align: center;
 }
 
-/* ---- Callouts ---------------------------------------------------------- */
-
 /* Square-edged tinted band. Neutral by default; modifiers change the tint. */
 .sd-callout {
   background: rgba(106, 118, 163, 0.07);
@@ -134,8 +126,6 @@
 .sd-callout-green {
   background: rgba(157, 176, 247, 0.07);
 }
-
-/* ---- Body text --------------------------------------------------------- */
 
 .sd-text-sm {
   font-size: 13px;
@@ -154,8 +144,6 @@
   color: var(--sd-muted);
   line-height: 1.65;
 }
-
-/* ---- Inline emphasis --------------------------------------------------- */
 
 .sd-strong {
   color: var(--sd-text);
@@ -176,8 +164,6 @@
 .sd-hl-muted {
   color: var(--sd-muted);
 }
-
-/* ---- Layout ------------------------------------------------------------ */
 
 .sd-grid-2 {
   display: grid;
@@ -217,8 +203,6 @@
   color: var(--sd-muted);
 }
 
-/* ---- Side panel -------------------------------------------------------- */
-
 .sd-panel-card {
   background: var(--sd-surface2);
   border: 1px solid var(--sd-border);
@@ -243,8 +227,6 @@
   color: var(--sd-text);
 }
 
-/* ---- Quiz -------------------------------------------------------------- */
-
 .sd-quiz {
   margin-top: 52px;
 }
@@ -254,8 +236,6 @@
   font-weight: 700;
   margin-bottom: 20px;
 }
-
-/* ---- Stepped diagrams -------------------------------------------------- */
 
 /* A node in a diagram that reveals itself stage by stage. The browser owns the
    animation and the reduced-motion opt-out, so the component only has to say

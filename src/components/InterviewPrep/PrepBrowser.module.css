@@ -11,8 +11,6 @@
   min-width: 0;
 }
 
-/* ---- table of contents ---- */
-
 /* Pinned below the app bar and capped at the viewport, with its own scroll: the
    cards scroll past it instead of pushing it off the screen. */
 .toc {
@@ -155,8 +153,6 @@
   }
 }
 
-/* ---- all / saved ---- */
-
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -200,11 +196,7 @@
   border-radius: 12px;
 }
 
-/* ---- cards ---- */
-
-/* ---- the topic sections ----
-
-   Two layouts, one markup. Nothing open: a grid of tiles. One open: the other
+/* Two layouts, one markup. Nothing open: a grid of tiles. One open: the other
    tiles become a wrapped row of pills and the open one takes the full width
    below them (order: 1 puts it last whatever its place in the list). The move
    between the two is a view transition, set up in PrepBrowser. */
@@ -420,8 +412,6 @@
   color: var(--sd-accent);
 }
 
-/* ---- modal ---- */
-
 .backdrop {
   position: fixed;
   inset: 0;
@@ -545,8 +535,6 @@
   color: var(--sd-accent);
   border-color: var(--sd-accent);
 }
-
-/* ---- the answer body: plain authored HTML, so these are element rules ---- */
 
 .prose {
   font-size: 14.5px;

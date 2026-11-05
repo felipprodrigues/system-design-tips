@@ -1,32 +1,42 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Sun, Moon } from "lucide-react";
 import styles from "./ThemeToggle.module.css";
 
+type Theme = "dark" | "light";
+
+// layout.tsx's inline script sets `<html data-theme>` from localStorage before
+// hydration, so the attribute is the source of truth and React only reads it.
+const listeners = new Set<() => void>();
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  return () => {
+    listeners.delete(onChange);
+  };
+}
+
+function read(): Theme {
+  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+}
+
+function readOnServer(): Theme {
+  return "dark";
+}
+
 export default function ThemeToggle() {
-  // Always starts "dark" so the first client render matches the server
-  // render exactly (server has no window/localStorage to read from).
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  // On mount, adopt whatever the inline beforeInteractive script already
-  // set on <html> (it read localStorage before hydration) — runs before
-  // paint, so there's no visible flash of the wrong icon.
-  useLayoutEffect(() => {
-    const current = document.documentElement.getAttribute("data-theme");
-    if (current === "light") setTheme("light");
-  }, []);
-
-  // Keeps the <html> attribute in sync with state — also re-applies it after
-  // React's dev Strict-Mode remount clears what the inline script set.
-  useLayoutEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+  const theme = useSyncExternalStore(subscribe, read, readOnServer);
 
   function toggle() {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    localStorage.setItem("sd-theme", next);
+    const next: Theme = theme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    try {
+      localStorage.setItem("sd-theme", next);
+    } catch {
+      // Storage unavailable: the change still holds for this page view.
+    }
+    for (const listener of listeners) listener();
   }
 
   return (

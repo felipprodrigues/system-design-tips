@@ -93,8 +93,6 @@
   }
 }
 
-/* ---- new-content toast ---- */
-
 /* Fixed under the bar on the right. Above the bar's z-index so it is never
    clipped by it, below any dialog. */
 /* Empty until something is unseen, so it must never sit over the page catching

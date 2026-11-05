@@ -250,7 +250,6 @@ export default function Concept03RateLimiting() {
           Why the algorithm behind a limit decides how forgiving it is, not just what number is printed on it.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -260,14 +259,12 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">Why One Client Can Become Everyone&rsquo;s Outage</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">Think Of It Like</p>
           <h2 className="sd-h2">A Data Plan, And The Night Before It Resets</h2>
@@ -282,7 +279,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Topology */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Shape Of It</p>
           <h2 className="sd-h2">A Layered Limiter In Front Of An API</h2>
@@ -310,7 +306,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Anatomy */}
         <div className="sd-section">
           <p className="sd-eyebrow">Anatomy</p>
           <h2 className="sd-h2">The Six Pieces</h2>
@@ -329,7 +324,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* The concept */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Concept</p>
           <h2 className="sd-h2">Four Algorithms And What Each One Forgives</h2>
@@ -349,7 +343,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Terms</p>
           <h2 className="sd-h2">The Vocabulary Of Saying No Politely</h2>
@@ -364,7 +357,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Token vs leaky */}
         <div className="sd-section">
           <p className="sd-eyebrow">Worked Example</p>
           <h2 className="sd-h2">Token Bucket vs Leaky Bucket</h2>
@@ -384,7 +376,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Token bucket flow */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Shape Of It</p>
           <h2 className="sd-h2">Token Bucket, One Request At A Time</h2>
@@ -411,7 +402,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Boundary burst */}
         <div className="sd-section">
           <p className="sd-eyebrow">Failure Mode</p>
           <h2 className="sd-h2">The Fixed Window&rsquo;s Boundary Burst</h2>
@@ -451,7 +441,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Algorithm reference */}
         <div className="sd-section">
           <p className="sd-eyebrow">Reference</p>
           <h2 className="sd-h2">Which Algorithm Fits Which Job</h2>
@@ -486,7 +475,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Distributed */}
         <div className="sd-section">
           <p className="sd-eyebrow">Failure Mode</p>
           <h2 className="sd-h2">One True Limit Across Many Servers</h2>
@@ -511,7 +499,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Who gets counted */}
         <div className="sd-section">
           <p className="sd-eyebrow">Counterpoint</p>
           <h2 className="sd-h2">Who The Limit Is Actually Counting</h2>
@@ -530,21 +517,18 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">Seen In The Wild</p>
           <h2 className="sd-h2">Limits You&rsquo;ve Probably Hit</h2>
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Forward</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
@@ -555,7 +539,6 @@ export default function Concept03RateLimiting() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">Try It Yourself</p>
           <h2 className="sd-h2">Guess The Algorithm Behind A Limit You&rsquo;ve Hit</h2>
@@ -565,7 +548,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Further reading */}
         <div className="sd-section">
           <p className="sd-eyebrow">Further Reading</p>
           <h2 className="sd-h2">Where To Go Deeper</h2>
@@ -583,7 +565,6 @@ export default function Concept03RateLimiting() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>

@@ -3,7 +3,7 @@
   transition: box-shadow 0.3s ease;
 }
 
-.section.highlight {
+.section[data-highlight] {
   box-shadow: 0 0 0 2px var(--sd-accent);
 }
 

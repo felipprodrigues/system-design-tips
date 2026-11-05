@@ -80,7 +80,6 @@ const styles = [
   },
 ];
 
-
 const terms = [
   { title: "Resource", def: "In REST, a noun the API exposes and lets you act on with HTTP verbs, like a user, an order, or a post, identified by a stable URL." },
   { title: "Over-fetching", def: "Getting more fields in a response than the client actually needs, wasting bandwidth and parsing time, a common REST symptom when one endpoint serves many different callers." },
@@ -158,7 +157,6 @@ export default function Concept08() {
           Three ways to expose a system, and the caller each one is built for.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -168,14 +166,12 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">The Argument This Concept Ends</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">Think Of It Like</p>
           <h2 className="sd-h2">Three Ways To Order Food</h2>
@@ -194,7 +190,6 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* The concept */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Concept</p>
           <h2 className="sd-h2">What Each Style Actually Does</h2>
@@ -219,7 +214,6 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Terms</p>
           <h2 className="sd-h2">The Vocabulary Of An API Contract</h2>
@@ -234,7 +228,6 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* REST vs GraphQL, worked */}
         <div className="sd-section">
           <p className="sd-eyebrow">Worked Example</p>
           <h2 className="sd-h2">Fetching A User&rsquo;s Profile With Their Last 3 Posts</h2>
@@ -274,7 +267,6 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* Topology */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Shape Of It</p>
           <h2 className="sd-h2">Where Each Style Typically Sits In One System</h2>
@@ -324,7 +316,6 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* Decision tree */}
         <div className="sd-section">
           <p className="sd-eyebrow">Putting It Together</p>
           <h2 className="sd-h2">Which API Style Fits Your Caller?</h2>
@@ -377,21 +368,18 @@ export default function Concept08() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">Seen In The Wild</p>
           <h2 className="sd-h2">Who Picked What, And Why</h2>
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Forward</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
@@ -402,7 +390,6 @@ export default function Concept08() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">Try It Yourself</p>
           <h2 className="sd-h2">Count The Round Trips</h2>
@@ -411,7 +398,6 @@ export default function Concept08() {
             Pick a screen in an app you use that clearly combines data from more than one resource, like a profile page showing a user plus their recent activity. Sketch what the <strong className="sd-strong">REST version</strong> would need (how many endpoints, how many round trips) versus a <strong className="sd-strong">single GraphQL query</strong> for the same screen, and name one reason an internal team building that same feature&rsquo;s backend services might use <strong className="sd-strong">gRPC</strong> between them instead of either.
           </div>
         </div>
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>

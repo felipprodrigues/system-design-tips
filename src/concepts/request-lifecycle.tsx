@@ -195,7 +195,6 @@ export default function Concept07() {
           Tracing an HTTP request from client click to rendered response — and every hand-off in between.
         </p>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Why This Exists
@@ -204,7 +203,6 @@ export default function Concept07() {
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             A software request begins the moment a user interacts with an interface and ends when that user{" "}
@@ -216,7 +214,6 @@ export default function Concept07() {
           </p>
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Think Of It Like
@@ -233,7 +230,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Opening figure — the separate systems involved */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Map
@@ -254,7 +250,6 @@ export default function Concept07() {
                 </marker>
               </defs>
 
-              {/* Client up to the DNS resolver, then on to the web server */}
               <path d="M 196 210 H 250 V 70 H 290" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-arrowhead)" />
               <path d="M 196 210 H 550" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-arrowhead)" />
               <path d="M 740 210 H 790" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-arrowhead)" />
@@ -310,7 +305,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* The Request Lifecycle */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             End to End
@@ -336,7 +330,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Key Terms
@@ -353,7 +346,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Diagram */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Request / Response
@@ -405,7 +397,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Anatomy of a Request Path */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Worked Example
@@ -428,7 +419,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Limitations and Bottlenecks */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Trade-offs
@@ -472,7 +462,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Seen In The Wild
@@ -481,7 +470,6 @@ export default function Concept07() {
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Key Points
@@ -490,7 +478,6 @@ export default function Concept07() {
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Common Mistakes
@@ -503,7 +490,6 @@ export default function Concept07() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Try It Yourself
@@ -515,7 +501,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Summary */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Summary
@@ -529,7 +514,6 @@ export default function Concept07() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -538,7 +522,6 @@ export default function Concept07() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
           Mapping the lifecycle tells you where a request can break. These are the mechanisms behind three of its most consequential hops.

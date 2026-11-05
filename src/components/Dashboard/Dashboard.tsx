@@ -24,7 +24,7 @@ function Check() {
    single page, so a section that can hide it hides the whole thing. */
 const CAPSTONE = "System Design 101";
 
-export default function Dashboard() {
+export default function Dashboard({ questionCount }: { questionCount: number }) {
   const roadmap = useRoadmap();
   const started = roadmap.done > 0 || roadmap.lastVisited !== undefined;
   const capstone = roadmap.sections.find((section) => section.title === CAPSTONE);
@@ -246,10 +246,8 @@ export default function Dashboard() {
             </svg>
           </span>
           <span className={styles.bannerBody}>
-            {/* The divider above already names the section, so the eyebrow counts
-                rather than repeating it — same reason the capstone banner uses its
-                concept label instead of its section title. */}
-            <span className={styles.bannerEyebrow}>57 questions</span>
+            {/* The divider above already names the section, so the eyebrow counts. */}
+            <span className={styles.bannerEyebrow}>{questionCount} questions</span>
             <span className={styles.bannerTitle}>Questions, answered</span>
             <span className={styles.bannerSub}>
               JavaScript, React, performance and the browser — each one answered the way you

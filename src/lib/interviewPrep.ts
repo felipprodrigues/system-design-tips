@@ -1,30 +1,22 @@
 import { highlight } from "./syntax";
 
 export interface PrepSection {
-  /** Anchor id from the source document: s1 … s57. Also what a "§15" means,
-      so an id is never reused or renumbered once it is authored. */
+  /** Authored anchor, and what a "§15" resolves to. Never renumbered; has gaps. */
   id: string;
-  /** Display number — the section's position, so dropping one leaves no gap. */
+  /** Position in the document, unlike `id`. */
   n: number;
-  /** Heading with the leading "12. " stripped. */
   title: string;
   topic: Topic;
-  /** First sentence of the answer, as a card teaser. */
   teaser: string;
-  /** The answer body, minus its own heading. Trusted, authored HTML. */
+  /** Trusted, authored HTML. */
   html: string;
 }
 
-/* Topics, in the order the contents lists them. The document itself is ordered
-   by when each question came up, not by subject, so the mapping below is the
-   only place the subject of a question is recorded. */
+/* Contents order. The document is ordered by when each question came up, so
+   BY_TOPIC below is the only record of what a question is about. */
 export const TOPICS = [
-  /* Not a subject like the rest: these six came as one graded mock round, and
-     they stay together at the top of the contents rather than scattering into
-     the subjects they happen to touch. */
+  // Not subjects: one graded mock round, and the write-it-in-front-of-them ones.
   "Mock round",
-  /* Also not a subject: the hands-on ones, where the answer is code you write in
-     front of them rather than something you explain. */
   "Code tasks",
   "JavaScript",
   "Async & timers",
@@ -38,14 +30,14 @@ export type Topic = (typeof TOPICS)[number];
 
 const BY_TOPIC: Record<Topic, number[]> = {
   "Mock round": [52, 53, 54, 56, 57],
-  "Code tasks": [1, 2, 5, 16, 26, 28, 50, 51, 55],
-  JavaScript: [7, 14, 15, 27, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49],
-  "Async & timers": [3, 13, 45],
-  React: [18, 19, 25, 29, 30, 31, 32, 33, 36, 37, 38],
-  Performance: [8, 22, 23, 24, 34, 35],
+  "Code tasks": [1, 2, 5, 16, 26, 28, 50, 51, 55, 58],
+  JavaScript: [7, 14, 15, 27, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49, 60],
+  "Async & timers": [13, 45],
+  React: [18, 19, 25, 29, 30, 31, 32, 33, 36, 37, 38, 62, 63, 64, 66, 67, 68],
+  Performance: [8, 22, 23, 24, 34, 35, 65],
   "Browser & network": [9, 10, 11, 20],
   Security: [17],
-  "Architecture & tooling": [6, 12, 21],
+  "Architecture & tooling": [6, 12, 21, 59, 61, 69],
 };
 
 const topicOf = new Map(TOPICS.flatMap((topic) => BY_TOPIC[topic].map((n) => [n, topic] as const)));
@@ -66,7 +58,6 @@ function text(html: string) {
     .trim();
 }
 
-/** Shortens a teaser to tooltip length, cutting at a sentence where it can. */
 function brief(teaser: string) {
   const stop = teaser.search(/[.?!]\s/);
   const one = stop > 40 ? teaser.slice(0, stop + 1) : teaser;
@@ -81,18 +72,13 @@ function attr(value: string) {
     .replace(/>/g, "&gt;");
 }
 
-/* The answers cross-reference each other as "§26" in plain prose — a number that
-   points at nothing on a page where nothing is numbered. Each one becomes the
-   title of the section it means, carrying that section's teaser as a tooltip, so
-   the reference informs the reader in place instead of sending them away.
-   Second pass: a reference needs the title and teaser of a section that may not
-   have been parsed yet when it is read. */
-const XREF = /§(\d+)/g;
+/* A bare "§26" means nothing to a reader, so each one becomes the target's
+   title. Resolved in a second pass: the target may not be parsed yet. Both
+   spellings occur in the hand-authored document. */
+const XREF = /(?:§|&sect;)(\d+)/g;
 
 function linkXrefs(html: string, byNumber: Map<number, PrepSection>) {
-  /* Teasers say "§18" too, and a § inside the tooltip is the same unreadable
-     thing. Resolved up front — which also keeps XREF out of its own replace
-     callback, where the shared lastIndex would derail the outer pass. */
+  // Built up front: XREF inside its own replace callback would share lastIndex.
   const tips = new Map(
     [...byNumber].map(([n, section]) => [
       n,
@@ -102,23 +88,20 @@ function linkXrefs(html: string, byNumber: Map<number, PrepSection>) {
 
   return html.replace(XREF, (whole, digits) => {
     const target = byNumber.get(Number(digits));
-    // A reference to something the document no longer contains stays plain text.
     if (!target) return whole;
 
+    // Authored number, not `target.n`: they diverge wherever an id is skipped.
     return `<span class="xref" tabindex="0" aria-describedby="prep-xref-tip" data-tip="${tips.get(
-      target.n,
+      Number(digits),
     )}">${attr(target.title)}</span>`;
   });
 }
 
-/* Parses the whole authored document. The caller reads the file — this module is
-   imported by the client too, so it stays free of node:fs. */
+// The caller reads the file: the client imports this, so it stays free of node:fs.
 export function parseSections(raw: string): PrepSection[] {
   const sections = [...raw.matchAll(SECTION)].map(([, id, heading, body], i) => {
-    // The authored number: what BY_TOPIC lists and what a "§15" resolves to.
     const authored = Number(id.slice(1));
-    /* First prose block with something to say: a few sections open on a lead-in
-       as short as "Answer:", which makes a useless card. */
+    // Over 60 chars: some sections open on a lead-in as short as "Answer:".
     const blocks = [...body.matchAll(/<(?:p|div)(?:\s[^>]*)?>([\s\S]*?)<\/(?:p|div)>/g)].map((m) =>
       text(m[1]),
     );
@@ -135,6 +118,13 @@ export function parseSections(raw: string): PrepSection[] {
   });
 
   const byNumber = new Map(sections.map((section) => [Number(section.id.slice(1)), section]));
+  // Teasers render as text, so a reference is the bare title, not a span.
+  for (const section of sections) {
+    section.teaser = section.teaser.replace(
+      XREF,
+      (ref, digits) => byNumber.get(Number(digits))?.title ?? ref,
+    );
+  }
   for (const section of sections) {
     section.html = linkXrefs(section.html, byNumber);
   }

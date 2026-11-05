@@ -93,25 +93,6 @@ function myTimeout(fn, delay = 0, ...args) {
 <p>"<code>setInterval</code> drifts — the browser is free to run it late, and the error accumulates. For a real stopwatch I would store <code>startedAt</code> and <code>accumulated</code>, then compute <code>Date.now() - startedAt + accumulated</code> on every tick. The interval becomes a repaint trigger rather than the source of truth, so being late once costs nothing."</p>
 
 
-<h2 id="s3">3. Event loop — the trace</h2>
-
-<div class="say"><strong>Analogy (full version in §13):</strong> one cashier, two lines. The promise line must be <em>completely empty</em> before the cashier even glances at the timer line. Every "what is the output order?" question is that one rule applied.</div>
-
-<p>Memorize the order, then narrate it: <strong>all sync code → drain <em>all</em> microtasks (promise <code>.then</code>, <code>queueMicrotask</code>) → one macrotask (<code>setTimeout</code>) → drain microtasks again → repeat.</strong></p>
-
-<pre><code>console.log('1');
-setTimeout(() =&gt; console.log('2'), 0);
-Promise.resolve().then(() =&gt; console.log('3'));
-(async () =&gt; { console.log('4'); await null; console.log('5'); })();
-console.log('6');</code></pre>
-
-<p>→ <code>1, 4, 6, 3, 5, 2</code></p>
-
-<p><code>4</code> is sync (async function bodies run synchronously until the first <code>await</code>). <code>await null</code> suspends and the rest becomes a microtask, queued <em>after</em> the already-queued <code>3</code>. <code>2</code> is last because timers are macrotasks — <code>0ms</code> means "soonest available turn," not "now."</p>
-
-<p>If they ask about Node: <code>process.nextTick</code> jumps the microtask queue ahead of promises.</p>
-
-
 <h2 id="s5">5. A list you can add to and delete from</h2>
 
 <p class="ask">Render a list with a text input: typing and submitting adds an item, each row can be deleted.</p>
@@ -382,23 +363,40 @@ w.onmessage = e =&gt; setResult(e.data);
 <p>Also know: <strong>tree shaking</strong> (dead-code elimination; requires ESM <code>import</code>/<code>export</code> — does not work with CommonJS <code>require</code>), <strong>code splitting</strong> (§23), <strong>HMR</strong> in dev, <strong>source maps</strong> for prod debugging. Have an opinion ready: "Vite/esbuild/Turbopack are faster because they are Go/Rust and use native ESM in dev instead of bundling on every change — Webpack is still what most legacy enterprise builds run on."</p>
 
 
-<h2 id="s13">13. Event loop — the deep version</h2>
+<h2 id="s13">13. The event loop and execution order</h2>
+
+<p class="ask">Walk me through the event loop — and then tell me what this snippet prints, and why.</p>
 
 <div class="say"><strong>Analogy:</strong> a <strong>single cashier with two lines.</strong> The cashier (call stack) serves one customer at a time. The <strong>VIP line</strong> (microtasks: promises, <code>queueMicrotask</code>, <code>MutationObserver</code>) must be <em>completely empty</em> before the cashier looks at the <strong>regular line</strong> (macrotasks: <code>setTimeout</code>, <code>setInterval</code>, I/O, events). And after serving <em>one</em> regular customer, they check the VIP line again — and drain it fully.</div>
 
-<p>The loop, in order:</p>
+<p><strong>The one-line recital, for when they want it fast:</strong> all sync code → drain <em>all</em> microtasks → one macrotask → drain microtasks again → repeat. Every "what is the output order?" question is that rule applied (&sect;50).</p>
+
+<h3>The loop, in order</h3>
 <ol>
-  <li>Run the current script to completion (call stack empties).</li>
-  <li><strong>Drain the entire microtask queue</strong> — including microtasks queued <em>by</em> microtasks. (Infinite microtasks = permanent freeze; the loop never moves on.)</li>
+  <li>Run the current script to completion (the call stack empties).</li>
+  <li><strong>Drain the entire microtask queue</strong> — including microtasks queued <em>by</em> microtasks. Infinite microtasks is a permanent freeze: the loop never moves on.</li>
   <li>Take <strong>one</strong> macrotask. Run it.</li>
   <li>Drain microtasks again.</li>
-  <li>Render (<code>requestAnimationFrame</code> → style → layout → paint), roughly once per frame.</li>
+  <li>Render (<code>requestAnimationFrame</code> → style → layout → paint), roughly once per frame (&sect;20).</li>
   <li>Repeat.</li>
 </ol>
 
 <p>The render step at #5 is why <strong><code>setTimeout(fn, 0)</code> is not "now"</strong> — it is "after this task, its microtasks, and possibly a paint."</p>
 
-<p>Practice trace:</p>
+<h3>Trace one: where <code>await</code> lands</h3>
+
+<pre><code>console.log('1');
+setTimeout(() =&gt; console.log('2'), 0);
+Promise.resolve().then(() =&gt; console.log('3'));
+(async () =&gt; { console.log('4'); await null; console.log('5'); })();
+console.log('6');</code></pre>
+
+<p>→ <code>1, 4, 6, 3, 5, 2</code></p>
+
+<p><code>4</code> is sync: an async function body runs synchronously until its first <code>await</code>. That <code>await null</code> suspends, and the rest of the body becomes a microtask queued <em>after</em> the already-queued <code>3</code>. <code>2</code> is last because timers are macrotasks — <code>0ms</code> means "soonest available turn," not "now."</p>
+
+<h3>Trace two: a macrotask that queues a microtask</h3>
+
 <pre><code>console.log('A');
 setTimeout(() =&gt; { console.log('B'); Promise.resolve().then(() =&gt; console.log('C')); }, 0);
 Promise.resolve().then(() =&gt; { console.log('D'); setTimeout(() =&gt; console.log('E'), 0); });
@@ -407,9 +405,16 @@ console.log('G');</code></pre>
 
 <p>→ <strong><code>A, G, D, F, B, C, E</code></strong></p>
 
-<p>Walk it: <code>A</code>, <code>G</code> sync. Microtasks drain: <code>D</code> (which queues timer E), then <code>F</code>. First macrotask: <code>B</code>, which queues microtask <code>C</code> — drained immediately after that task. Then the next macrotask: <code>E</code>.</p>
+<p>Walk it out loud: <code>A</code> and <code>G</code> are sync. Microtasks drain — <code>D</code> (which queues timer <code>E</code>), then <code>F</code>. First macrotask: <code>B</code>, which queues microtask <code>C</code>, drained immediately after that task rather than waiting. Only then the next macrotask: <code>E</code>.</p>
 
-<p>Node adds: <code>process.nextTick</code> runs <strong>before</strong> the promise microtask queue, and macrotasks split into phases (timers → pending → poll → check/<code>setImmediate</code> → close).</p>
+<p>The point the second trace makes and the first does not: <strong>microtasks are drained after <em>every</em> macrotask</strong>, not once per loop — which is why <code>C</code> beats <code>E</code> even though <code>E</code>'s timer was queued first.</p>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Node differs in two ways worth naming:</strong> <code>process.nextTick</code> runs <em>before</em> the promise microtask queue, and macrotasks split into phases (timers → pending → poll → check/<code>setImmediate</code> → close).</li>
+  <li><strong>This is not event propagation.</strong> The event loop decides <em>when</em> a task runs; bubbling and capturing decide <em>which elements</em> get a turn at one click, all inside a single task (&sect;53).</li>
+  <li><strong>It is one thread.</strong> A long task blocks rendering and input, which is the whole reason for <code>requestAnimationFrame</code> over a <code>while</code> loop, and for Web Workers when the work is genuinely heavy (&sect;11).</li>
+</ul>
 
 
 <h2 id="s14">14. Deep vs shallow copy</h2>
@@ -533,20 +538,58 @@ Array.prototype.myMap = function (cb, thisArg) {
 <div class="say"><strong>The sentence that lands:</strong> "Client-side validation is UX. Server-side validation is security. Never trust the client."</div>
 
 
-<h2 id="s18">18. Virtual DOM — deep</h2>
+<h2 id="s18">18. Virtual DOM vs Real DOM</h2>
+
+<p class="ask">What is the difference between the Virtual DOM and the real DOM — and is the Virtual DOM faster?</p>
 
 <div class="say"><strong>Analogy:</strong> you are renovating a room. You do not demolish and rebuild it to move one chair. You draw a <strong>new blueprint</strong>, compare it to the old blueprint, and send the builders a list containing only "move the chair." The blueprints are cheap paper (JS objects); the builders are expensive (DOM writes that trigger layout and paint).</div>
 
-<p>The Virtual DOM is a tree of plain JS objects describing what the UI <em>should</em> look like:</p>
+<table>
+<tr><th></th><th>Real DOM</th><th>Virtual DOM</th></tr>
+<tr><td>What it is</td><td>The browser's live tree of the page</td><td>Plain JS objects describing what the UI <em>should</em> look like</td></tr>
+<tr><td>Who owns it</td><td>The browser</td><td>React, in memory</td></tr>
+<tr><td>Cost of a change</td><td>Can trigger style recalculation → layout → paint → composite (&sect;20)</td><td>An object allocation. No browser involved at all.</td></tr>
+<tr><td>Reading from it</td><td><code>offsetHeight</code> and friends can force a synchronous layout</td><td>Nothing to force — it is just data</td></tr>
+</table>
+
+<p>A virtual node is this cheap:</p>
 
 <pre><code>// &lt;button className="x"&gt;Hi&lt;/button&gt; compiles to roughly:
 { type: 'button', props: { className: 'x', children: 'Hi' } }</code></pre>
 
-<p>The cycle: state changes → your component function re-runs → returns a <strong>new</strong> VDOM tree → React diffs it against the previous tree → computes the minimum set of real DOM mutations → flushes them in one batch.</p>
+<p>Creating thousands of those costs nothing worth measuring. Touching the real DOM <em>once</em> can cost a layout pass over the whole document. <strong>That asymmetry is the entire justification for the design</strong> — it is cheaper to build a complete description twice and compare them than to guess which nodes to touch.</p>
 
-<p><strong>Why it is faster:</strong> it is <em>not</em> faster than hand-written optimal DOM code. It is faster than the naive alternative (re-render everything) and it <strong>batches</strong> writes to avoid layout thrashing. The real selling point is <strong>declarative programming with acceptable performance</strong> — you describe the end state instead of writing imperative transition steps.</p>
+<p>The cycle: state changes → your component function re-runs → returns a <strong>new</strong> VDOM tree → React diffs it against the previous tree (&sect;19) → computes the minimum set of real DOM mutations → flushes them in one batch.</p>
+
+<pre><code>// you write this — it looks like a full rebuild
+&lt;ul&gt;{items.map((i) =&gt; &lt;li key={i.id}&gt;{i.text}&lt;/li&gt;)}&lt;/ul&gt;
+
+// React commits this — one node touched
+li[3].textContent = 'new text'</code></pre>
+
+<h3>Is it faster? No — and say so</h3>
+
+<p><strong>The Virtual DOM is not faster than the DOM.</strong> Hand-written minimal DOM calls beat it every time, because there is a diffing step that direct code simply skips. Claiming otherwise is the answer that gets you caught. What it is faster than is the <em>naive</em> alternative — rebuilding everything on every change — and what it actually buys you is three things:</p>
+
+<ul>
+  <li><strong>Batching.</strong> Ten state updates become one DOM write, not ten.</li>
+  <li><strong>No layout thrashing.</strong> The classic read/write/read/write loop that forces a reflow per iteration cannot happen, because reads and writes are separated by construction (&sect;20).</li>
+  <li><strong>A declarative model.</strong> You write what the UI <em>is</em>, not which nodes to patch in what order.</li>
+</ul>
+
+<p>That last one is the real product. It is a correctness and maintainability win that happens to be <em>fast enough</em> — and framing it that way, rather than as a performance trick, is the senior answer.</p>
+
+<h3>Render is not a DOM update</h3>
+
+<p>The distinction that defuses most performance panic. A component re-rendering means a JS function ran and returned objects; if the new tree diffs clean against the old one, the real DOM is touched <em>zero</em> times. So "we have too many re-renders" is a claim about JS cost, not paint cost, and it is usually far cheaper than people assume. Profile before you memoize (&sect;34).</p>
+
+<h3>Why keys exist</h3>
+
+<p>Diffing a list is ambiguous without identity. <code>key={index}</code> renumbers every row when one is inserted at the top, so React patches the contents of all of them instead of moving nodes — and component state strands on the wrong row. <code>key={item.id}</code> lets it move nodes instead. &sect;19 is the diffing rules in full.</p>
 
 <p>Say this to show range: "Svelte and Solid skip the VDOM entirely — they compile to targeted updates at build time. The VDOM is a tradeoff, not a law of physics."</p>
+
+<div class="say"><strong>The one-liner:</strong> "The real DOM is the browser's live tree, where a change can cascade into layout and paint. The Virtual DOM is plain objects — free to build, free to throw away. React builds a new description, diffs it against the last one, and commits the minimum. It is not faster than optimal hand-written DOM code; it is fast enough while letting me describe the end state instead of the steps to get there."</div>
 
 
 <h2 id="s19">19. Diffing, reconciliation, Fiber</h2>
@@ -607,7 +650,7 @@ Array.prototype.myMap = function (cb, thisArg) {
 
 <p><strong>TTFB is the SSR tradeoff</strong> — the user waits for your server's data fetch before any bytes arrive. Static is always faster to first byte.</p>
 
-<p>App Router specifics, if they are on modern Next: <strong>Server Components are the default</strong> and never ship their JS to the client; <code>'use client'</code> opts a subtree into the browser bundle. <code>fetch</code> is cached by default with <code>revalidate</code>/<code>cache</code> options. <strong>Streaming SSR</strong> with Suspense sends the shell immediately and streams slow sections in as they resolve — which fixes the TTFB problem. Pages Router equivalents: <code>getServerSideProps</code> (SSR), <code>getStaticProps</code> + <code>revalidate</code> (SSG/ISR).</p>
+<p>App Router specifics, if they are on modern Next: <strong>Server Components are the default</strong> and never ship their JS to the client; <code>'use client'</code> opts a subtree into the browser bundle. <code>fetch</code> <strong>is no longer cached across requests by default</strong> — that changed, and repeating the old line dates you; identical GETs are only memoized within one render pass, and caching across requests is the <code>use cache</code> directive (&sect;65). <strong>Streaming SSR</strong> with Suspense sends the shell immediately and streams slow sections in as they resolve — which fixes the TTFB problem. Pages Router equivalents: <code>getServerSideProps</code> (SSR), <code>getStaticProps</code> + <code>revalidate</code> (SSG/ISR).</p>
 
 <p><strong>Hydration mismatch</strong> is the bug they will ask about: server and client render different HTML — usually <code>Date.now()</code>, <code>Math.random()</code>, or <code>localStorage</code>/<code>window</code> access during render. Fix by reading browser-only values in <code>useEffect</code>.</p>
 
@@ -866,7 +909,7 @@ function List({ items, filter }) {
 
 <div class="say"><strong>The key sentence:</strong> "Rendering in React does not mean touching the DOM. Rendering means calling the component to produce a description of the UI. Only the commit phase writes to the DOM — and React writes only the differences it found, not the whole tree."</div>
 
-<p><strong>The diffing rules that decide what survives:</strong> different element type at the same position → tear down the subtree and rebuild it; same type → keep the DOM node, patch the changed attributes; lists are matched by <strong>key</strong>, which is why index-as-key corrupts state when the list reorders. See §18 (Virtual DOM) and §19 (Fiber) for the deep version.</p>
+<p><strong>The diffing rules that decide what survives:</strong> different element type at the same position → tear down the subtree and rebuild it; same type → keep the DOM node, patch the changed attributes; lists are matched by <strong>key</strong>, which is why index-as-key corrupts state when the list reorders. See §18 and §19 for the deep version.</p>
 
 
 <h2 id="s31">31. useLayoutEffect</h2>
@@ -1650,7 +1693,7 @@ timeout</code></pre>
   <li><em>"Why doesn't <code>promise then</code> print?"</em> — <code>.then(onFulfilled)</code> with one argument has no <code>onRejected</code>, so a rejected promise skips it and propagates down the chain to the nearest rejection handler. <code>.then(f, g)</code> would have caught it in <code>g</code>; <code>.then(f).catch(g)</code> also catches errors thrown <em>inside</em> <code>f</code> — that is the difference between the two forms.</li>
   <li><em>"What if <code>reject()</code> became <code>resolve()</code>?"</em> → <code>start, promise constructor, final, promise then, promise second then, timeout</code> — the <code>.catch</code> is skipped because nothing rejected.</li>
   <li><em>"Remove the <code>.catch</code>?"</em> → unhandled rejection warning, and <code>"promise second then"</code> never prints.</li>
-  <li><em>"Where does <code>async/await</code> fit?"</em> — <code>await</code> is a microtask resumption; the code after an <code>await</code> behaves exactly like a <code>.then</code> callback. Related: §3 and §13.</li>
+  <li><em>"Where does <code>async/await</code> fit?"</em> — <code>await</code> is a microtask resumption; the code after an <code>await</code> behaves exactly like a <code>.then</code> callback. Related: §13.</li>
 </ul>
 
 
@@ -2000,3 +2043,744 @@ export const Button = forwardRef&lt;HTMLButtonElement, ButtonProps&gt;(
   <li><strong>Test behaviour, not markup.</strong> The click fires, the disabled button doesn't, the label points at the input. DOM snapshots only punish restyling.</li>
   <li><strong>One page showing every variant</strong> — Storybook or a plain <code>/ui</code> route. Side by side is how drift becomes visible.</li>
 </ul>
+
+
+<h2 id="s58">58. Write a curry function</h2>
+
+<p class="ask">Implement <code>curry</code> so that a three-argument function can also be called one argument at a time. Then show what it buys you.</p>
+
+<div class="say"><strong>Plain version:</strong> a machine that needs three ingredients normally refuses to start until it has all three. Currying makes it polite — hand it one now, one tomorrow, one next week. It remembers what it already holds, and bakes the moment it has enough.</div>
+
+<p><strong>What currying is.</strong> A transformation. It takes a function that wants all its arguments at once — <code>f(a, b, c)</code> — and returns one that collects them across however many calls you make, invoking the original only when it holds as many as the original declared. So <code>f(a, b, c)</code> becomes callable as <code>f(a)(b)(c)</code>, or <code>f(a, b)(c)</code>.</p>
+
+<p><strong>What it is for: partial application.</strong> Locking in some arguments now to make a specialised, reusable function for later. That is why it is everywhere in functional pipelines, where each step has to be a one-argument function.</p>
+
+<pre><code>function curry(fn) {
+  return function curried(...args) {
+    // Enough ingredients? fn.length is how many the original declared.
+    if (args.length &gt;= fn.length) return fn(...args);
+
+    // Not yet — hand back a machine that remembers what it got.
+    return (...next) =&gt; curried(...args, ...next);
+  };
+}
+
+const volume = (l, w, h) =&gt; l * w * h;
+const curried = curry(volume);
+
+curried(2, 3, 4);     // 24  — all at once
+curried(2)(3)(4);     // 24  — one at a time
+curried(2, 3)(4);     // 24  — mixed
+
+// The real payoff: pre-loaded specialists
+const areaOfBase = curried(2, 3);   // length and width locked in
+areaOfBase(10);                     // 60
+areaOfBase(20);                     // 120</code></pre>
+
+<p>Two things make it work, and naming both is the point of the exercise: <code>fn.length</code> — the number of parameters the original declared — tells you when you have enough, and the <strong>closure</strong> over <code>args</code> is what remembers the earlier calls (§7).</p>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Currying vs partial application.</strong> Currying strictly means one argument at a time, N functions deep. Partial application means some now, the rest later. The implementation above supports both, which is what people actually want — say so rather than pretending they are the same word.</li>
+  <li><strong><code>fn.length</code> lies about rest and defaults.</strong> <code>(a, b = 1) =&gt; …</code> and <code>(...args) =&gt; …</code> both report a length that stops counting at the first default or rest parameter, so an arity-driven curry fires early. Real libraries take the arity explicitly: <code>curry(fn, 3)</code>.</li>
+  <li><strong>Where you have actually seen it.</strong> Redux's <code>connect(mapState)(Component)</code>, <code>styled(Button)</code>, middleware shaped as <code>store =&gt; next =&gt; action</code>, and every <code>pipe()</code> in Ramda or lodash/fp.</li>
+</ul>
+
+<div class="say"><strong>Analogy:</strong> a coffee order you build up over time. You say "large" — the barista writes it down and makes nothing. "Oat milk" — still waiting. "Latte" — the order is complete, and only now does the machine run. And "large oat milk ___" is a half-written order you reuse every morning, filling in just the last word.</div>
+
+
+<h2 id="s59">59. JavaScript design patterns</h2>
+
+<p class="ask">Which design patterns do you actually use in JavaScript, and when would you reach for one?</p>
+
+<div class="say"><strong>Plain version:</strong> they are cooking techniques, not recipes. "Sauté", "braise", "emulsify" — nobody invents those on the spot, and saying "braise it" to another cook transmits a paragraph in one word. But a chef who braises the salad because braising is impressive has missed the point.</div>
+
+<p><strong>What a pattern is.</strong> A named, reusable solution to a problem that keeps recurring — a <em>description of structure</em>: which objects exist, who holds a reference to whom, who calls what. Not code you install. There is no <code>npm i singleton</code>.</p>
+
+<p><strong>What they buy you.</strong> Two things. They save you re-deriving a solution someone already got right, edge cases included. And they are <em>vocabulary</em> — "that's an observer" transmits a whole architecture in two words.</p>
+
+<p><strong>The JavaScript caveat worth leading with.</strong> Many classic Java-era patterns are nearly invisible here, because the language already has first-class functions, closures and plain objects. Strategy is "pass a function". Decorator is "wrap a function". Iterator is built in (§49). So the JS-relevant list is much shorter than the textbook's.</p>
+
+<pre><code>// MODULE — hide the internals, expose a door (closures, §7)
+const Counter = (() =&gt; {
+  let count = 0;                                  // truly private
+  return { inc: () =&gt; ++count, get: () =&gt; count };
+})();
+Counter.inc(); Counter.get();   // 1 — count is unreachable from outside
+
+// SINGLETON — exactly one instance, ever (config, DB pool, cache)
+const db = (() =&gt; {
+  let instance;
+  return { get: () =&gt; (instance ??= { conn: 'connected' }) };
+})();
+db.get() === db.get();          // true
+
+// FACTORY — one entry point decides WHICH object to build
+const makeUser = (role) =&gt; ({
+  admin:  { role, canDelete: true  },
+  viewer: { role, canDelete: false },
+}[role] ?? { role: 'guest', canDelete: false });
+
+// OBSERVER / PUB-SUB — "tell me when something happens"
+class Emitter {
+  #subs = {};
+  on(evt, fn)  { (this.#subs[evt] ??= []).push(fn); return () =&gt; this.off(evt, fn); }
+  off(evt, fn) { this.#subs[evt] = (this.#subs[evt] ?? []).filter(f =&gt; f !== fn); }
+  emit(evt, d) { (this.#subs[evt] ?? []).forEach(fn =&gt; fn(d)); }
+}
+const bus = new Emitter();
+const stop = bus.on('login', (u) =&gt; console.log('welcome', u));
+bus.emit('login', 'Ada');       // "welcome Ada"
+stop();                         // unsubscribe — the returned teardown matters
+
+// DECORATOR — wrap a function to add behaviour without editing it
+const withLog = (fn) =&gt; (...args) =&gt; {
+  console.log('calling', fn.name, args);
+  return fn(...args);
+};
+const sum = withLog((a, b) =&gt; a + b);
+sum(2, 3);                      // logs, then returns 5
+
+// STRATEGY — swap the algorithm, keep the caller identical
+const shipping = {
+  standard: (w) =&gt; w * 1.0,
+  express:  (w) =&gt; w * 2.5,
+  free:     ()  =&gt; 0,
+};
+const price = (kind, weight) =&gt; shipping[kind](weight);
+price('express', 4);            // 10</code></pre>
+
+<table>
+<tr><th>Pattern</th><th>Problem it solves</th><th>Where you have already seen it</th></tr>
+<tr><td>Module</td><td>Privacy and namespacing</td><td>ES modules, closures</td></tr>
+<tr><td>Singleton</td><td>One shared resource</td><td>Redux store (§37), a DB client</td></tr>
+<tr><td>Factory</td><td>Creation logic in one place</td><td><code>document.createElement</code></td></tr>
+<tr><td>Observer</td><td>Reacting to change</td><td><code>addEventListener</code>, RxJS, <code>useSyncExternalStore</code></td></tr>
+<tr><td>Decorator</td><td>Add behaviour without editing the source</td><td>Middleware, higher-order components</td></tr>
+<tr><td>Strategy</td><td>Interchangeable algorithms</td><td><code>sort(comparator)</code></td></tr>
+<tr><td>Proxy</td><td>Intercept property access</td><td><code>new Proxy()</code>, Vue 3 reactivity</td></tr>
+</table>
+
+<div class="say"><strong>The one-liner:</strong> "Patterns are vocabulary, not a goal. A Factory with one product, or a Singleton for a value that is never shared, is complexity I now maintain forever. The right answer is always 'this pattern, because this specific problem' — and in JavaScript half the catalogue collapses into passing a function."</div>
+
+
+<h2 id="s60">60. Prototypal inheritance vs classical inheritance</h2>
+
+<p class="ask">What is the difference between prototypal and classical inheritance — and which one does JavaScript have?</p>
+
+<div class="say"><strong>Plain version:</strong> a photocopied recipe card versus grandma's phone number. Classical inheritance hands you the copy — if she later fixes a typo, your copy stays wrong forever. Prototypal gives you the number: you do not hold the recipe at all, you call her when you need it, and her fix lands on your next call. If she does not know, she calls <em>her</em> mother. That is the prototype chain.</div>
+
+<p><strong>Classical</strong> (Java, C#, C++): the unit of reuse is a <strong>class</strong> — a blueprint, a different kind of thing from the objects it produces. <code>new</code> instantiates it and each instance gets its structure laid out from the blueprint. The hierarchy is fixed at compile time (§61); you cannot teach a class a new method while the program runs.</p>
+
+<p><strong>Prototypal</strong> (JavaScript): the unit of reuse is an ordinary <strong>object</strong>. Every object carries a hidden link, <code>[[Prototype]]</code>, pointing at another object. Read a property the engine cannot find locally and it follows that link, then the next, up the <strong>prototype chain</strong>, until it finds the property or reaches <code>null</code>. This is <em>delegation</em>: nothing is copied, the lookup happens live on every access — so mutating a prototype instantly changes every object already delegating to it.</p>
+
+<p><strong>And the answer to "which one does JS have".</strong> Only prototypal. <code>class</code> is syntax over the same chain: <code>typeof Dog === 'function'</code>, methods live once on <code>Dog.prototype</code> shared by all instances, and <code>extends</code> just points <code>Dog.prototype</code>'s prototype at <code>Animal.prototype</code>.</p>
+
+<pre><code>// --- the raw mechanism ---
+const animal = { eat() { return `${this.name} is eating`; } };
+
+const dog = Object.create(animal);          // dog's prototype IS animal
+dog.bark = function () { return 'Woof'; };
+
+const rex = Object.create(dog);
+rex.name = 'Rex';
+
+rex.eat();                                  // "Rex is eating" — found two links up
+Object.getPrototypeOf(rex) === dog;         // true
+rex.hasOwnProperty('eat');                  // false — borrowed, not copied
+
+// A live link, not a copy: teach the ancestor and everyone knows it now
+animal.sleep = function () { return `${this.name} is sleeping`; };
+rex.sleep();                                // "Rex is sleeping" — rex already existed
+
+// chain: rex -> dog -> animal -> Object.prototype -> null
+
+
+// --- `class` is the same chain, spelled differently ---
+class Animal {
+  constructor(name) { this.name = name; }
+  eat() { return `${this.name} is eating`; }
+}
+class Dog extends Animal {
+  eat() { return super.eat() + ' (noisily)'; }   // an explicit chain walk
+}
+
+new Dog('Rex').eat();                                       // "Rex is eating (noisily)"
+Object.getPrototypeOf(Dog.prototype) === Animal.prototype;  // true
+typeof Dog;                                                 // "function"</code></pre>
+
+<table>
+<tr><th></th><th>Classical</th><th>Prototypal</th></tr>
+<tr><td>Unit of reuse</td><td>A class — a blueprint, not an object</td><td>An ordinary object</td></tr>
+<tr><td>How reuse happens</td><td>Laid out at instantiation</td><td>A live delegation link</td></tr>
+<tr><td>Changeable while running</td><td>No</td><td>Yes — mutate the prototype</td></tr>
+<tr><td>Lookup</td><td>Resolved by the compiler</td><td>Walks the chain at call time</td></tr>
+<tr><td>In JavaScript</td><td>Only as <code>class</code> syntax</td><td>The actual engine</td></tr>
+</table>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Where the chain is already doing your work.</strong> <code>[].map</code> is not on your array — it is on <code>Array.prototype</code>, two links up, which is exactly why a polyfill installs there (§16) and why <code>Object.create(null)</code> gives you a dictionary with no inherited keys (§46).</li>
+  <li><strong>The cost of the live link.</strong> Mutating a built-in prototype changes it for every library in the page, and a user-supplied <code>__proto__</code> landing in a plain object is a real vulnerability class — one of the reasons to reach for a <code>Map</code> (§42).</li>
+  <li><strong>Own vs inherited.</strong> <code>hasOwnProperty</code> and <code>Object.keys</code> see only own properties; <code>in</code> and a <code>for…in</code> walk the chain. That difference is most of the trick questions here.</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "JavaScript has no classical inheritance. <code>class</code> is syntactic sugar over prototypal delegation — <code>typeof Dog === 'function'</code>, and <code>extends</code> just sets <code>Dog.prototype</code>'s prototype to <code>Animal.prototype</code>. Nothing is ever copied; lookups delegate up the chain at call time. I use <code>class</code> for readability and prefer composition over deep chains either way."</div>
+
+
+<h2 id="s61">61. Runtime vs build time vs compile time</h2>
+
+<p class="ask">Runtime, build time, compile time — are they the same thing? Where does the distinction actually bite you?</p>
+
+<div class="say"><strong>Plain version:</strong> a school play. <em>Compile time</em> is reading the script and fixing a line written in the wrong language — nobody is acting yet. <em>Build time</em> is the day before: printing scripts, painting sets, packing boxes; paint "Tuesday" on the backdrop and it says Tuesday forever. <em>Runtime</em> is the show, with an audience, where someone trips over a cable.</div>
+
+<p><strong>No — and they are nested, not parallel.</strong> Compile time is one step <em>inside</em> build time, and build time finishes entirely <em>before</em> runtime begins.</p>
+
+<ul>
+  <li><strong>Compile time</strong> — a tool reads your source and translates it. Types are checked, syntax validated, TypeScript and JSX rewritten into something the target can run (<code>tsc</code>, Babel, SWC). It knows only what is in the files. It has never seen a user.</li>
+  <li><strong>Build time</strong> — the whole pipeline behind <code>npm run build</code>, on your machine or in CI. It <em>contains</em> the compile step plus everything else needed to emit the deployable artifact: install, bundle, tree-shake, minify, hash filenames, inline env vars, pre-render static pages (§12). It runs once per deploy, and whatever data it reads is frozen into the output.</li>
+  <li><strong>Runtime</strong> — the program executing, for a real user, on a real device. The only phase that knows the clock, the request, who is asking, whether the network is up. It happens every single time someone uses the thing.</li>
+</ul>
+
+<p><strong>The JavaScript twist that confuses everyone.</strong> Plain JS has no separate compile phase — the engine parses and JIT-compiles milliseconds before executing, so a <code>SyntaxError</code> in the browser is a parse-time error that still happens during page load. A genuinely separate compile time exists in a JS project only <em>because</em> you added a toolchain.</p>
+
+<pre><code>// ===== PARSE TIME — plain JS, the engine reads the file first =====
+console.log('hello');
+const broken = ;          // SyntaxError
+// Output: nothing. Not even 'hello'. The file is rejected before line 1 runs.
+// Hoisting is this same phase: declarations processed before execution starts (§15).
+
+// ===== COMPILE TIME — cart.ts, via tsc/Babel/SWC =====
+const price: number = "10";   // TS2322, caught on your machine. No user affected.
+// But types are ERASED. The shipped JS is just: const price = "10";
+const user = JSON.parse(body) as User;   // `as` reassures the COMPILER only
+user.name.toUpperCase();                 // API changed? TypeError at RUNTIME.
+
+// ===== BUILD TIME — runs once, in CI =====
+const VERSION  = process.env.NEXT_PUBLIC_VERSION;   // inlined as a literal
+const BUILT_AT = new Date().toISOString();          // the BUILD's clock, frozen
+export async function generateStaticParams() {
+  const posts = await db.post.findMany();           // a DB hit at build time
+  return posts.map((p) =&gt; ({ slug: p.slug }));      // writes .html to disk
+}
+// Publish a post after the build? The static page will not know until you rebuild.
+
+// ===== RUNTIME — every request, every click, every user =====
+const now   = new Date();                      // the USER's clock
+const agent = req.headers.get('user-agent');   // who is asking, right now
+const cart  = await fetch('/api/cart');        // might 500, might time out
+undefinedThing.name;    // TypeError — runtime bugs are, by definition, only findable here</code></pre>
+
+<table>
+<tr><th></th><th>Compile time</th><th>Build time</th><th>Runtime</th></tr>
+<tr><td><strong>What happens</strong></td><td>Source is translated and type-checked</td><td>Install → compile → bundle → emit the artifact</td><td>The program executes</td></tr>
+<tr><td><strong>Who runs it</strong></td><td><code>tsc</code>, Babel, SWC</td><td><code>npm run build</code>, Vite, Webpack, CI</td><td>The browser, Node, the server</td></tr>
+<tr><td><strong>How often</strong></td><td>Once per build, or per keystroke in your editor</td><td>Once per deploy</td><td>Every request, load and click</td></tr>
+<tr><td><strong>Can see</strong></td><td>Your files, types, imports</td><td>Files, env vars, network and DB <em>as of that moment</em></td><td>The real user, request, clock, device, network</td></tr>
+<tr><td><strong>Typical errors</strong></td><td><code>TS2322</code>, <code>SyntaxError</code>, "cannot find name"</td><td>"Module not found", a missing env var</td><td><code>TypeError</code>, 500s, hydration mismatch</td></tr>
+<tr><td><strong>Who pays</strong></td><td>You, in seconds</td><td>CI minutes, once</td><td><strong>Your users</strong>, every time</td></tr>
+</table>
+
+<h3>Where this bites you, day to day</h3>
+<ul>
+  <li><strong>Env vars.</strong> <code>NEXT_PUBLIC_*</code> and <code>VITE_*</code> are inlined at build time — changing one in the hosting dashboard does nothing until you rebuild. Server-only vars are read at runtime, so a restart is enough.</li>
+  <li><strong>Rendering strategy.</strong> SSG renders at build time (fast, can be stale), SSR at runtime (always fresh, costs a server per request), ISR straddles both. Picking one <em>is</em> picking a phase (§21).</li>
+  <li><strong>TypeScript stops at the boundary.</strong> Types are compile-time only, so anything from an API, <code>localStorage</code> or a form arrives at runtime unchecked. That is why you validate at the trust boundary, at runtime, with Zod or a hand-written guard.</li>
+  <li><strong>Shift left.</strong> A bug caught by the compiler costs seconds; by a test, minutes; in CI, an hour; in production, an incident. Each earlier phase is roughly an order of magnitude cheaper — the whole reason typed toolchains exist on top of a language that does not need them.</li>
+</ul>
+
+<div class="say"><strong>Analogy:</strong> a restaurant. Compile time is proofreading the recipe card — it catches "add 3 of —" and "fold in the chair" without any cooking. Build time is the morning prep: chopping, portioning, printing tonight's menu, and whatever you print at 9am is what the room reads all night. Runtime is dinner service: a real person sits down, says "no peanuts", the till goes offline, and table 6 orders the thing you prepped out of.</div>
+
+
+<h2 id="s62">62. forwardRef — and why React 19 retired it</h2>
+
+<p class="ask">A form needs to focus the <code>&lt;Input&gt;</code> component you wrote after a failed validation. Why doesn't passing it a <code>ref</code> work, and how do you make it work?</p>
+
+<div class="say"><strong>Plain version:</strong> a ref is a street address for one DOM node. Point it at a real <code>&lt;input&gt;</code> and React hands the address over. Point it at <em>your</em> component and React has no idea which element inside you meant — the input, the wrapper, the label — so it refuses to guess. <code>forwardRef</code> is the child pointing at one of them and saying "this one."</div>
+
+<p><strong>The problem.</strong> Refs land on real host elements. On your own function component there is nothing for React to resolve them to, so in React 18 the ref simply stays <code>null</code> and you get a warning for your trouble.</p>
+
+<pre><code>&lt;input ref={myRef} /&gt;      // myRef.current = the &lt;input&gt; node
+&lt;MyInput ref={myRef} /&gt;    // React 18: null, plus "Function components cannot be given refs"</code></pre>
+
+<p><strong>The fix</strong> is the child nominating the element the ref should reach:</p>
+
+<pre><code>const MyInput = forwardRef((props, ref) =&gt; (
+  &lt;div className="wrapper"&gt;
+    &lt;input ref={ref} {...props} /&gt;   {/* the ref lands here */}
+  &lt;/div&gt;
+));</code></pre>
+
+<p>Now <code>myRef.current</code> is the actual <code>&lt;input&gt;</code>. The ref passes <em>through</em> the component to the node the child picked — which is the whole purpose in one line: <strong>make your component behave like a native element for whoever uses it.</strong></p>
+
+<h3>React 19 made it a plain prop</h3>
+
+<p>You no longer need the wrapper at all. <code>ref</code> is an ordinary prop on function components, so forwarding is just destructuring:</p>
+
+<pre><code>function MyInput({ ref, ...props }) {
+  return &lt;input ref={ref} {...props} /&gt;;
+}</code></pre>
+
+<p><code>forwardRef</code> still works and is not an error — it is deprecated, with a codemod to unwrap it. Saying "in React 19 I would just take <code>ref</code> as a prop, and <code>forwardRef</code> only survives in code written before 19" is the answer that dates you correctly. Note it does <em>not</em> change class components, which have always received instance refs natively.</p>
+
+<h3>When to forward</h3>
+<p>When a parent legitimately needs to do something to the DOM inside your component:</p>
+<ul>
+  <li><strong>Focus</strong> — a form calling <code>.focus()</code> on your <code>&lt;Input&gt;</code> after a validation error.</li>
+  <li><strong>Scroll</strong> — scrolling to a <code>&lt;Section&gt;</code> or a list item.</li>
+  <li><strong>Measure</strong> — reading the width or height of your <code>&lt;Card&gt;</code>.</li>
+  <li><strong>Media</strong> — <code>.play()</code> and <code>.pause()</code> on your <code>&lt;VideoPlayer&gt;</code>.</li>
+  <li><strong>Library integration</strong> — anything that wants a real node: focus traps, drag and drop, animation libraries, popover positioning.</li>
+</ul>
+<p>The general signal: you are building a <strong>reusable leaf component that wraps a single native element</strong> — <code>&lt;Button&gt;</code>, <code>&lt;Input&gt;</code>, <code>&lt;TextArea&gt;</code> in a design system. Those should always forward, because consumers will expect them to work like the real thing. It is the most commonly missed piece in a homegrown library (§57).</p>
+
+<h3>When not to</h3>
+<ul>
+  <li><strong>The node is only needed inside the child</strong> — a local <code>useRef</code> is the whole answer (§25). Nothing crosses the boundary.</li>
+  <li><strong>You want to trigger child <em>behaviour</em>, not touch its DOM</strong> — use props. <code>&lt;Modal isOpen /&gt;</code> beats a ref whose <code>.open()</code> you call; the first is state React can see, the second is a side channel around it.</li>
+  <li><strong>Big composite components</strong> — forwarding one node out of a whole <code>&lt;DataTable&gt;</code> rarely means anything. Expose props.</li>
+</ul>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong><code>useImperativeHandle</code></strong> is the companion, and the answer when you want <code>.focus()</code> reachable but not <code>.innerHTML</code>: it replaces the node with a curated API of your own. That is §63.</li>
+  <li><strong>Refs are populated after commit</strong>, so the ref is <code>null</code> on the first render pass no matter how many components it crossed — read it in an effect or a handler, never during render (§25).</li>
+  <li><strong>React 19 ref cleanup.</strong> A ref callback can now return a cleanup function, which runs on unmount instead of React calling it again with <code>null</code>. It is the fix for the observer-attached-to-a-ref pattern leaking.</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "<code>ref</code> doesn't work on a component because React cannot know which element inside you meant. <code>forwardRef</code> lets the child nominate one, which is what makes a design-system <code>&lt;Input&gt;</code> behave like a real input. In React 19 that ceremony is gone — <code>ref</code> is just a prop — and if what I actually want is to change the child's behaviour rather than touch its DOM, the answer was a prop all along."</div>
+
+
+<h2 id="s63">63. useImperativeHandle</h2>
+
+<p class="ask">You have a <code>&lt;Modal&gt;</code> that the parent needs to open and close. How would you expose that, and when is a ref the right call instead of props?</p>
+
+<div class="say"><strong>Plain version:</strong> forwarding a ref (§62) hands the parent the keys to the building. <code>useImperativeHandle</code> hands them a <strong>reception desk</strong> instead — three buttons you chose, and the rooms behind it stay yours.</div>
+
+<p><strong>What it does.</strong> It replaces what a ref gives the parent. Instead of your DOM node, they get an object you define:</p>
+
+<pre><code>useImperativeHandle(ref, () =&gt; ({ /* your API */ }), [deps]);</code></pre>
+
+<pre><code>function Modal({ ref, children }) {
+  const dialogRef = useRef(null);
+
+  useImperativeHandle(ref, () =&gt; ({
+    open:  () =&gt; dialogRef.current.showModal(),
+    close: () =&gt; dialogRef.current.close(),
+  }), []);
+
+  return &lt;dialog ref={dialogRef}&gt;{children}&lt;/dialog&gt;;
+}
+
+// parent
+const modalRef = useRef(null);
+&lt;button onClick={() =&gt; modalRef.current.open()}&gt;Open&lt;/button&gt;
+&lt;Modal ref={modalRef}&gt;…&lt;/Modal&gt;</code></pre>
+
+<p><code>modalRef.current</code> is <code>{ open, close }</code> — the <code>&lt;dialog&gt;</code> stays private. The parent cannot reach its <code>innerHTML</code>, restyle it, or unmount a child out from under you, because it was never handed the node.</p>
+
+<h3>When a ref is the right call</h3>
+<p>For <strong>actions that happen at a moment, not state</strong>: <code>.focus()</code>, <code>.play()</code>, <code>.scrollTo()</code>, <code>editor.insertText()</code>. The test is whether "it already happened" is a thing you would store — nobody keeps <code>hasBeenFocused</code> in state. Or to expose three safe methods instead of a whole DOM node, which is the design-system case (§57).</p>
+
+<h3>When it is the wrong call</h3>
+<ul>
+  <li><strong>When it is really state — use props.</strong> <code>&lt;Modal isOpen={open} onClose={close} /&gt;</code> beats <code>modalRef.current.open()</code>: the first is something React can see, re-render from, and serialise into a URL. The second is a side channel around it, and two sources of truth for "is it open" is the bug that follows.</li>
+  <li><strong>When you just need to pass a node through</strong> — that is plain forwarding, and in React 19 it is one line: <code>function Input({ ref }) { return &lt;input ref={ref} /&gt;; }</code> (§62).</li>
+</ul>
+
+<h3>The gotcha</h3>
+<p>The factory is a closure like any other, so <strong>a method that reads state needs that state in the dep array</strong> or it keeps returning the value from the render that created it:</p>
+
+<pre><code>const [text, setText] = useState('');
+
+useImperativeHandle(ref, () =&gt; ({
+  submit: () =&gt; send(text),       // reads `text` from THIS render
+}), [text]);                      // omit this and submit() always sends ''</code></pre>
+
+<p>The alternative is the usual escape hatch — keep the value in a ref and read <code>.current</code> at call time, so there is nothing to go stale (§25). Same stale-closure mechanic as everywhere else (§7).</p>
+
+<div class="say"><strong>The one-liner:</strong> "It is an escape hatch, and I treat it as one. Props are how a parent changes what a child <em>is</em>; an imperative handle is for making something <em>happen</em> — focus, play, scroll — where there is no state to hold. If I find myself exposing more than two or three methods, that is usually state that wanted to be a prop."</div>
+
+
+<h2 id="s64">64. The component lifecycle</h2>
+
+<p class="ask">Walk me through a component's lifecycle. Where does each phase live in a function component, and how does that map to the class methods?</p>
+
+<div class="say"><strong>Plain version:</strong> a component only ever does three things — <strong>arrive, change, leave.</strong> Mount, update, unmount. Everything you know about hooks is a rule about which of those three a given line belongs to.</div>
+
+<p>In a class, those three phases were three methods you wrote in three places. In a function component there are no lifecycle methods at all — there is the render body, and there are effects whose dependency array decides which phase they belong to.</p>
+
+<pre><code>function Thing({ id }) {
+  const [data, setData] = useState(null);      // 1. init — mount only
+
+  console.log('render');                       // 2. every render — pure, no side effects
+
+  useEffect(() =&gt; {
+    const c = new AbortController();
+    fetch(`/api/${id}`, { signal: c.signal })  // 3. after paint
+      .then((r) =&gt; r.json()).then(setData);
+
+    return () =&gt; c.abort();                    // 4. cleanup — before the next run, and on unmount
+  }, [id]);
+
+  return &lt;div&gt;{data?.name}&lt;/div&gt;;
+}</code></pre>
+
+<table>
+<tr><th>Phase</th><th>What happens</th></tr>
+<tr><td><strong>Mount</strong></td><td>render → DOM created → effect runs</td></tr>
+<tr><td><strong>Update</strong></td><td>render → DOM patched → cleanup of the old effect → new effect runs</td></tr>
+<tr><td><strong>Unmount</strong></td><td>cleanup runs, nothing else</td></tr>
+</table>
+
+<p>The middle row is the one people get wrong: an update does not "re-run the effect", it <strong>tears the old one down first</strong>. That is why a fetch keyed on <code>[id]</code> aborts the in-flight request for the previous <code>id</code> before starting the next — and why a stale response can never overwrite a fresh one.</p>
+
+<h3>The dependency array <em>is</em> the lifecycle</h3>
+
+<pre><code>useEffect(fn, [])        // mount only, plus the unmount cleanup
+useEffect(fn, [id])      // mount, then whenever id changes
+useEffect(fn)            // every render</code></pre>
+
+<p>There is no separate "on mount" API because mount is just the render with no previous dependency array to compare against — which is why every effect runs on the first pass regardless of its deps. §51 is that question asked as a trace.</p>
+
+<h3>The class mapping they usually want</h3>
+<table>
+<tr><th>Class</th><th>Hook</th></tr>
+<tr><td><code>componentDidMount</code></td><td><code>useEffect(fn, [])</code></td></tr>
+<tr><td><code>componentDidUpdate</code></td><td><code>useEffect(fn, [dep])</code></td></tr>
+<tr><td><code>componentWillUnmount</code></td><td>the returned cleanup</td></tr>
+<tr><td><code>shouldComponentUpdate</code></td><td><code>React.memo</code> (§29)</td></tr>
+</table>
+
+<p><strong>The point to make out loud:</strong> hooks did not rename the three methods, they <em>collapsed</em> them. One effect is the setup <em>and</em> teardown of a single concern, sitting together; the class version split one feature — subscribe here, resubscribe there, unsubscribe over there — across three methods, which is exactly how the unsubscribe went missing.</p>
+
+<h3>Two rules</h3>
+<ol>
+  <li><strong>Render must be pure.</strong> No fetching, no timers, no DOM writes, no ref reads (§25). React may call your render twice, throw the result away, or run it for a screen nobody sees — so the body must be a function of props and state and nothing else. Side effects go in effects or event handlers.</li>
+  <li><strong>Every subscription needs its cleanup.</strong> Listener, interval, socket, observer, in-flight fetch — return the undo. Missing cleanup is the number one React memory leak, and §28 is that question on its own.</li>
+</ol>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Strict Mode double-firing is not a bug.</strong> In development React mounts, unmounts and remounts once, so effects run twice. It is deliberately checking that your cleanup actually works — a listener you never remove shows up as a duplicate immediately instead of in production three weeks later. Production runs it once.</li>
+  <li><strong>Effects run after paint, not after render.</strong> If you need to measure or mutate the DOM before the user sees the frame, that is <code>useLayoutEffect</code> (§31) — and it blocks the paint, which is the price.</li>
+  <li><strong>The one phase with no hook.</strong> <code>componentDidCatch</code> has no equivalent — error boundaries still require a class component, which is why <code>react-error-boundary</code> exists to wrap one for you.</li>
+  <li><strong>"Lifecycle" is the old mental model.</strong> The React team's framing is synchronisation: an effect does not fire "on update", it keeps something outside React in sync with your props and state, and the deps say what it is synced to. Saying that is what separates someone who learned hooks from someone who translated class methods into them.</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "Mount, update, unmount — and in a function component I don't write three methods for them, I write one effect per concern whose dependency array decides when it re-syncs and whose return value tears it down. Render stays pure; anything that touches the outside world goes in the effect."</div>
+
+
+<h2 id="s65">65. Making a data-heavy page fast</h2>
+
+<p class="ask">A page makes a lot of API calls and feels slow. Walk me through what you would look for, in order.</p>
+
+<div class="say"><strong>Plain version:</strong> six questions, and they are in priority order. Am I waiting for things one at a time? Am I asking twice for what I already have? Am I asking from the wrong place? Am I keeping answers I no longer want? Am I asking for more than I use? And only last: does it <em>feel</em> as slow as it is?</div>
+
+<p>The first five reduce real latency. The sixth reduces <em>perceived</em> latency. Fix them in that order — no amount of optimistic UI rescues a page making nine sequential requests.</p>
+
+<h3>1. Waterfalls — requests queuing for no reason</h3>
+
+<pre><code>const user  = await getUser(id);    // 300ms
+const posts = await getPosts(id);   // +300ms
+const prefs = await getPrefs(id);   // +300ms → 900ms total</code></pre>
+
+<p>None of those need the one before it. They ran sequentially because you wrote <code>await</code> three times. <code>Promise.all</code> makes it 300ms — and §45 is the whole question of which combinator to pick when some of them fail.</p>
+
+<p><strong>The version that hides from you is component-level.</strong> The parent fetches, renders a child, the child fetches, renders a grandchild, the grandchild fetches. Every nesting level is another round trip and no single file looks wrong:</p>
+
+<pre><code class="plain">Page       → fetch user     300ms
+ └ Posts    → fetch posts    600ms
+    └ Tags   → fetch tags     900ms</code></pre>
+
+<p>Fix it by hoisting the fetches to where the data is first <em>known</em>, or by starting all of them before awaiting any. The tell in a profile: a staircase in the network panel rather than a block.</p>
+
+<h3>2. Don't fetch what you already have</h3>
+
+<p>Five components each calling <code>useEffect(() =&gt; fetch('/api/user/42'))</code> is five identical requests on mount, and five more when you navigate away and back. Nothing remembers. A cache keyed by what you asked for collapses them:</p>
+
+<pre><code>const { data } = useQuery({
+  queryKey: ['user', id],
+  queryFn: () =&gt; getUser(id),
+  staleTime: 60_000,     // treat as fresh for a minute
+});</code></pre>
+
+<p>The key does the work: five components asking for <code>['user', 42]</code> share one request, and the answer is reused for a minute, so revisits are instant. <strong>Do not hand-roll this.</strong> Deduping, staleness, background revalidation and cancellation <em>are</em> the feature — TanStack Query and SWR exist because it is harder than it looks (§34).</p>
+
+<h3>3. Move the fetch to the server</h3>
+
+<p>A client-side fetch is browser → your API → your database → back. The browser leg is the slow, unpredictable one, over a network you do not control; the database leg is a few milliseconds inside one datacenter. You are paying the expensive hop to go and get data that was already sitting next to the server.</p>
+
+<pre><code>// Server Component — runs on the server
+async function Page({ params }) {
+  const user = await getUser(params.id);   // same datacenter as the DB
+  return &lt;Profile user={user} /&gt;;
+}</code></pre>
+
+<p>The client receives rendered output instead of a loading state plus a request to make: no spinner, no round trip, and no API key in the browser (§21).</p>
+
+<p><strong>The Next 16 specifics, stated precisely</strong> — this is where people repeat advice that expired two majors ago:</p>
+<ul>
+  <li>Identical <code>fetch</code> GETs are <strong>memoized within a single render pass</strong>, across layouts, pages and <code>generateMetadata</code> — so you can fetch in the component that needs the data instead of drilling props. Route Handlers are excluded; they are not part of the component tree. For non-<code>fetch</code> work (an ORM call), <code>React.cache</code> does the same thing, also per request.</li>
+  <li><strong><code>fetch</code> is not cached across requests by default, and it blocks the render until it resolves.</strong> Caching across requests is the <code>use cache</code> directive, which needs <code>cacheComponents: true</code> turned on. Otherwise, wrap the slow component in <code>&lt;Suspense&gt;</code> and stream it.</li>
+</ul>
+
+<h3>4. Cancel stale requests</h3>
+
+<p>Responses can arrive out of order, and the last one to land wins rather than the one that matches what the user typed. Typing "rea" fires three:</p>
+
+<pre><code class="plain">t=0    "r"    → A
+t=100  "re"   → B
+t=200  "rea"  → C
+
+t=250  C responds → correct results
+t=400  B responds → overwrites with results for "re"
+t=900  A responds → overwrites with results for "r"</code></pre>
+
+<p>The input says "rea" and the list shows results for "r". The fix is the effect cleanup aborting the previous request, which works because <strong>React runs the old cleanup before the new effect</strong> (§64) — so only the newest request can ever reach <code>setResults</code>. That is the pattern in §28.</p>
+
+<p><strong>Debounce is a different fix for a different problem, and the distinction is the good answer here:</strong> abort stops <em>wrong</em> results, debounce stops <em>ten</em> requests for a ten-letter word. Use both — wait for a pause, fire once, abort if they start typing again.</p>
+
+<h3>5. Fetch less</h3>
+
+<ul>
+  <li><strong>Over-fetching fields.</strong> The endpoint returns <code>{ id, name, avatar, bio, address, loginHistory: [...200] }</code> at 8KB and you render an avatar and a name. On a 50-row list that is 400KB to use about 10KB — and parsing the JSON is often slower than downloading it. Fix with <code>?fields=</code>, a slimmer endpoint, or a GraphQL query.</li>
+  <li><strong>Fetching everything, then slicing.</strong> <code>const all = await fetch('/api/orders')</code> then <code>all.slice(0, 20)</code> works at 100 rows and dies at 100,000. Paginate server-side, and <strong>prefer a cursor to <code>page=5</code></strong>: offsets break when rows are inserted mid-scroll, so users see duplicates or skip items. (Virtualizing the rows is the <em>rendering</em> half of this — §35.)</li>
+  <li><strong>Blocking paint on invisible data.</strong> A dashboard that awaits all six widgets shows a spinner for 2s when the top widget was ready at 200ms. Load what is on screen, fetch the rest on scroll.</li>
+</ul>
+
+<h3>6. Only now: make it feel instant</h3>
+
+<p>Honest UI feels broken. Click "Add to cart" → spinner → 400ms of nothing → the item appears. Nothing is wrong, but dead UI reads as lag, and users click again. So show the expected result immediately and correct it if the server disagrees:</p>
+
+<pre><code>const [optimisticItems, addOptimistic] = useOptimistic(
+  items,                                        // server-confirmed truth
+  (current, newItem) =&gt; [...current, newItem],  // how to fake the next state
+);
+
+async function handleAdd(item) {
+  addOptimistic(item);   // renders immediately, no await
+  await addItem(item);   // the real request, in the background
+}</code></pre>
+
+<p><strong>Why it is a hook and not just another <code>useState</code>:</strong> when the real <code>items</code> updates, React throws the optimistic value away and renders the truth. If the request fails, <code>items</code> never changes and the fake item disappears on its own — there is no rollback code to write. Add a toast so the failure is not silent. The gotcha: the optimistic value only holds while a transition or action is pending, so <code>addOptimistic</code> belongs inside one, not in a bare handler.</p>
+
+<p><code>&lt;Suspense&gt;</code> is the same trade at page scale:</p>
+
+<pre><code>&lt;Header /&gt;                          {/* paints at 100ms */}
+&lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;
+  &lt;SlowRevenueChart /&gt;              {/* streams in at 800ms */}
+&lt;/Suspense&gt;</code></pre>
+
+<p>Total latency is unchanged. The user spent 700ms of it reading and clicking instead of watching a spinner — which is also why this moves LCP and INP while the server timings stay flat (§8).</p>
+
+<div class="say"><strong>The one-liner:</strong> "I look for waterfalls first, because they are the only bug here that multiplies — three sequential 300ms calls is 900ms of nothing. Then dedupe with a cache keyed by the request, move what I can to the server so the slow hop disappears, abort what is stale, and trim what I never render. Optimistic UI and Suspense come last, because perceived speed cannot rescue a page that genuinely makes nine round trips."</div>
+
+
+<h2 id="s66">66. What is JSX?</h2>
+
+<p class="ask">What is JSX, and what does the browser actually receive?</p>
+
+<div class="say"><strong>Plain version:</strong> it looks like HTML sitting inside JavaScript. It isn't. The browser never sees a line of it — a build step rewrites it into ordinary function calls before it ships, and those calls return plain objects.</div>
+
+<p><strong>JSX is syntax sugar for a function call.</strong> That is the entire answer; everything else follows from it.</p>
+
+<pre><code>// what you write
+&lt;button className="primary" onClick={save}&gt;Save&lt;/button&gt;
+
+// what actually runs
+jsx('button', { className: 'primary', onClick: save, children: 'Save' })
+
+// what that returns — the virtual DOM node from §18
+{ type: 'button', props: { className: 'primary', onClick: save, children: 'Save' } }</code></pre>
+
+<p>So <strong>JSX is an expression that evaluates to an object describing UI.</strong> In this project the rewrite is done by SWC inside Turbopack, Next 16's default bundler — which makes it a build-time step, not a runtime one (§61).</p>
+
+<h3>The mental model that matters</h3>
+
+<p>HTML is a document. JSX is a function call that returns a <em>description</em> of UI — so it is a first-class value. You can store it in a variable, pass it as a prop, return it from a branch, and map over a list of them:</p>
+
+<pre><code>const badge = status === 'live' ? &lt;Live /&gt; : &lt;Draft /&gt;;
+return &lt;Card header={badge}&gt;{rows.map((r) =&gt; &lt;Row key={r.id} {...r} /&gt;)}&lt;/Card&gt;;</code></pre>
+
+<p>None of that is possible in a template language, where you get whatever control-flow directives the template author shipped. It is possible here because it was always just JavaScript — and that is the actual argument for JSX, not the fact that it looks familiar.</p>
+
+<h3>The rules, and the reason behind each</h3>
+<table>
+<tr><th>Rule</th><th>Why</th></tr>
+<tr><td>Capitalized means a component, lowercase means a host element</td><td><code>&lt;div&gt;</code> compiles to the <em>string</em> <code>'div'</code>; <code>&lt;Card&gt;</code> compiles to the <em>variable</em> <code>Card</code>. Lowercase a component name and React looks for an HTML tag of that name.</td></tr>
+<tr><td><code>className</code>, <code>htmlFor</code></td><td>Props are JavaScript object keys, and <code>class</code>/<code>for</code> are reserved words.</td></tr>
+<tr><td><code>{}</code> takes expressions, not statements</td><td>It is an argument position. <code>if</code> and <code>for</code> are statements, which is why you see <code>&amp;&amp;</code>, ternaries and <code>.map()</code> instead.</td></tr>
+<tr><td>One root element per return</td><td>A function returns one value. Fragments (<code>&lt;&gt;…&lt;/&gt;</code>) are the wrapper that adds no DOM node.</td></tr>
+<tr><td><code>{userInput}</code> is escaped</td><td>It is passed as a value, never parsed as markup — which is why React is XSS-safe by default and why <code>dangerouslySetInnerHTML</code> is the deliberate hole (§17).</td></tr>
+</table>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Why you no longer <code>import React</code>.</strong> The old classic transform emitted <code>React.createElement(...)</code>, so <code>React</code> had to be in scope in every file. React 17 introduced the automatic runtime: the compiler imports <code>jsx</code> from <code>react/jsx-runtime</code> itself. <code>React.createElement</code> still works and is still what JSX <em>means</em> — the import just stopped being your job.</li>
+  <li><strong>JSX is not React's property.</strong> It is a syntax any compiler can target — Preact, Solid and Vue all consume it, and you can set the factory per file. It is a transform with a convention, not a framework feature.</li>
+  <li><strong>What <code>{...r}</code> compiles to:</strong> <code>Object.assign</code>-style spread into the props object, which is why a later prop wins over an earlier one and why spreading unknown props onto a host element can leak invalid DOM attributes.</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "JSX is sugar for a function call that returns a plain object. The browser never sees it — SWC or Babel rewrites it at build time. That matters because it means markup is an ordinary JavaScript value I can store, pass and compute with, which is the thing templates cannot do."</div>
+
+
+<h2 id="s67">67. Props vs state</h2>
+
+<p class="ask">What is the difference between props and state, and how do you decide which one a piece of data should be?</p>
+
+<div class="say"><strong>Plain version:</strong> a component is a function. <strong>Props are the arguments</strong> — handed in by whoever called you, and not yours to change. <strong>State is a variable that survives between calls</strong> — yours, and changing it is what asks for a new render.</div>
+
+<pre><code>function Greeting({ name }) {               // props — given to you, read-only
+  const [count, setCount] = useState(0);    // state — owned by you
+}</code></pre>
+
+<table>
+<tr><th></th><th>Props</th><th>State</th></tr>
+<tr><td>Owned by</td><td>The parent</td><td>This component</td></tr>
+<tr><td>Writable here</td><td>No</td><td>Yes, through the setter</td></tr>
+<tr><td>Survives a re-render</td><td>Comes in fresh each time</td><td>Persists for the component's life</td></tr>
+<tr><td>Changing it re-renders</td><td>The parent's change does</td><td>Yes</td></tr>
+</table>
+
+<h3>The flow is one-way</h3>
+
+<p><strong>Data down, events up.</strong> A child cannot change a prop. What it can do is call a function the parent handed it, and let the parent change its own state:</p>
+
+<pre><code>function Parent() {
+  const [n, setN] = useState(0);
+  return &lt;Child count={n} onAdd={() =&gt; setN(n + 1)} /&gt;;
+}
+
+function Child({ count, onAdd }) {
+  return &lt;button onClick={onAdd}&gt;{count}&lt;/button&gt;;
+}
+</code></pre>
+
+<p>That constraint is the whole reason a React app is debuggable: when a value is wrong, it came from exactly one place — the component that owns it. Every escape hatch from one-way flow (a ref that mutates a child, §63) buys convenience by giving that up.</p>
+
+<h3>Which one do I use?</h3>
+<ol>
+  <li><strong>Can I compute it from what I already have? → neither.</strong> Derive it during render. <code>const total = items.length</code> needs no state, and a <code>useState</code> that mirrors a computed value is a second source of truth you now have to keep in sync.</li>
+  <li><strong>Does the parent decide it? → prop.</strong></li>
+  <li><strong>Does it change because of something that happens <em>in here</em>? → state.</strong></li>
+</ol>
+
+<p>If two siblings need the same state, it moves up to their nearest common parent — that is lifting state, and §36 is the full escalation ladder from <code>useState</code> to a store.</p>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Don't copy a prop into state.</strong> <code>const [value, setValue] = useState(props.value)</code> reads the prop <em>once</em>, on mount, and silently ignores every later change — the most common version of this bug in real code. If you need the prop to reset the local state, pass a different <code>key</code> and let React remount the component; that is what <code>key</code> is for beyond lists.</li>
+  <li><strong>The three re-render causes</strong> fall straight out of this: your state changed, your props changed, or your parent re-rendered (§22).</li>
+  <li><strong>"Read-only" means the object too.</strong> Mutating <code>props.user.name</code> or pushing into a state array does not throw, it just fails to re-render and corrupts the parent's data. Replace, never mutate — the same rule Redux makes explicit (§37).</li>
+  <li><strong>Controlled vs uncontrolled inputs is this exact question</strong> applied to form fields: is the value state you own, or does the DOM keep it (§32)?</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "Props are a function's arguments, state is a variable that persists across calls. Data flows down and events flow up, so a child never writes a prop — it calls a callback and the owner updates its own state. And before either, I ask whether the value can just be derived, because the cheapest state is the state that does not exist."</div>
+
+
+<h2 id="s68">68. useTransition vs useDeferredValue</h2>
+
+<p class="ask">A search box sits above 10,000 rows and filtering takes 200ms. Typing feels broken. What are <code>useTransition</code> and <code>useDeferredValue</code> doing about it, and which one would you reach for?</p>
+
+<div class="say"><strong>Plain version:</strong> React will not show you half a render. So the one slow thing on the page holds the fast thing hostage — the letter you typed waits for 10,000 rows it has nothing to do with. These two hooks are how you tell React which of the two you actually care about seeing first.</div>
+
+<h3>Why it feels broken</h3>
+
+<p>React's default is one state change → do all the work → paint once:</p>
+
+<pre><code class="plain">press "a" → render input (1ms) → render list (200ms) → paint both</code></pre>
+
+<p>The letter appears at 201ms, because React refuses to paint a half-finished render — a tree where the input says "a" and the list still says the previous query is inconsistent, and avoiding that is the entire point of the commit phase being atomic (§19). Type fast and the keyboard feels dead: <strong>the list's slowness is charged to the input.</strong></p>
+
+<p>Marking the list as non-urgent splits the two:</p>
+
+<pre><code class="plain">press "a" → render input → paint "a"          ← you see it immediately
+          → then render the list in the background
+press "b" → throw away the half-done "a" list, start over for "ab"</code></pre>
+
+<p><strong>The discarding is the feature, not a cost.</strong> That half-rendered list was going to be wrong the moment the next key landed. Type "abc" quickly and the list renders once, for "abc" — which is why this is possible at all: the render phase is interruptible and produces nothing the user has seen yet (§19).</p>
+
+<h3>Two hooks, one mechanism</h3>
+
+<p>The difference is only what you hand them.</p>
+
+<p><strong><code>useTransition</code> — you wrap the update.</strong> For when you own the <code>setState</code> call:</p>
+
+<pre><code>const [isPending, startTransition] = useTransition();
+
+setQuery(value);                           // urgent
+startTransition(() =&gt; setList(value));     // not urgent</code></pre>
+
+<p><strong><code>useDeferredValue</code> — you wrap the value.</strong> For when you do not own the setter — it arrived as a prop, or out of a library hook:</p>
+
+<pre><code>const laggy = useDeferredValue(query);
+
+&lt;input value={query} /&gt;         // always current
+&lt;HeavyList query={laggy} /&gt;     // catches up when there is time</code></pre>
+
+<table>
+<tr><th>You have…</th><th>Reach for</th><th>Because</th></tr>
+<tr><td>The <code>setState</code> call</td><td>Either — <code>useTransition</code> edges it</td><td>It also hands you <code>isPending</code> for a spinner or a dimmed list</td></tr>
+<tr><td>Only a value</td><td><code>useDeferredValue</code></td><td>There is no update to wrap</td></tr>
+</table>
+
+<h3>It is not a debounce</h3>
+
+<p><strong>A debounce skips work; these do all of it.</strong> Every value still gets rendered eventually — the only thing that changed is what paints first. So the two fix different complaints, and saying which is which is the answer they are listening for:</p>
+
+<ul>
+  <li><strong>Too many requests</strong> — ten fetches for a ten-letter word → debounce (§26). Deferring would still fire all ten.</li>
+  <li><strong>Typing feels laggy</strong> — the work is local rendering, not network → these.</li>
+</ul>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong>Neither makes the render faster.</strong> The 200ms is still spent; it just stops blocking the keystroke. If the list is slow enough that it never catches up, this is lipstick — <strong>render fewer rows</strong> is the real fix, and virtualization is how (§35, §54).</li>
+  <li><strong><code>useDeferredValue</code> needs the expensive child memoized to pay off.</strong> The deferred pass re-renders with the old value, so if the heavy subtree re-renders anyway on the urgent pass, you moved nothing off the critical path. <code>React.memo</code> on the list is what makes the split real (§29).</li>
+  <li><strong>Updates inside <code>startTransition</code></strong> are marked by the synchronous run of that callback, so a <code>setState</code> after an <code>await</code> inside it lands as urgent again — React 19's async transitions (Actions) are what handle that case properly, and that is also the machinery behind <code>useOptimistic</code> (§65).</li>
+  <li><strong>Small API details worth knowing:</strong> <code>useDeferredValue(value, initialValue)</code> takes an optional initial value for the first render, and React also exports a standalone <code>startTransition</code> for use outside a component, where you have no place to put the hook.</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "Same mechanism, different handle: <code>useTransition</code> wraps the update when I own the setter and gives me <code>isPending</code>; <code>useDeferredValue</code> wraps the value when I only have the value. Both keep an urgent paint off the slow path by letting React interrupt and discard the non-urgent render. Neither is a debounce — they do all the work, they just reorder what you see — and neither substitutes for not rendering 10,000 rows."</div>
+
+
+<h2 id="s69">69. Dynamic routing</h2>
+
+<p class="ask">What is dynamic routing, and what does it buy you over declaring the routes yourself?</p>
+
+<div class="say"><strong>Plain version:</strong> you do not write a page per blog post. You write <em>one</em> page and tell the router "the last part of the URL is a variable, hand it to me." One file serves ten thousand addresses.</div>
+
+<p><strong>What it is.</strong> A route with a <em>parameter</em> in it rather than a fixed path. The segment is declared as a placeholder, the router matches any value in that position, and your page receives the matched value and fetches whatever it names. In the App Router the placeholder is a folder in square brackets:</p>
+
+<pre><code>// app/blog/[slug]/page.tsx  →  /blog/anything
+export default async function Page({ params }: PageProps&lt;"/blog/[slug]"&gt;) {
+  const { slug } = await params;      // params is a Promise — await it
+  const post = await getPost(slug);
+  return &lt;article&gt;{post.title}&lt;/article&gt;;
+}</code></pre>
+
+<table>
+<tr><th>Folder</th><th>Matches</th><th><code>params</code></th></tr>
+<tr><td><code>[slug]</code></td><td>One segment</td><td><code>{ slug: 'a' }</code></td></tr>
+<tr><td><code>[...slug]</code></td><td>One or more</td><td><code>{ slug: ['a', 'b'] }</code></td></tr>
+<tr><td><code>[[...slug]]</code></td><td>Zero or more</td><td><code>{ slug: undefined }</code> at the base path</td></tr>
+</table>
+
+<h3>The benefits, in the order they matter</h3>
+<ol>
+  <li><strong>One template instead of N files.</strong> Content scales without the codebase scaling. Adding a post is a data change, not a deploy of a new file.</li>
+  <li><strong>The URL becomes the state.</strong> Every item gets a real, shareable, bookmarkable address that survives a refresh — the same argument as routing over a boolean flag (&sect;56), applied to data rather than views.</li>
+  <li><strong>It can still be static.</strong> <code>generateStaticParams</code> lists the known values at build time, so dynamic routes prerender to HTML and keep SSG's speed (&sect;21). Dynamic <em>segment</em> does not mean dynamic <em>rendering</em> — that is the distinction interviewers are usually probing.</li>
+  <li><strong>Per-route code splitting</strong> comes free: the template's bundle loads once, not once per item (&sect;23).</li>
+</ol>
+
+<h3>If they push</h3>
+<ul>
+  <li><strong><code>params</code> is a Promise</strong> and so is <code>searchParams</code>. Destructuring them synchronously is the most common migration break coming from older Next.</li>
+  <li><strong>Route param vs query string.</strong> A param identifies the <em>resource</em> (<code>/posts/42</code>); a query string carries <em>view options</em> on it (<code>?sort=new</code>). Filters, sorts and pagination belong in <code>searchParams</code>, not in the path.</li>
+  <li><strong>Without <code>generateStaticParams</code></strong> the values are unknown at build, so params are runtime data: the page renders on request, and under Cache Components a param read needs a <code>&lt;Suspense&gt;</code> boundary to stream behind (&sect;65).</li>
+  <li><strong>Validate the param.</strong> It is user input in the URL, so an unknown value should be a deliberate <code>notFound()</code>, never an unhandled throw — and never interpolated into a query or a filesystem path unchecked (&sect;17).</li>
+</ul>
+
+<div class="say"><strong>The one-liner:</strong> "A dynamic route is one file with a placeholder segment, so a single template serves every item and each one gets its own real URL. The part people miss is that it is orthogonal to rendering: with <code>generateStaticParams</code> those routes prerender at build and are as fast as hand-written static pages."</div>

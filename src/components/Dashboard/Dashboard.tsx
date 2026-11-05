@@ -141,78 +141,88 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Its own titled rule, like every other block here — without one this pair
+          runs straight into the capstones and reads as part of that section. */}
+      <section className={styles.feature}>
+        <h2 className={styles.featureLabel}>
+          Apply It
+          <span className={styles.featureRule} aria-hidden="true" />
+        </h2>
+        <div className={styles.banners}>
+          <Link href="/walkthrough" className={styles.banner} data-tone="method">
+            <span className={styles.bannerIcon} aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="m13.2 6.8-2.1 4.3-4.3 2.1 2.1-4.3 4.3-2.1Z" />
+              </svg>
+            </span>
+            <span>
+              <span className={styles.bannerEyebrow}>The Method</span>
+              <span className={styles.bannerTitle}>A 7-step walkthrough</span>
+              <span className={styles.bannerSub}>
+                The order to work in when you&rsquo;re handed a blank page and a vague problem.
+              </span>
+            </span>
+          </Link>
+
+          <Link href="/case-studies" className={styles.banner} data-tone="cases">
+            <span className={styles.bannerIcon} aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                <rect x="3" y="4.5" width="14" height="4" rx="1" />
+                <path d="M4.5 8.5v6a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-6" />
+                <path d="M8.5 11.5h3" />
+              </svg>
+            </span>
+            <span>
+              <span className={styles.bannerEyebrow}>Case studies</span>
+              <span className={styles.bannerTitle}>System blueprints</span>
+              <span className={styles.bannerSub}>
+                The same trade-offs, met by real teams at real scale.
+              </span>
+            </span>
+          </Link>
+        </div>
+      </section>
       {capstone && (
         <section className={styles.feature}>
           <h2 className={styles.featureLabel}>
             {capstone.title}
             <span className={styles.featureRule} aria-hidden="true" />
           </h2>
-          {capstone.concepts.map(({ concept, status }) => (
-            <Link
-              key={concept.slug}
-              href={`/concepts/${concept.slug}`}
-              className={styles.banner}
-              data-tone="capstone"
-            >
-              <span className={styles.bannerIcon} aria-hidden="true">
-                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
-                  <path d="M3.5 16.5h13" />
-                  <rect x="4" y="11" width="3.2" height="4" rx="0.6" />
-                  <rect x="8.4" y="7.5" width="3.2" height="7.5" rx="0.6" />
-                  <rect x="12.8" y="4" width="3.2" height="11" rx="0.6" />
-                </svg>
-              </span>
-              <span className={styles.bannerBody}>
-                <span className={styles.bannerEyebrow}>{concept.label ?? capstone.title}</span>
-                <span className={styles.bannerTitle}>{concept.title}</span>
-                <span className={styles.bannerSub}>{concept.description}</span>
-              </span>
-              {/* Not aria-hidden like the grid's badge: here the link keeps its own
-                  visible label, so the status can just be read out alongside it. */}
-              {status !== "todo" && (
-                <span className={styles.badge} data-status={status}>
-                  {STATUS_LABEL[status]}
+          <div className={styles.banners}>
+            {capstone.concepts.map(({ concept, status }) => (
+              <Link
+                key={concept.slug}
+                href={`/concepts/${concept.slug}`}
+                className={styles.banner}
+                data-tone="capstone"
+              >
+                <span className={styles.bannerIcon} aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                    <path d="M3.5 16.5h13" />
+                    <rect x="4" y="11" width="3.2" height="4" rx="0.6" />
+                    <rect x="8.4" y="7.5" width="3.2" height="7.5" rx="0.6" />
+                    <rect x="12.8" y="4" width="3.2" height="11" rx="0.6" />
+                  </svg>
                 </span>
-              )}
-            </Link>
-          ))}
+                <span className={styles.bannerBody}>
+                  <span className={styles.bannerEyebrow}>{concept.label ?? capstone.title}</span>
+                  <span className={styles.bannerTitle}>{concept.title}</span>
+                  <span className={styles.bannerSub}>{concept.description}</span>
+                </span>
+                {/* Not aria-hidden like the grid's badge: here the link keeps its own
+                    visible label, so the status can just be read out alongside it. */}
+                {status !== "todo" && (
+                  <span className={styles.badge} data-status={status}>
+                    {STATUS_LABEL[status]}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
         </section>
       )}
 
-      <div className={styles.banners}>
-        <Link href="/walkthrough" className={styles.banner} data-tone="method">
-          <span className={styles.bannerIcon} aria-hidden="true">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
-              <circle cx="10" cy="10" r="7.5" />
-              <path d="m13.2 6.8-2.1 4.3-4.3 2.1 2.1-4.3 4.3-2.1Z" />
-            </svg>
-          </span>
-          <span>
-            <span className={styles.bannerEyebrow}>The Method</span>
-            <span className={styles.bannerTitle}>A 7-step walkthrough</span>
-            <span className={styles.bannerSub}>
-              The order to work in when you&rsquo;re handed a blank page and a vague problem.
-            </span>
-          </span>
-        </Link>
-
-        <Link href="/case-studies" className={styles.banner} data-tone="cases">
-          <span className={styles.bannerIcon} aria-hidden="true">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
-              <rect x="3" y="4.5" width="14" height="4" rx="1" />
-              <path d="M4.5 8.5v6a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-6" />
-              <path d="M8.5 11.5h3" />
-            </svg>
-          </span>
-          <span>
-            <span className={styles.bannerEyebrow}>Case studies</span>
-            <span className={styles.bannerTitle}>System blueprints</span>
-            <span className={styles.bannerSub}>
-              The same trade-offs, met by real teams at real scale.
-            </span>
-          </span>
-        </Link>
-      </div>
 
       <section className={styles.feature}>
         <h2 className={styles.featureLabel}>

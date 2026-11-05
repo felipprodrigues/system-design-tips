@@ -63,12 +63,15 @@ export const groups: ConceptGroup[] = [
     ],
   },
   {
-    /* One page, not a queue of them: the whole point is that the ten pieces only
-       make sense in one continuous story, and each one already has its own concept
-       to link out to. Last in the order, so nothing here is a forward reference. */
+    /* Capstones, not a queue: each one is a single continuous story that only works
+       read end to end, and every piece inside it already has its own concept to link
+       out to. Two stories, two axes — one grows the same architecture from a hundred
+       users to a million, the other walks one message across all ten backend pieces.
+       Last in the order, so nothing here is a forward reference. */
     title: "System Design 101",
     concepts: [
-      { slug: "scaling-a-photo-app", number: 1, minutes: 18, label: "Capstone", related: ["horizontal-vs-vertical-scaling", "caching-strategies", "database-sharding-partitioning"], title: "Scaling a Photo App to a Million Users", description: "A practical system design walkthrough: growing one photo-sharing app from a single server to a million users, and the break that makes each of the ten pieces necessary." },
+      { slug: "scaling-a-photo-app", number: 1, minutes: 18, label: "Capstone", related: ["backend-around-one-message", "horizontal-vs-vertical-scaling", "caching-strategies", "database-sharding-partitioning"], title: "Scaling a Photo App to a Million Users", description: "A practical system design walkthrough: growing one photo-sharing app from a single server to a million users, and the break that makes each of the ten pieces necessary." },
+      { slug: "backend-around-one-message", number: 2, minutes: 19, label: "Capstone", related: ["scaling-a-photo-app", "communication-patterns", "api-design", "architectural-styles"], title: "How a Backend Is Built Around One Message", description: "Follow one chat message end to end and watch a backend assemble around it: server, API, database, cache, WebSockets, message queue, load balancer, containers, architecture and observability — each one arriving when the last hits its limit." }
     ],
   },
 ];

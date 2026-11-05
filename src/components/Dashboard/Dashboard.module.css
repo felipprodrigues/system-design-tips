@@ -336,6 +336,10 @@
 
 /* Each banner sets --tone, and everything tinted inside it reads from that, so a
    banner is one variable away from a different colour. */
+.feature .banners {
+  margin-top: 0;
+}
+
 .banner {
   display: flex;
   align-items: center;
@@ -410,8 +414,14 @@
   line-height: 1.2;
 }
 
+/* These double as the concept's meta description, which is written for search
+   results, not for a half-width card — so the card takes the first three lines
+   and the rest is a click away. Only the capstones ever run past three. */
 .bannerSub {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
   margin-top: 4px;
   font-size: 12.5px;
   line-height: 1.5;
@@ -468,19 +478,12 @@
   background: var(--sd-border-strong);
 }
 
-/* The banner language of The Method and Case Studies, one step louder: full width,
-   and its own hue, so the roadmap ends on a destination rather than a row.
-   Violet because the other two already own blue and gold — three banners, three
-   hues, told apart without reading them. */
+/* The banner language of The Method and Case Studies, in its own hue. Violet
+   because the other two already own blue and gold — three banners, three hues,
+   told apart without reading them. */
 .banner[data-tone="capstone"] {
   --tone: var(--sd-violet);
   --tone-wash: var(--sd-violet-wash);
-  padding: 20px 22px;
-  /* Unlike the half-width pair, the tint carries the whole way across rather than
-     fading out at 64% — at full width a wash that dies mid-card just looks unfinished. */
-  background:
-    linear-gradient(100deg, var(--tone-wash), color-mix(in srgb, var(--tone-wash) 45%, transparent)),
-    var(--sd-surface);
 }
 
 /* Takes the slack between icon and status badge; without it the long sub line

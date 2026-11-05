@@ -446,7 +446,7 @@ deep.config.theme = 'blue';               // original untouched</code></pre>
 </table>
 
 <pre><code>console.log(a); var a = 1;   // undefined — hoisted &amp; initialized
-console.log(b); let b = 1;   // ReferenceError: Cannot access 'b' before initialization
+console.log(b); let b = 1;   // Hoisted but NOT initialized: Throws "ReferenceError: Cannot access 'b' before initialization"
 
 if (true) { var x = 1; let y = 2; }
 

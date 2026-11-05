@@ -117,7 +117,6 @@ export default function Concept05() {
           Turning vague product goals into concrete, quantifiable engineering constraints.
         </p>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             System design begins with translating vague product goals into{" "}
@@ -131,7 +130,6 @@ export default function Concept05() {
           </p>
         </div>
 
-        {/* Functional vs Non-Functional */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Defining Requirements
@@ -178,7 +176,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* NFR Levers */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Three Levers
@@ -205,7 +202,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Rule of 86,400 */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Back-of-the-Envelope
@@ -219,7 +215,6 @@ export default function Concept05() {
             </p>
           </div>
 
-          {/* BOTE pipeline */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "24px 20px", marginBottom: 16 }}>
             <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 20, textAlign: "center" }}>
               100M DAU × 10 requests/day
@@ -245,7 +240,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Storage */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Back-of-the-Envelope
@@ -281,7 +275,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Overhead */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Trade-offs
@@ -297,7 +290,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Flow diagram */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Putting It Together
@@ -319,7 +311,6 @@ export default function Concept05() {
                 </div>
               ))}
 
-              {/* Branch: calculate */}
               <div style={{ display: "flex", gap: 24, marginBottom: 8 }}>
                 <div className="sd-stack-center">
                   <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-teal)", borderRadius: 8, padding: "10px 16px", fontSize: 12, fontWeight: 600, color: "var(--sd-teal)", textAlign: "center" }}>
@@ -359,7 +350,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Bandwidth */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Back-of-the-Envelope
@@ -393,7 +383,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Summary */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Summary
@@ -407,7 +396,6 @@ export default function Concept05() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -416,7 +404,6 @@ export default function Concept05() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
           BOTE math gives you a starting order of magnitude, not a guarantee. It tells you whether an architecture is plausible before you spend months building it.

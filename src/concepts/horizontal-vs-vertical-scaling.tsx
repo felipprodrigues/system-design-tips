@@ -143,7 +143,6 @@ export default function Concept01() {
           Understanding how systems grow — and the trade-offs each approach demands.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Big Idea
@@ -155,7 +154,6 @@ export default function Concept01() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Why This Exists
@@ -164,7 +162,6 @@ export default function Concept01() {
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Intro */}
         <div style={{ marginBottom: 32, display: "flex", flexDirection: "column", gap: 12, fontSize: 15, lineHeight: 1.8 }}>
           <p>
             Every system eventually faces a growth problem: traffic increases, latency climbs, and the infrastructure that worked yesterday starts to buckle. The fundamental question becomes —{" "}
@@ -178,12 +175,11 @@ export default function Concept01() {
             <strong className="sd-strong">horizontal scaling</strong> (scaling out). Both solve the same problem, but they do so with very different architectures, cost curves, and failure modes.
           </p>
           <p>
-            Most real-world systems don't pick one and ignore the other — they start vertical for simplicity, and shift horizontal as demand outgrows what a single box can handle. Understanding{" "}
+            Most real-world systems don’t pick one and ignore the other — they start vertical for simplicity, and shift horizontal as demand outgrows what a single box can handle. Understanding{" "}
             <span className="sd-hl">why</span> that transition happens, and what it costs, is what this concept is about.
           </p>
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Think Of It Like
@@ -200,9 +196,7 @@ export default function Concept01() {
           </div>
         </div>
 
-        {/* Two-column cards */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
-          {/* Vertical */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: 24 }}>
             <h2 style={{ fontSize: 17, fontWeight: 600, marginBottom: 12 }}>
               <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: "rgba(106, 118, 163,0.15)", color: "var(--sd-amber)", marginRight: 10, verticalAlign: "middle" }}>Vertical</span>
@@ -224,7 +218,6 @@ export default function Concept01() {
             </ul>
           </div>
 
-          {/* Horizontal */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: 24 }}>
             <h2 style={{ fontSize: 17, fontWeight: 600, marginBottom: 12 }}>
               <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: "rgba(127, 147, 242,0.12)", color: "var(--sd-teal)", marginRight: 10, verticalAlign: "middle" }}>Horizontal</span>
@@ -232,7 +225,7 @@ export default function Concept01() {
             </h2>
             <p style={{ fontSize: 14, lineHeight: 1.75, marginBottom: 10 }}>Add more machines to your resource pool. A load balancer distributes traffic across nodes.</p>
             <p style={{ fontSize: 14, lineHeight: 1.75, marginBottom: 14 }}>
-              State can't live in memory locally — you must go{" "}
+              State can’t live in memory locally — you must go{" "}
               <span style={{ borderBottom: "1px dashed var(--sd-teal)", color: "var(--sd-teal)", cursor: "help" }} title="Each request carries all the info needed. No session stored on the server. Any node can handle any request.">
                 stateless
               </span>.
@@ -252,7 +245,6 @@ export default function Concept01() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Key Terms
@@ -269,7 +261,6 @@ export default function Concept01() {
           </div>
         </div>
 
-        {/* Flow diagram */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Shape Of It
@@ -290,17 +281,14 @@ export default function Concept01() {
                 </marker>
               </defs>
 
-              {/* client to load balancer */}
               <path d="M 176 235 H 262" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
 
-              {/* load balancer fans out to every server */}
               <path d="M 450 235 H 500" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" />
               <path d="M 500 75 V 395" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" />
               <path d="M 500 75 H 532" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
               <path d="M 500 235 H 532" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
               <path d="M 500 395 H 532" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
 
-              {/* every server talks to the one shared store */}
               <path d="M 710 75 H 805 V 215 H 822" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
               <path d="M 710 235 H 822" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
               <path d="M 710 395 H 805 V 255 H 822" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-fleet-arrow)" />
@@ -339,7 +327,6 @@ export default function Concept01() {
           </div>
         </div>
 
-        {/* Comparison table */}
         <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
             <thead>
@@ -367,7 +354,6 @@ export default function Concept01() {
           </table>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Seen In The Wild
@@ -376,7 +362,6 @@ export default function Concept01() {
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Common Mistakes
@@ -385,7 +370,6 @@ export default function Concept01() {
           <MarkerList mark="✕" color="var(--sd-danger)" bg="var(--sd-danger-wash)" items={commonMistakes} columns={2} />
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Try It Yourself
@@ -397,7 +381,6 @@ export default function Concept01() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>
@@ -407,7 +390,7 @@ export default function Concept01() {
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="When to make the switch">
           <p className="sd-text-sm">
-            Vertical scaling hits a ceiling defined by physical hardware constraints and the law of diminishing returns. These are the four signals that tell you it's time to go horizontal.
+            Vertical scaling hits a ceiling defined by physical hardware constraints and the law of diminishing returns. These are the four signals that tell you it’s time to go horizontal.
           </p>
           {[
             { num: "1", title: "Economic Efficiency Declines", body: "Vertical scaling follows an exponential cost curve. Top-tier hardware often costs more than running multiple commodity instances. When the cost-per-unit-of-performance exceeds a distributed cluster, pivot." },
@@ -416,13 +399,13 @@ export default function Concept01() {
             { num: "4", title: "Managed Service Limits", body: "Cloud providers enforce hard limits on single-instance types — disk IOPS, bandwidth caps, connection limits. When you hit these quotas, you are forced to shard or replicate horizontally." },
           ].map((item) => <PItem key={item.num} {...item} />)}
           <div className="sd-panel-note">
-            Start vertical for simplicity. Once you're within <strong className="sd-hl">60–70% of maximum vertical capacity</strong>, begin the shift. Delaying forces a painful re-architecture under pressure.
+            Start vertical for simplicity. Once you’re within <strong className="sd-hl">60–70% of maximum vertical capacity</strong>, begin the shift. Delaying forces a painful re-architecture under pressure.
           </div>
         </PanelSection>
 
         <PanelSection title="When you've hit the ceiling">
           <p className="sd-text-sm">
-            Hitting the limit of the largest available instance — the <strong className="sd-strong">"God Machine" strategy</strong> — is a failure state for any system expecting growth. You have four architectural levers.
+            Hitting the limit of the largest available instance — the <strong className="sd-strong">“God Machine” strategy</strong> — is a failure state for any system expecting growth. You have four architectural levers.
           </p>
           {[
             { num: "A", title: "Functional Decomposition (Microservices)", body: "Break a CPU/RAM-bound monolith into discrete services. Each runs in its own process space on its own cluster, bypassing the memory limit of a single host." },
@@ -431,7 +414,7 @@ export default function Concept01() {
             { num: "D", title: "Asynchronous Processing", body: "Move heavy work to background workers via a message queue (Kafka, RabbitMQ). Decoupling computation from the request-response cycle reclaims CPU and RAM for primary threads." },
           ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-teal)" numBg="rgba(127, 147, 242,0.12)" />)}
           <div style={{ background: "rgba(74, 81, 112,0.06)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            Without these strategies prepared, hitting the ceiling triggers a <strong style={{ color: "var(--sd-red)" }}>"stop-the-world" emergency</strong> — forced read-replica rollouts while racing to refactor for a sharded architecture.
+            Without these strategies prepared, hitting the ceiling triggers a <strong style={{ color: "var(--sd-red)" }}>“stop-the-world” emergency</strong> — forced read-replica rollouts while racing to refactor for a sharded architecture.
           </div>
         </PanelSection>
 
@@ -446,7 +429,7 @@ export default function Concept01() {
             { num: "4", title: "Sticky Sessions vs. Global Context", body: "Server-side sessions force sticky sessions — load balancer affinity to a single node. If that node dies, users lose state. The fix (externalizing state) just makes your cache cluster the new bottleneck." },
           ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-amber)" numBg="rgba(106, 118, 163,0.12)" />)}
           <div className="sd-panel-note">
-            If you can't externalize state, your "horizontal" cluster is just a group of nodes waiting on a single shared bottleneck — <strong className="sd-hl">zero throughput gain, multiplied complexity</strong>.
+            If you can’t externalize state, your “horizontal” cluster is just a group of nodes waiting on a single shared bottleneck — <strong className="sd-hl">zero throughput gain, multiplied complexity</strong>.
           </div>
         </PanelSection>
 
@@ -461,7 +444,7 @@ export default function Concept01() {
             { num: "4", title: "Hidden Latency", body: "Distributed systems add network hops and serialization overhead. A slow algorithm plus cross-node coordination can make the system feel slower than the original monolith." },
           ].map((item) => <PItem key={item.num} {...item} numColor="var(--sd-green)" numBg="rgba(157, 176, 247,0.12)" />)}
           <div style={{ background: "rgba(157, 176, 247,0.06)", borderRadius: 0, padding: "12px 14px", fontSize: 12, lineHeight: 1.65, color: "var(--sd-text)" }}>
-            <strong style={{ color: "var(--sd-green)" }}>Optimize before you distribute.</strong> Profile hot paths and fix time complexity first. If hardware can't solve your latency, you have an <strong className="sd-hl">algorithmic issue, not a scaling issue</strong>.
+            <strong style={{ color: "var(--sd-green)" }}>Optimize before you distribute.</strong> Profile hot paths and fix time complexity first. If hardware can’t solve your latency, you have an <strong className="sd-hl">algorithmic issue, not a scaling issue</strong>.
           </div>
         </PanelSection>
       </SidePanel>

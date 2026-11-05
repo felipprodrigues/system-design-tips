@@ -117,7 +117,6 @@ export default function Concept04() {
           Distribute traffic, eliminate single points of failure, and scale without downtime.
         </p>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             Load balancing is the process of{" "}
@@ -133,7 +132,6 @@ export default function Concept04() {
           </p>
         </div>
 
-        {/* The Pattern */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             The Big Picture
@@ -141,14 +139,13 @@ export default function Concept04() {
           <h2 className="sd-h2">The Basic Shape of Every Web App</h2>
 
           <div className="sd-prose">
-            <p>Clients make requests. Servers handle them. Put a load balancer in front and that traffic spreads across many identical servers, so one box going down doesn't take the whole app down with it.</p>
+            <p>Clients make requests. Servers handle them. Put a load balancer in front and that traffic spreads across many identical servers, so one box going down doesn’t take the whole app down with it.</p>
             <p style={{ marginTop: 10 }}>
-              Pretty much every design question you'll ever see — from a chat app like WhatsApp to a live streaming platform like Twitch — starts with some version of this pattern. The more detail you layer on top, the more specialized the design gets, but{" "}
+              Pretty much every design question you’ll ever see — from a chat app like WhatsApp to a live streaming platform like Twitch — starts with some version of this pattern. The more detail you layer on top, the more specialized the design gets, but{" "}
               <strong className="sd-strong">the skeleton stays the same</strong>.
             </p>
           </div>
 
-          {/* Skeleton diagram */}
           <div className="sd-figure">
             <p className="sd-figure-caption">
               The skeleton every design starts from
@@ -177,12 +174,11 @@ export default function Concept04() {
           </div>
 
           <div className="sd-callout sd-callout-accent">
-            The client doesn't care how many servers exist. It talks to a single address and trusts the load balancer to route things.{" "}
+            The client doesn’t care how many servers exist. It talks to a single address and trusts the load balancer to route things.{" "}
             <strong className="sd-strong">That abstraction is the entire point.</strong>
           </div>
         </div>
 
-        {/* Algorithms */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Distribution Logic
@@ -195,7 +191,7 @@ export default function Concept04() {
           </h2>
 
           <div className="sd-prose">
-            <p>The algorithm determines how the load balancer selects the "next" server for each incoming request. The right choice depends on whether your servers are homogeneous, whether connections are short- or long-lived, and whether clients need to consistently land on the same server.</p>
+            <p>The algorithm determines how the load balancer selects the “next” server for each incoming request. The right choice depends on whether your servers are homogeneous, whether connections are short- or long-lived, and whether clients need to consistently land on the same server.</p>
           </div>
 
           <div className="sd-grid-2">
@@ -212,7 +208,6 @@ export default function Concept04() {
             ))}
           </div>
 
-          {/* Traffic diagram */}
           <div className="sd-figure">
             <p className="sd-figure-caption">
               Load balancer as reverse proxy
@@ -250,7 +245,6 @@ export default function Concept04() {
           </div>
         </div>
 
-        {/* Layer 4 vs 7 */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             OSI Model
@@ -297,7 +291,6 @@ export default function Concept04() {
           </div>
         </div>
 
-        {/* Health checks */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Fault Tolerance
@@ -311,20 +304,19 @@ export default function Concept04() {
             </p>
             <p style={{ marginTop: 10 }}>
               If a server fails to respond or returns a 5xx error, the balancer marks it as{" "}
-              <strong className="sd-strong">unhealthy</strong> and stops routing traffic to it. Once it passes health checks again, it's automatically reinstated. This mechanism is the bedrock of system availability.
+              <strong className="sd-strong">unhealthy</strong> and stops routing traffic to it. Once it passes health checks again, it’s automatically reinstated. This mechanism is the bedrock of system availability.
             </p>
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>
-            <strong className="sd-strong">If your design requires high availability, you must assume servers will fail.</strong> The load balancer's job is to hide that failure from the end-user by redirecting traffic in real-time — before the user notices anything is wrong.
+            <strong className="sd-strong">If your design requires high availability, you must assume servers will fail.</strong> The load balancer’s job is to hide that failure from the end-user by redirecting traffic in real-time — before the user notices anything is wrong.
           </div>
 
           <div className="sd-callout sd-callout-green">
-            Health checks also enable <span className="sd-hl">zero-downtime deployments</span>: drain a server, deploy, wait for it to pass health checks, then bring it back into rotation. No traffic is ever sent to a server that isn't ready.
+            Health checks also enable <span className="sd-hl">zero-downtime deployments</span>: drain a server, deploy, wait for it to pass health checks, then bring it back into rotation. No traffic is ever sent to a server that isn’t ready.
           </div>
         </div>
 
-        {/* Comparison table */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Reference
@@ -355,7 +347,6 @@ export default function Concept04() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -364,7 +355,6 @@ export default function Concept04() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
           A load balancer routes requests across servers and uses health checks to skip dead ones. It does not store data or render responses.
@@ -405,7 +395,7 @@ export default function Concept04() {
             <br />
             Need centralized API management — auth, rate limits, routing by endpoint? <strong className="sd-hl">API Gateway.</strong>
             <br /><br />
-            Building microservices at any real scale, you'll likely run both, each solving a different half of the problem.
+            Building microservices at any real scale, you’ll likely run both, each solving a different half of the problem.
           </div>
         </PanelSection>
 
@@ -440,7 +430,7 @@ export default function Concept04() {
 
         <PanelSection title="When does IP Hash backfire, and what's the alternative?">
           <p className="sd-text-sm">
-            IP Hash solves session stickiness by mapping a client's IP to a fixed server. But this guarantee has several failure modes that make it{" "}
+            IP Hash solves session stickiness by mapping a client’s IP to a fixed server. But this guarantee has several failure modes that make it{" "}
             <strong className="sd-strong">unreliable for most modern applications</strong>.
           </p>
           {[
@@ -467,13 +457,13 @@ export default function Concept04() {
             </div>
           ))}
           <div className="sd-panel-note">
-            IP Hash is a <strong className="sd-hl">workaround for a stateful architecture</strong>. If your system requires it, that's a signal to invest in externalizing session state rather than tightening the load balancer constraint.
+            IP Hash is a <strong className="sd-hl">workaround for a stateful architecture</strong>. If your system requires it, that’s a signal to invest in externalizing session state rather than tightening the load balancer constraint.
           </div>
         </PanelSection>
 
         <PanelSection title="How do Layer 7 balancers enable zero-downtime deployments?">
           <p className="sd-text-sm">
-            A Layer 7 load balancer's ability to inspect requests makes it a powerful tool for deployment strategies that eliminate downtime and reduce risk. These techniques are only possible because the balancer can route based on{" "}
+            A Layer 7 load balancer’s ability to inspect requests makes it a powerful tool for deployment strategies that eliminate downtime and reduce risk. These techniques are only possible because the balancer can route based on{" "}
             <strong className="sd-strong">request content, not just connection metadata</strong>.
           </p>
           {[

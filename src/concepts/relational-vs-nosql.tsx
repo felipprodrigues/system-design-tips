@@ -78,7 +78,6 @@ const matrixRows = [
   { requirement: "Scale", relational: "Vertical (Scale-up)", nosql: "Horizontal (Scale-out)" },
 ];
 
-
 const terms = [
   { title: "ACID", def: "Atomicity, Consistency, Isolation, Durability, the four guarantees a relational transaction typically provides, ensuring data stays correct even under concurrent access or a crash." },
   { title: "Schema", def: "The defined structure (tables, columns, types, relationships) that data must conform to, strictly enforced in relational databases and loosely enforced or unenforced in most NoSQL databases." },
@@ -147,7 +146,6 @@ export default function Concept01Module02() {
           Two philosophies for storing data — integrity-first structure versus flexible, horizontally scalable performance.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Big Idea
@@ -159,7 +157,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             Relational databases (RDBMS) are built on the mathematical foundation of{" "}
@@ -171,7 +168,6 @@ export default function Concept01Module02() {
           </p>
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Think Of It Like
@@ -188,7 +184,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Relational Model */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Model 01
@@ -247,7 +242,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* NoSQL Model */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Model 02
@@ -290,7 +284,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Key Terms
@@ -307,7 +300,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Decision Matrix */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Reference
@@ -342,7 +334,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Decision Flow */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Putting It Together
@@ -363,7 +354,6 @@ export default function Concept01Module02() {
                 </marker>
               </defs>
 
-              {/* edges */}
               <path d="M 460 80 V 105" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
               <path d="M 383 251 C 320 330, 200 360, 175 432" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
               <path d="M 537 251 C 620 300, 670 330, 700 370" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
@@ -371,7 +361,6 @@ export default function Concept01Module02() {
               <path d="M 700 562 C 700 600, 705 612, 705 652" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
               <path d="M 787 516 C 860 580, 915 600, 927 652" fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-db-arrow)" />
 
-              {/* branch labels */}
               <text x="318" y="340" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fill="var(--sd-muted)">Yes</text>
               <text x="636" y="336" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="13" fill="var(--sd-muted)">No</text>
               <text x="372" y="608" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">Yes, huge volume</text>
@@ -379,22 +368,18 @@ export default function Concept01Module02() {
               <text x="705" y="617" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">shape</text>
               <text x="988" y="608" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="12" fill="var(--sd-muted)">Traversal-heavy</text>
 
-              {/* start */}
               <rect x="330" y="16" width="260" height="64" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-teal)" strokeWidth="1.5" />
               <text x="460" y="42" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">What&apos;s the access</text>
               <text x="460" y="62" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">pattern?</text>
 
-              {/* decision 1 */}
               <polygon points="460,113 615,205 460,297 305,205" fill="var(--sd-surface2)" stroke="var(--sd-teal)" strokeWidth="1.5" />
               <text x="460" y="199" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">Need JOINs and</text>
               <text x="460" y="219" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">strict ACID?</text>
 
-              {/* decision 2 */}
               <polygon points="700,378 875,470 700,562 525,470" fill="var(--sd-surface2)" stroke="var(--sd-teal)" strokeWidth="1.5" />
               <text x="700" y="464" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">Mostly lookup by</text>
               <text x="700" y="484" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fill="var(--sd-text)">known key?</text>
 
-              {/* outcomes */}
               <rect x="60" y="440" width="230" height="60" rx="8" fill="var(--sd-surface2)" stroke="var(--sd-accent)" strokeWidth="1.5" />
               <text x="175" y="476" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="14" fontWeight="700" fill="var(--sd-text)">Relational (SQL)</text>
 
@@ -420,7 +405,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Seen In The Wild
@@ -429,7 +413,6 @@ export default function Concept01Module02() {
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Key Points
@@ -438,7 +421,6 @@ export default function Concept01Module02() {
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Common Mistakes
@@ -451,7 +433,6 @@ export default function Concept01Module02() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Try It Yourself
@@ -463,7 +444,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Exercises */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Practice
@@ -506,7 +486,6 @@ export default function Concept01Module02() {
           `}</style>
         </div>
 
-        {/* Summary */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Summary
@@ -519,7 +498,6 @@ export default function Concept01Module02() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -528,7 +506,6 @@ export default function Concept01Module02() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => { setPanelOpen(false); setActivePanelSection(null); }} title="Going further">
         <p style={{ fontSize: 12, color: "var(--sd-muted)", lineHeight: 1.7, padding: "4px 2px 8px" }}>
           The trade-offs in this concept rarely have one correct answer. Here&rsquo;s a deeper walkthrough of the trickier ones.

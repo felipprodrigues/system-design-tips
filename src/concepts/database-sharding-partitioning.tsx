@@ -122,7 +122,6 @@ export default function Concept02DatabaseSharding() {
           Decomposing a single, massive dataset into smaller chunks spread across nodes — trading query simplicity for horizontal scale.
         </p>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             Database sharding and partitioning are strategies used to{" "}
@@ -134,7 +133,6 @@ export default function Concept02DatabaseSharding() {
           </p>
         </div>
 
-        {/* Horizontal Partitioning / Sharding */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Model 01
@@ -162,7 +160,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Range-Based Sharding */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Strategy 01
@@ -195,7 +192,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Hash-Based Sharding */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Strategy 02
@@ -219,7 +215,6 @@ export default function Concept02DatabaseSharding() {
             </code>
           </pre>
 
-          {/* Hash routing diagram */}
           <div className="sd-figure">
             <p className="sd-figure-caption">
               Routing a write with a hash-based shard key
@@ -255,7 +250,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Strategy comparison */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Reference
@@ -286,7 +280,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Partitioning within a single node */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Single-Instance Technique
@@ -310,7 +303,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Shard Map implementation */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Implementation
@@ -346,7 +338,6 @@ export default function Concept02DatabaseSharding() {
           </pre>
         </div>
 
-        {/* Trade-offs */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Costs
@@ -367,7 +358,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Summary */}
         <div className="sd-section">
           <p className="sd-eyebrow">
             Summary
@@ -381,7 +371,6 @@ export default function Concept02DatabaseSharding() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">
             Quiz Review
@@ -390,7 +379,6 @@ export default function Concept02DatabaseSharding() {
           <QuizCarousel cards={quizCards} />
         </div>
 
-      {/* Side Panel */}
       <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} title="Going further">
         <PanelSection title="How do you rebalance a hash-sharded cluster without reshuffling everything?">
           <p className="sd-text-sm">
@@ -427,7 +415,7 @@ export default function Concept02DatabaseSharding() {
         <PanelSection title="What is two-phase commit, and why do cross-shard transactions need it?">
           <p className="sd-text-sm">
             A single-shard transaction gets ACID guarantees for free from the local database engine. The moment a transaction touches{" "}
-            <strong className="sd-strong">two different shards</strong>, there's no single engine watching both — something else has to coordinate.
+            <strong className="sd-strong">two different shards</strong>, there’s no single engine watching both — something else has to coordinate.
           </p>
           {[
             {
@@ -449,7 +437,7 @@ export default function Concept02DatabaseSharding() {
             </div>
           ))}
           <div className="sd-panel-note">
-            <strong className="sd-hl">Two-phase commit buys atomicity across shards at the cost of availability during the protocol.</strong> It's the CAP theorem's trade-off showing up again, one layer down.
+            <strong className="sd-hl">Two-phase commit buys atomicity across shards at the cost of availability during the protocol.</strong> It’s the CAP theorem’s trade-off showing up again, one layer down.
           </div>
         </PanelSection>
 
@@ -507,7 +495,7 @@ export default function Concept02DatabaseSharding() {
             </div>
           ))}
           <div className="sd-panel-note">
-            <strong className="sd-hl">Start from your access patterns, not the algorithm.</strong> The shard key is a bet on what you'll query — get it wrong and you're re-sharding in production.
+            <strong className="sd-hl">Start from your access patterns, not the algorithm.</strong> The shard key is a bet on what you’ll query — get it wrong and you’re re-sharding in production.
           </div>
         </PanelSection>
       </SidePanel>

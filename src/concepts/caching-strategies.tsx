@@ -175,7 +175,6 @@ export default function Concept09() {
           A second copy of the truth, and every way of keeping it honest.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -185,14 +184,12 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">Why The Hardest Part Is Not The Caching</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">Think Of It Like</p>
           <h2 className="sd-h2">A Cheat Sheet Of Your Bank Balance</h2>
@@ -207,7 +204,6 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* The concept */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Concept</p>
           <h2 className="sd-h2">The Pieces That Make Up A Caching Decision</h2>
@@ -227,7 +223,6 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Terms</p>
           <h2 className="sd-h2">The Vocabulary Of A Second Copy</h2>
@@ -242,7 +237,6 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* Write-through vs write-back */}
         <div className="sd-section">
           <p className="sd-eyebrow">Worked Example</p>
           <h2 className="sd-h2">Write-Through vs Write-Back</h2>
@@ -282,7 +276,6 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* Cache-aside read path */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Shape Of It</p>
           <h2 className="sd-h2">Cache-Aside On A Read</h2>
@@ -304,7 +297,6 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* Stampede */}
         <div className="sd-section">
           <p className="sd-eyebrow">Failure Mode</p>
           <h2 className="sd-h2">When The Cache Stops Absorbing Load</h2>
@@ -361,21 +353,18 @@ export default function Concept09() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">Seen In The Wild</p>
           <h2 className="sd-h2">Where The Read-To-Write Ratio Pays</h2>
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Forward</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
@@ -386,7 +375,6 @@ export default function Concept09() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">Try It Yourself</p>
           <h2 className="sd-h2">Two Ways To Keep It Fresh</h2>
@@ -395,7 +383,6 @@ export default function Concept09() {
             Pick a piece of data in an app you use that changes rarely but is read constantly, like a user&rsquo;s display name or a product&rsquo;s description. Sketch out, in a sentence each, how you&rsquo;d cache it with a <strong className="sd-strong">TTL</strong> versus with <strong className="sd-strong">explicit invalidation on write</strong>, and name one scenario where each approach would show a user outdated information.
           </div>
         </div>
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>

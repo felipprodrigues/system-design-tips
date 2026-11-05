@@ -76,26 +76,24 @@ export default function Concept02() {
         <ConceptHeader slug="latency-throughput-availability" />
         <LearnedToggle />
         <p className="sd-lede">
-          The three pillars of system observability — if you can't measure these, you can't operate.
+          The three pillars of system observability — if you can’t measure these, you can’t operate.
         </p>
 
-        {/* Intro */}
         <div className="sd-intro">
           <p>
             Before you can reason about scaling, consistency, or fault tolerance, you need a shared language for measuring system health. These three metrics are that language.{" "}
             <strong className="sd-strong">Latency</strong> tells you how fast the system responds.{" "}
             <strong className="sd-strong">Throughput</strong> tells you how much work it can handle.{" "}
-            <strong className="sd-strong">Availability</strong> tells you how often it's actually reachable.
+            <strong className="sd-strong">Availability</strong> tells you how often it’s actually reachable.
           </p>
           <p>
-            They are related but not interchangeable — and optimizing for one often creates pressure on another. Understanding their definitions, how they're measured, and where they conflict is the prerequisite to every architectural decision that follows.
+            They are related but not interchangeable — and optimizing for one often creates pressure on another. Understanding their definitions, how they’re measured, and where they conflict is the prerequisite to every architectural decision that follows.
           </p>
           <p>
             When an architecture buckles under load or degrades in production, it is almost never because of an obscure syntax bug. It fails because someone miscalculated the relationship between how fast an operation completes, how many operations can run concurrently, and what proportion of them succeed over time. Treat these three as <strong className="sd-strong">mathematical constraints that push against one another</strong>, not as isolated target numbers on a dashboard.
           </p>
         </div>
 
-        {/* ── LATENCY ── */}
         <div className="sd-section">
           <p className="sd-eyebrow">Metric 01</p>
           <h2 className="sd-h2">
@@ -104,7 +102,7 @@ export default function Concept02() {
           </h2>
 
           <div className="sd-prose">
-            <p>Latency is the time it takes for a single request to complete. In a distributed architecture, this is not a single number — it's a <strong className="sd-strong">distribution</strong>. The most common mistake is reporting latency as an arithmetic mean.</p>
+            <p>Latency is the time it takes for a single request to complete. In a distributed architecture, this is not a single number — it’s a <strong className="sd-strong">distribution</strong>. The most common mistake is reporting latency as an arithmetic mean.</p>
             <p style={{ marginTop: 10 }}>If 99% of requests take 10ms but 1% take 5 seconds, your average looks healthy while a real slice of users hits timeouts. The mean hides outliers entirely.</p>
           </div>
 
@@ -126,7 +124,6 @@ export default function Concept02() {
             ))}
           </div>
 
-          {/* Latency diagram */}
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, padding: "28px 24px 22px", marginBottom: 16 }}>
             <p style={{ fontSize: 11, color: "var(--sd-muted)", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 22, textAlign: "center" }}>Latency = Total Round-Trip Time</p>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
@@ -155,7 +152,6 @@ export default function Concept02() {
             </p>
           </div>
 
-          {/* Latency anatomy */}
           <div className="sd-prose">
             <p>Latency is often confused with <strong className="sd-strong">response time</strong>. Response time is the total elapsed time the client experiences. Latency is the portion of it introduced by network transit, queuing, and compute along the path. Those three pieces are additive:</p>
             <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0", fontFamily: "var(--sd-font-mono)" }}>
@@ -187,7 +183,6 @@ export default function Concept02() {
           </div>
         </div>
 
-        {/* ── THROUGHPUT ── */}
         <div className="sd-section">
           <p className="sd-eyebrow">Metric 02</p>
           <h2 className="sd-h2">
@@ -211,7 +206,7 @@ export default function Concept02() {
           </div>
 
           <div style={{ background: "rgba(127, 147, 242,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong className="sd-strong">Little's Law</strong> ties the two together: <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>L = λW</span>, where concurrency (L) equals arrival rate (λ) times latency (W). Hold arrival rate steady and double latency, and the number of in-flight requests doubles. That is why rising latency silently drains a worker pool until the pool itself becomes the outage.
+            <strong className="sd-strong">Little’s Law</strong> ties the two together: <span style={{ fontFamily: "var(--sd-font-mono)", color: "var(--sd-teal)" }}>L = λW</span>, where concurrency (L) equals arrival rate (λ) times latency (W). Hold arrival rate steady and double latency, and the number of in-flight requests doubles. That is why rising latency silently drains a worker pool until the pool itself becomes the outage.
           </div>
 
           <div className="sd-grid-2">
@@ -231,7 +226,6 @@ export default function Concept02() {
           </div>
         </div>
 
-        {/* ── AVAILABILITY ── */}
         <div className="sd-section">
           <p className="sd-eyebrow">Metric 03</p>
           <h2 className="sd-h2">
@@ -240,11 +234,11 @@ export default function Concept02() {
           </h2>
 
           <div className="sd-prose">
-            <p>Availability is the percentage of time a system is functional and reachable, expressed in <strong className="sd-strong">"nines"</strong>. It is calculated as:</p>
+            <p>Availability is the percentage of time a system is functional and reachable, expressed in <strong className="sd-strong">“nines”</strong>. It is calculated as:</p>
             <p style={{ textAlign: "center", fontSize: 15, fontWeight: 600, color: "var(--sd-teal)", margin: "14px 0" }}>
               Availability = Uptime ÷ (Uptime + Downtime)
             </p>
-            <p>In distributed systems, availability is rarely binary. A system can be "up" while returning 500 errors to 5% of users. The inverse metric is <strong className="sd-strong">Error Rate</strong> — Failed Requests ÷ Total Requests.</p>
+            <p>In distributed systems, availability is rarely binary. A system can be “up” while returning 500 errors to 5% of users. The inverse metric is <strong className="sd-strong">Error Rate</strong> — Failed Requests ÷ Total Requests.</p>
           </div>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
@@ -295,17 +289,16 @@ export default function Concept02() {
           </div>
 
           <div className="sd-callout sd-callout-accent">
-            <strong className="sd-strong">High availability ≠ fast.</strong> A system that takes 30 seconds to respond but eventually succeeds is technically "available." Availability measures uptime, not speed. You need all three metrics to describe system health accurately.
+            <strong className="sd-strong">High availability ≠ fast.</strong> A system that takes 30 seconds to respond but eventually succeeds is technically “available.” Availability measures uptime, not speed. You need all three metrics to describe system health accurately.
           </div>
         </div>
 
-        {/* ── TENSION ── */}
         <div className="sd-section">
           <p className="sd-eyebrow">Putting it together</p>
           <h2 className="sd-h2">The Tension Between Metrics</h2>
 
           <div className="sd-prose">
-            <p>These metrics don't exist in isolation — optimizing for one creates pressure on the others.</p>
+            <p>These metrics don’t exist in isolation — optimizing for one creates pressure on the others.</p>
             <p style={{ marginTop: 10 }}>
               To improve <strong className="sd-strong">latency</strong>, you might cache results — increasing memory usage and cache consistency complexity. To improve <strong className="sd-strong">availability</strong>, you add redundant nodes — which increases consistency complexity. To improve <strong className="sd-strong">throughput</strong>, you scale horizontally — which introduces distributed state challenges covered in the previous concept.
             </p>
@@ -342,7 +335,7 @@ export default function Concept02() {
           </div>
 
           <div style={{ background: "rgba(106, 118, 163,0.07)", borderRadius: 0, padding: "14px 18px", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            <strong className="sd-strong">Recap.</strong> Latency is governed by network physics, execution cycles, and queuing, with percentiles exposing the tail the mean hides. Throughput is bounded by concurrency under Little's Law, where rising latency quietly drains the worker pool. Availability is decided by topology, since dependencies in series multiply risk while redundancy in parallel absorbs it. Every architecture ahead is a negotiation between these three.
+            <strong className="sd-strong">Recap.</strong> Latency is governed by network physics, execution cycles, and queuing, with percentiles exposing the tail the mean hides. Throughput is bounded by concurrency under Little’s Law, where rising latency quietly drains the worker pool. Availability is decided by topology, since dependencies in series multiply risk while redundancy in parallel absorbs it. Every architecture ahead is a negotiation between these three.
           </div>
 
           <div className="sd-callout sd-callout-green">
@@ -350,7 +343,6 @@ export default function Concept02() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>
@@ -374,7 +366,7 @@ export default function Concept02() {
             </div>
           ))}
           <div className="sd-panel-note">
-            Poor latency occurs when the system is <strong className="sd-hl">congested</strong> — processing at capacity while requests wait in buffers. The "pipes" are full so throughput is high, but the transit time for any specific request is sacrificed.
+            Poor latency occurs when the system is <strong className="sd-hl">congested</strong> — processing at capacity while requests wait in buffers. The “pipes” are full so throughput is high, but the transit time for any specific request is sacrificed.
           </div>
         </PanelSection>
 

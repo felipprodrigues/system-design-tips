@@ -301,7 +301,6 @@ export default function Concept07ContentDeliveryNetworks() {
           Why moving the bytes closer works wonders for content everyone shares, and almost nothing for content nobody shares.
         </p>
 
-        {/* Big idea */}
         <div className="sd-section">
           <p className="sd-eyebrow">Big Idea</p>
           <div className="sd-prose" style={{ fontSize: 16 }}>
@@ -311,14 +310,12 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Why this exists */}
         <div className="sd-section">
           <p className="sd-eyebrow">Why This Exists</p>
           <h2 className="sd-h2">One Server Cannot Be Near Everybody</h2>
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists} />
         </div>
 
-        {/* Think of it like */}
         <div className="sd-section">
           <p className="sd-eyebrow">Think Of It Like</p>
           <h2 className="sd-h2">One Press, Or A Shop In Every Town</h2>
@@ -333,7 +330,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Origin pull flow */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Shape Of It</p>
           <h2 className="sd-h2">Origin Pull: One Miss, Then Hits</h2>
@@ -366,7 +362,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Anatomy */}
         <div className="sd-section">
           <p className="sd-eyebrow">Anatomy</p>
           <h2 className="sd-h2">The Six Pieces</h2>
@@ -385,7 +380,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* The concept */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Concept</p>
           <h2 className="sd-h2">How The Edge Actually Works</h2>
@@ -405,7 +399,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Key terms */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Terms</p>
           <h2 className="sd-h2">The Vocabulary Of The Edge</h2>
@@ -420,7 +413,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Pull vs push */}
         <div className="sd-section">
           <p className="sd-eyebrow">Worked Example</p>
           <h2 className="sd-h2">Origin Pull vs Origin Push</h2>
@@ -440,7 +432,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Distance chart */}
         <div className="sd-section">
           <p className="sd-eyebrow">The Shape Of It</p>
           <h2 className="sd-h2">The Floor Under Every Round Trip</h2>
@@ -484,7 +475,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Fit */}
         <div className="sd-section">
           <p className="sd-eyebrow">Counterpoint</p>
           <h2 className="sd-h2">What Benefits, And What Does Not</h2>
@@ -505,7 +495,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Cacheability reference */}
         <div className="sd-section">
           <p className="sd-eyebrow">Reference</p>
           <h2 className="sd-h2">How Each Kind Of Content Caches</h2>
@@ -543,7 +532,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Stale asset failure mode */}
         <div className="sd-section">
           <p className="sd-eyebrow">Failure Mode</p>
           <h2 className="sd-h2">The Stale Asset After A Deploy</h2>
@@ -568,7 +556,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Not a capacity plan */}
         <div className="sd-section">
           <p className="sd-eyebrow">Counterpoint</p>
           <h2 className="sd-h2">A Shield, Not A Capacity Plan</h2>
@@ -587,21 +574,18 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Seen in the wild */}
         <div className="sd-section">
           <p className="sd-eyebrow">Seen In The Wild</p>
           <h2 className="sd-h2">Edges You Use Every Day</h2>
           <MarkerList mark="▪" color="var(--sd-teal)" items={seenInTheWild} columns={2} />
         </div>
 
-        {/* Key points */}
         <div className="sd-section">
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Forward</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} columns={2} />
         </div>
 
-        {/* Common mistakes */}
         <div className="sd-section">
           <p className="sd-eyebrow">Common Mistakes</p>
           <h2 className="sd-h2">Where This Usually Goes Wrong</h2>
@@ -612,7 +596,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </blockquote>
         </div>
 
-        {/* Try it yourself */}
         <div className="sd-section">
           <p className="sd-eyebrow">Try It Yourself</p>
           <h2 className="sd-h2">Find The Edge In A Site You Already Use</h2>
@@ -622,7 +605,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Further reading */}
         <div className="sd-section">
           <p className="sd-eyebrow">Further Reading</p>
           <h2 className="sd-h2">Where To Go Deeper</h2>
@@ -640,7 +622,6 @@ export default function Concept07ContentDeliveryNetworks() {
           </div>
         </div>
 
-        {/* Quiz */}
         <div className="sd-quiz">
           <p className="sd-eyebrow-accent">Quiz Review</p>
           <p className="sd-quiz-title">Check your understanding</p>

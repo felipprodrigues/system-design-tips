@@ -97,13 +97,23 @@
 
 /* Fixed under the bar on the right. Above the bar's z-index so it is never
    clipped by it, below any dialog. */
-.toast {
+/* Empty until something is unseen, so it must never sit over the page catching
+   clicks — the column ignores the pointer and each card takes it back. */
+.toastStack {
   position: fixed;
   top: 68px;
   right: 20px;
   z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   width: 320px;
   max-width: calc(100vw - 32px);
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
   padding: 14px 16px 15px;
   background: var(--sd-surface);
   border: 1px solid color-mix(in srgb, var(--sd-teal) 40%, transparent);
@@ -196,7 +206,7 @@
 
 @media (max-width: 760px) {
   /* The bar grows a second row for the tabs at this width. */
-  .toast {
+  .toastStack {
     top: 104px;
     right: 12px;
   }

@@ -87,6 +87,9 @@ function createSlugStore(key: string) {
       next.push(slug);
       write(next);
     },
+    replace(next: readonly string[]) {
+      write(next);
+    },
   };
 }
 
@@ -113,6 +116,18 @@ export function useVisited(): readonly string[] {
 
 export function markVisited(slug: string) {
   visited.touch(slug);
+}
+
+/* Decision cards on /frontend. Its own key: these ids are cards on one page, not
+   concepts, so they must never surface in a list anything else reads. */
+const frontendCards = createSlugStore("sd-fe-cards");
+
+export function useFrontendCards(): readonly string[] {
+  return frontendCards.use();
+}
+
+export function toggleFrontendCard(id: string) {
+  frontendCards.toggle(id);
 }
 
 export function useSaved(): readonly string[] {
@@ -153,6 +168,26 @@ export function markSeen(key: string) {
   } catch {
     // It reappears next visit, which beats throwing out of a click handler.
   }
+}
+
+/* A remembered preference rather than progress, but the storage, the caching and
+   the cross-tab wiring are the same, so it rides on the same store rather than a
+   near-copy of it. It is held as a one-element list, which is why the value in
+   localStorage reads ["strip"] rather than "strip".
+
+   The server snapshot is an empty list, so every first paint renders the default
+   and a stored preference lands at hydration. That is the same trade the rest of
+   this file makes: no cookie, so nothing can be known before the browser says so. */
+const stageView = createSlugStore("sd-stage-view");
+
+export type StageView = "rows" | "strip";
+
+export function useStageView(): StageView {
+  return stageView.use()[0] === "strip" ? "strip" : "rows";
+}
+
+export function setStageView(view: StageView) {
+  stageView.replace([view]);
 }
 
 export type Status = "done" | "doing" | "todo";

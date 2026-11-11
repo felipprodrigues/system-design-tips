@@ -226,6 +226,38 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
 
       <section className={styles.feature}>
         <h2 className={styles.featureLabel}>
+          Frontend System Design 101
+          <span className={styles.featureRule} aria-hidden="true" />
+        </h2>
+
+        <div className={styles.banners}>
+          <Link href="/frontend" className={styles.banner} data-tone="frontend">
+            <span className={styles.bannerIcon} aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                <rect x="2.5" y="4" width="15" height="12" rx="1.2" />
+                <path d="M2.5 7.5h15" />
+                <path d="M7 11h4" />
+                <path d="M7 13.5h6" />
+              </svg>
+            </span>
+            <span className={styles.bannerBody}>
+              <span className={styles.bannerEyebrow}>The map</span>
+              <span className={styles.bannerTitle}>A 9-step walkthrough to Frontend System Design</span>
+              <span className={styles.bannerSub}>
+                Nine stages, one stack, and a decision list per stage. Rendering strategy, state
+                ownership, the eight UI states, the reconnect path &mdash; each a concept&rsquo;s worth
+                of material on its own, and this is the order to meet them in.
+              </span>
+            </span>
+            <span className={styles.badge} data-kind="frontend">
+              Frontend
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      <section className={styles.feature}>
+        <h2 className={styles.featureLabel}>
           Interview Q&amp;A
           <span className={styles.featureRule} aria-hidden="true" />
         </h2>

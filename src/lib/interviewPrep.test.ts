@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { deeper } from "../app/frontend/data";
 import { parseSections, TOPICS } from "./interviewPrep";
 
 const sections = parseSections(
@@ -35,6 +36,17 @@ assert.ok(sections.length > 0, "the document parsed into sections");
     0,
   );
   assert.equal(counted, sections.length, "every section lands in exactly one topic");
+}
+
+{
+  /* /frontend links out to these by authored number. A number that stopped
+     resolving is a link the page silently drops, so it fails here instead. */
+  const byNumber = new Set(sections.map((s) => Number(s.id.slice(1))));
+  for (const { n, ids } of deeper) {
+    for (const id of ids) {
+      assert.ok(byNumber.has(id), `stage ${n} links to §${id}, which is no section`);
+    }
+  }
 }
 
 {

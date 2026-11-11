@@ -350,6 +350,11 @@
   --tone-wash: var(--sd-accent-wash);
 }
 
+.banner[data-tone="frontend"] {
+  --tone: var(--sd-pink);
+  --tone-wash: var(--sd-pink-wash);
+}
+
 /* Teal has no wash token of its own — it is used as a diagram hue everywhere
    else — so this one mixes its own. Full-width like the capstone, and tinted the
    same way across: a wash that dies at 64% looks unfinished at this width. */

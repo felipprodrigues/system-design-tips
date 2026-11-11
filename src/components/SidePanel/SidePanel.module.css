@@ -88,4 +88,7 @@
   gap: 8px;
   scrollbar-width: thin;
   scrollbar-color: var(--sd-border) transparent;
+  /* html sets overflow-x, so locking body does not reach the viewport scroller:
+     without this, reaching the end of the panel scrolls the page behind it. */
+  overscroll-behavior: contain;
 }

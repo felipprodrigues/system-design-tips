@@ -118,9 +118,8 @@ export function markVisited(slug: string) {
   visited.touch(slug);
 }
 
-/* Decision cards on /frontend, ticked off as they are read. A separate key from
-   the starred questions above: these ids are cards on one page, not concepts,
-   and nothing outside that page should ever see them in its list. */
+/* Decision cards on /frontend. Its own key: these ids are cards on one page, not
+   concepts, so they must never surface in a list anything else reads. */
 const frontendCards = createSlugStore("sd-fe-cards");
 
 export function useFrontendCards(): readonly string[] {

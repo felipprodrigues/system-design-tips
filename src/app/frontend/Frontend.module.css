@@ -1,8 +1,3 @@
-/* The nine stages read as a deck, so stepping slides the explanation sideways
-   while the stack diagram stays put. Keeping the diagram still is the point:
-   the page argues the stack never changes, only who owns which part of it, and
-   a diagram that flew in and out each time would say the opposite. */
-
 .slide {
   animation: slideFromRight 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -21,8 +16,8 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* The parts that shift between stages are the highlights, so they move rather
-   than cut. Staying on the same figure is what makes the shift readable. */
+/* Only the highlights move: the stack diagram itself never animates, because the
+   page argues the stack does not change, only who owns which part of it. */
 .stack rect,
 .stack line,
 .stack path,
@@ -35,8 +30,6 @@
     opacity 300ms ease;
 }
 
-/* Marks the deck as one unit, so the sections below it do not read as a tenth
-   slide. The label sits in the rule rather than above it. */
 .deckEnd {
   display: flex;
   align-items: center;
@@ -71,10 +64,6 @@
   }
 }
 
-/* Two ways to pick a stage. Rows show all nine at once, grouped by phase, which
-   is the overview. The strip shows one line that scrolls, which keeps the eye on
-   where you are in the sequence rather than on the whole map. */
-
 .viewBar {
   display: flex;
   justify-content: flex-end;
@@ -108,8 +97,6 @@
   color: var(--sd-text);
 }
 
-/* The label takes its colour from the active stage's phase, and the rules on
-   either side inherit it, so crossing into a new phase is visible at a glance. */
 .phaseRule {
   display: flex;
   align-items: center;
@@ -131,8 +118,7 @@
   opacity: 0.35;
 }
 
-/* The fade at both ends is what says the line continues past the edge. The
-   padding keeps the first and last chip from sitting permanently under it. */
+/* The padding keeps the first and last chip out from under the end fades. */
 .track {
   position: relative;
   display: flex;
@@ -164,10 +150,6 @@
   text-align: left;
 }
 
-/* The decisions read two ways: a list when you are reading the stage top to
-   bottom, and one card per question when you are using the stage as a checklist
-   to answer out loud. Same pairs either way. */
-
 .decideHead {
   display: flex;
   align-items: center;
@@ -183,9 +165,8 @@
   gap: 10px;
 }
 
-/* The card holds two controls: the body opens the explanation, the tick in the
-   corner marks it read. Nested buttons are invalid, so the card itself is a
-   plain box and the body is the button filling it. */
+/* Two controls, and nested buttons are invalid: the card is a plain box, the
+   body is the button filling it, and the tick is its sibling. */
 .qaCard {
   position: relative;
   display: flex;
@@ -346,8 +327,6 @@
   scrollbar-width: thin;
 }
 
-/* Ties a section below the deck back to the stage that produces it, and puts
-   the deck on that stage on the way past. */
 .stageLink {
   display: inline-flex;
   align-items: center;

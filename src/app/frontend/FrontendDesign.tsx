@@ -31,13 +31,6 @@ import {
   whyThisExists,
 } from "./data";
 
-/* Three bits of markup inside a plain string: *emphasis* lifts a phrase to
-   --sd-text, [WebSocket] becomes a hover definition from the glossary, and
-   `code` is an API name shown as one. It keeps the stage data as data, so
-   filling in the remaining stages is writing sentences rather than writing JSX. */
-/* The three sections below the deck are each one stage's output. The chip says
-   which, and puts the deck back on that stage rather than leaving the reader to
-   scroll up and hunt for it. */
 function StageLink({ n, onJump }: { n: number; onJump: (n: number) => void }) {
   const target = stages[n - 1];
   const colour = phases.find((p) => p.id === target.phase)!.color;
@@ -80,11 +73,9 @@ function rich(text: string) {
    unique across all nine stages, so neither has to be qualified by stage. */
 const idOf = (q: string) => q.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-/* The address bar holds which stage you are on and which card is open, so a
-   refresh or a pasted link lands where you were. It is read through
-   useSyncExternalStore rather than an effect: hydration uses the server's empty
-   snapshot, and the real query string arrives on the render straight after, with
-   no setState in an effect and no mismatch to paper over. */
+/* Read through useSyncExternalStore rather than an effect: hydration takes the
+   server's empty snapshot and the real query string arrives on the next render,
+   so there is no setState in an effect and no mismatch to paper over. */
 const searchListeners = new Set<() => void>();
 
 function subscribeSearch(onChange: () => void) {
@@ -112,9 +103,6 @@ const LAYER_W = 420;
 const LAYER_H = 38;
 const LAYER_TOP = 106;
 const LAYER_STEP = 44;
-
-/* Not a concept: it's the order you work in, like /walkthrough, so it sits outside
-   the numbered sequence: no group, no previous or next link, nothing to mark complete. */
 
 export default function FrontendDesign() {
   const search = useSyncExternalStore(subscribeSearch, readSearch, () => "");
@@ -158,8 +146,6 @@ export default function FrontendDesign() {
     });
   }, [active, view]);
 
-  /* Stepping while the drawer is open would leave the previous stage's deep
-     dives on screen under the new stage's heading. */
   function go(n: number) {
     if (n === active) return;
     setDir(n > active ? "fwd" : "back");
@@ -271,8 +257,6 @@ export default function FrontendDesign() {
             </div>
           )}
 
-          {/* Nine chips rather than an SVG stepper: at nine the arrows stop helping and
-              the row needs to wrap, which HTML does and a fixed viewBox doesn't. */}
           <div hidden={view !== "rows"} style={{ display: view === "rows" ? "flex" : undefined, flexDirection: "column", gap: 10, marginBottom: 16 }}>
             {phases.map((p) => (
               <div key={p.id} style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>

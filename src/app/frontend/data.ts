@@ -1,6 +1,5 @@
-/* The nine stages, grouped into three phases. Phase is ours, not the source's:
-   the first two produce no code, the middle three produce the app, the last four
-   are passes over what already exists. That split is the argument of the page. */
+/* Phase is ours, not the source's: the first two stages produce no code, the
+   middle three produce the app, the last four are passes over what exists. */
 
 export interface Phase {
   id: "frame" | "build" | "harden";
@@ -40,15 +39,10 @@ export interface Check {
   explain: Explain;
 }
 
-/* Opened from a decision card. Written for someone meeting the term for the
-   first time, so the card stays short and the jargon has somewhere to go. */
 export interface Explain {
-  /** What the words mean, with nothing assumed. */
   plain: string;
-  /** Where they have already run into it without knowing the name. One entry
-      per case, so parallel examples read as a list rather than a paragraph. */
+  /** One entry per case: more than one renders as a list rather than a paragraph. */
   seen: string[];
-  /** What a good answer to the question actually sounds like. */
   say: string;
 }
 
@@ -56,19 +50,16 @@ export interface Stage {
   n: number;
   phase: Phase["id"];
   label: string;
-  /** The single question the stage answers. */
   decides: string;
-  /** Decisions, not topics. `q` is the question asked of the design, `a` what you walk out having chosen. */
+  /** `q` is the question asked of the design, `a` what you walk out having chosen. */
   checks: Check[];
   /** How you know the stage is finished rather than merely mentioned. */
   tell: string;
   /** What changes on the stack diagram, shown under the figure. */
   draws: string;
-  /** Diagram ids this stage claims. */
+  /** Diagram ids this stage lights up. */
   lit: string[];
-  /** The plain language picture, so the decisions below land before the jargon does. */
   analogy?: { title: string; body: string };
-  /** Opened from the stage's Deep Dive button. Authored per stage, over time. */
   deepDives?: DeepDive[];
 }
 
@@ -89,9 +80,8 @@ const DEDUPE =
 const IDEMPOTENT =
   "A request that can arrive twice without doing the thing twice. It is the property that makes retrying a write safe.";
 
-/* One glossary for the whole page. A check line writes [WebSocket] and gets a
-   hover definition, so the sentence can stay plain while the term stays precise.
-   The key is also the visible label, so there is nothing to keep in sync. */
+/* The key is also the visible label a line writes as [WebSocket], so there is
+   nothing to keep in sync and a missing entry shows up as unmatched markup. */
 export const terms: Record<string, string> = {
   SSG: "Static site generation. Pages are built once, when you deploy, and served as plain files. Unbeatable for speed and cost, and the content is frozen until the next build.",
   ISR: "Incremental static regeneration. Pages are static files, but the server quietly rebuilds one once its timer runs out. Static speed, with content that catches up on its own.",
@@ -1469,10 +1459,8 @@ export const crossCutting = [
   { id: "telemetry", name: "Telemetry" },
 ];
 
-/* Lifetime against ownership. Positions are the point of the figure: the two
-   axes are the only two questions stage 4 asks, and everything on a screen
-   lands somewhere on them. Fractions of the plot area, origin at the bottom left.
-   Kept inside 0.19-0.88 vertically so nothing collides with the corner rules. */
+/* Fractions of the plot area, origin at the bottom left. Kept inside 0.19-0.88
+   vertically so nothing collides with the corner rules. */
 export const stateItems = [
   { label: "Theme preference", x: 0.06, y: 0.86 },
   { label: "URL / route state", x: 0.14, y: 0.70 },
@@ -1484,8 +1472,6 @@ export const stateItems = [
   { label: "Fetched list in view", x: 0.80, y: 0.26 },
 ];
 
-/* One instruction per quadrant, pinned to its outer corner. The axes already
-   name the quadrant, so the caption only has to say what to do about it. */
 export const quadrants = [
   { id: "tl", rule: "You have to persist it. Nobody else will.", x: 100, y: 86, anchor: "start" },
   { id: "tr", rule: "Cache it, and own the invalidation.", x: 640, y: 86, anchor: "end" },
@@ -1534,9 +1520,6 @@ export const vitals = [
   },
 ];
 
-/* The other half of stage 7's numbers. Nobody publishes a threshold for these,
-   so the starting line is the point: a number you picked can be exceeded, and
-   "we should keep an eye on the bundle" cannot. */
 export const ownBudgets = [
   {
     name: "JS bundle size",

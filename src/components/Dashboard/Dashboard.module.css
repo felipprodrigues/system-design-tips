@@ -350,8 +350,6 @@
   --tone-wash: var(--sd-accent-wash);
 }
 
-/* Pink, the one hue nothing else on the page owns — gold, blue and violet are
-   already spoken for, and three of the four other banners are shades of blue. */
 .banner[data-tone="frontend"] {
   --tone: var(--sd-pink);
   --tone-wash: var(--sd-pink-wash);

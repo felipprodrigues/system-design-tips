@@ -1,4 +1,3 @@
-/** Something that shipped and is worth telling a returning reader about. */
 export interface Release {
   /** Doubles as the announcement's identity: the localStorage key is derived from
       it, so a new href is a new notice and there is no key to remember to bump. */

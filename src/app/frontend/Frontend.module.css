@@ -345,3 +345,84 @@
 .stageLink:hover {
   opacity: 1;
 }
+
+.deeper {
+  display: grid;
+  gap: 18px;
+}
+
+.deeperStage {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+  padding: 12px 13px;
+}
+
+.deeperTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.deeperTag {
+  padding: 2px 7px;
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border);
+  border-radius: 999px;
+  color: var(--sd-muted);
+  font-family: var(--sd-font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.deeperHead {
+  margin: 0 0 8px;
+  font-family: var(--sd-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.deeperList {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deeperLink {
+  display: block;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--sd-text);
+  font-size: 12.5px;
+  line-height: 1.4;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.deeperLink:hover,
+.deeperLink:focus-visible {
+  background: var(--sd-surface2);
+  border-color: var(--sd-border-strong);
+}
+
+@media (min-width: 680px) {
+  .deeper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 900px) {
+  .deeper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

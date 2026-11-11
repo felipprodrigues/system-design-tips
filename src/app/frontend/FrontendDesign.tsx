@@ -104,7 +104,19 @@ const LAYER_H = 38;
 const LAYER_TOP = 106;
 const LAYER_STEP = 44;
 
-export default function FrontendDesign() {
+/* A topic names two things where it covers two ("Next.js & build"), and the tags
+   are what the card is about, so each half is its own label. */
+function labelsIn(questions: Deeper["questions"]) {
+  const parts = questions.flatMap((q) => q.topic.split(" & "));
+  return [...new Set(parts)].map((part) => part[0].toUpperCase() + part.slice(1));
+}
+
+export interface Deeper {
+  n: number;
+  questions: { id: string; title: string; topic: string }[];
+}
+
+export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
   const search = useSyncExternalStore(subscribeSearch, readSearch, () => "");
   const params = new URLSearchParams(search);
   const asked = Number(params.get("stage"));
@@ -871,6 +883,52 @@ export default function FrontendDesign() {
           <p className="sd-eyebrow">Key Points</p>
           <h2 className="sd-h2">What To Carry Out Of This</h2>
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} />
+        </div>
+
+        <div className="sd-section">
+          <p className="sd-eyebrow">Answered In Full</p>
+          <h2 className="sd-h2">The Same Decisions, As Interview Questions</h2>
+
+          <div className="sd-prose">
+            <p>
+              A stage names the decision; these are the mechanisms underneath it, each written out
+              the way you would say it in the room. They open on the Q&amp;A page and come back here
+              when you close them.
+            </p>
+          </div>
+
+          <div className={styles.deeper}>
+            {deeper.map(({ n, questions }) => {
+              const target = stages[n - 1];
+              const colour = phases.find((p) => p.id === target.phase)!.color;
+              return (
+                <div key={n} className={styles.deeperStage}>
+                  <div className={styles.deeperTags}>
+                    {labelsIn(questions).map((label) => (
+                      <span key={label} className={styles.deeperTag}>
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                  <p className={styles.deeperHead} style={{ color: colour }}>
+                    {`Stage ${n} · ${target.label}`}
+                  </p>
+                  <ul className={styles.deeperList}>
+                    {questions.map((q) => (
+                      <li key={q.id}>
+                        <a
+                          className={styles.deeperLink}
+                          href={`/interview-qa?q=${q.id}&topic=${encodeURIComponent(q.topic)}`}
+                        >
+                          {q.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </PageLayout>
 

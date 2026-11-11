@@ -1595,3 +1595,16 @@ export const keyPoints = [
   "*Nothing on the client is a security control.* It can be a convenience over one, and that's the most it can ever be.",
   "*Every stage has a tell.* If you can't say what you walked away with, you named the stage instead of doing it.",
 ];
+
+/* Stage number to the questions on /interview-qa that answer one of its decisions
+   in full. Authored numbers only: the titles and the group each one opens in are
+   resolved from the Q&A document itself, so nothing here can drift out of date. */
+export const deeper: { n: number; ids: number[] }[] = [
+  { n: 2, ids: [21, 61] },
+  { n: 3, ids: [56, 57, 36, 37] },
+  { n: 4, ids: [67, 32, 25] },
+  { n: 5, ids: [30, 68, 31] },
+  { n: 6, ids: [9, 10, 26, 45] },
+  { n: 7, ids: [8, 23, 35, 65, 11, 20] },
+  { n: 9, ids: [17] },
+];

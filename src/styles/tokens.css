@@ -26,13 +26,15 @@
   --sd-done:      #3fb950;
   --sd-done-wash: rgba(63, 185, 80, 0.12);
 
-  /* The three destination banners — The Method, Case Studies and the capstone — are
-     told apart by hue rather than by reading them. Navigation colours only: content
+  /* The destination banners — The Method, Case Studies, the capstone and Frontend 101 —
+     are told apart by hue rather than by reading them. Navigation colours only: content
      never reaches for either of these. */
   --sd-warm:      #c2a14d;
   --sd-warm-wash: rgba(194, 161, 77, 0.14);
   --sd-violet:      #9b6ef2;
   --sd-violet-wash: rgba(155, 110, 242, 0.14);
+  --sd-pink:      #f0568f;
+  --sd-pink-wash: rgba(240, 86, 143, 0.15);
 
   /* Genuine red, reserved for "this is a mistake" content. Apart from this,
      --sd-done and the two banner hues the palette is deliberately monochrome. */
@@ -73,6 +75,8 @@
   --sd-warm-wash: rgba(134, 102, 21, 0.1);
   --sd-violet:      #6b3fb5;
   --sd-violet-wash: rgba(107, 63, 181, 0.1);
+  --sd-pink:      #c2255c;
+  --sd-pink-wash: rgba(194, 37, 92, 0.1);
 
   --sd-danger:      #c62b30;
   --sd-danger-wash: rgba(198, 43, 48, 0.07);

@@ -28,9 +28,12 @@ export default function SidePanel({
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
+  /* On the documentElement, not the body: the stylesheet sets overflow-x on
+     html, which stops the body's overflow from propagating to the viewport, so
+     locking the body here would leave the page scrolling behind the panel. */
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    document.documentElement.style.overflow = open ? "hidden" : "";
+    return () => { document.documentElement.style.overflow = ""; };
   }, [open]);
 
   return (

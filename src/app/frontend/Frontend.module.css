@@ -1,0 +1,368 @@
+/* The nine stages read as a deck, so stepping slides the explanation sideways
+   while the stack diagram stays put. Keeping the diagram still is the point:
+   the page argues the stack never changes, only who owns which part of it, and
+   a diagram that flew in and out each time would say the opposite. */
+
+.slide {
+  animation: slideFromRight 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.slide[data-dir="back"] {
+  animation-name: slideFromLeft;
+}
+
+@keyframes slideFromRight {
+  from { opacity: 0; transform: translateX(26px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideFromLeft {
+  from { opacity: 0; transform: translateX(-26px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* The parts that shift between stages are the highlights, so they move rather
+   than cut. Staying on the same figure is what makes the shift readable. */
+.stack rect,
+.stack line,
+.stack path,
+.stack text,
+.stack g {
+  transition:
+    fill 300ms ease,
+    stroke 300ms ease,
+    stroke-width 300ms ease,
+    opacity 300ms ease;
+}
+
+/* Marks the deck as one unit, so the sections below it do not read as a tenth
+   slide. The label sits in the rule rather than above it. */
+.deckEnd {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 44px 0 8px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+}
+
+.deckEnd::before,
+.deckEnd::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--sd-border-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    animation: none;
+  }
+
+  .stack rect,
+  .stack line,
+  .stack path,
+  .stack text,
+  .stack g {
+    transition: none;
+  }
+}
+
+/* Two ways to pick a stage. Rows show all nine at once, grouped by phase, which
+   is the overview. The strip shows one line that scrolls, which keeps the eye on
+   where you are in the sequence rather than on the whole map. */
+
+.viewBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--sd-border);
+  border-radius: 8px;
+  background: var(--sd-surface2);
+}
+
+.toggleBtn {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 5px 11px;
+  border-radius: 6px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+}
+
+.toggleBtn[aria-pressed="true"] {
+  background: var(--sd-surface);
+  color: var(--sd-text);
+}
+
+/* The label takes its colour from the active stage's phase, and the rules on
+   either side inherit it, so crossing into a new phase is visible at a glance. */
+.phaseRule {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 12px;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.phaseRule::before,
+.phaseRule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+/* The fade at both ends is what says the line continues past the edge. The
+   padding keeps the first and last chip from sitting permanently under it. */
+.track {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 28px;
+  margin: 0 -4px;
+  mask-image: linear-gradient(to right, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.stripChip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: 8px;
+  padding: 8px 13px;
+  cursor: pointer;
+  color: var(--sd-text);
+  font-family: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+
+/* The decisions read two ways: a list when you are reading the stage top to
+   bottom, and one card per question when you are using the stage as a checklist
+   to answer out loud. Same pairs either way. */
+
+.decideHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.qaCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+/* The card holds two controls: the body opens the explanation, the tick in the
+   corner marks it read. Nested buttons are invalid, so the card itself is a
+   plain box and the body is the button filling it. */
+.qaCard {
+  position: relative;
+  display: flex;
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border);
+  border-radius: 10px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.qaCard:hover,
+.qaCard:focus-within {
+  border-color: var(--sd-border-strong);
+  background: var(--sd-surface);
+}
+
+.qaCard[data-read] {
+  border-color: color-mix(in srgb, var(--sd-teal) 45%, var(--sd-border));
+}
+
+.qaOpen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  font: inherit;
+  color: var(--sd-text);
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.qaSave {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--sd-border);
+  border-radius: 999px;
+  background: var(--sd-surface2);
+  color: var(--sd-border-strong);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.qaSave:hover {
+  color: var(--sd-text);
+  border-color: var(--sd-border-strong);
+}
+
+.qaSave[aria-pressed="true"] {
+  color: var(--sd-bg);
+  background: var(--sd-teal);
+  border-color: var(--sd-teal);
+}
+
+.qaQ {
+  padding-right: 22px;
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.qaMore {
+  margin-top: auto;
+  padding-top: 4px;
+  font-family: var(--sd-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--sd-muted);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.qaCard:hover .qaMore,
+.qaCard:focus-within .qaMore {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .qaMore {
+    opacity: 1;
+  }
+}
+
+.qaInline {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  color: var(--sd-text);
+  margin-right: 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--sd-border-strong);
+}
+
+.qaInline:hover {
+  text-decoration-color: currentColor;
+}
+
+.seenList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.seenList li {
+  position: relative;
+  padding-left: 15px;
+}
+
+.seenList li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--sd-muted);
+}
+
+.code {
+  font-family: var(--sd-font-mono);
+  font-size: 0.92em;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 5px;
+  padding: 1px 5px;
+  color: var(--sd-text);
+  overflow-wrap: anywhere;
+}
+
+.codeBlock {
+  display: block;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 7px 0 2px;
+  padding: 9px 11px;
+  font-family: var(--sd-font-mono);
+  font-size: 11.5px;
+  line-height: 1.65;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 7px;
+  color: var(--sd-text);
+  scrollbar-width: thin;
+}
+
+/* Ties a section below the deck back to the stage that produces it, and puts
+   the deck on that stage on the way past. */
+.stageLink {
+  display: inline-flex;
+  align-items: center;
+  margin: -4px 0 14px;
+  padding: 4px 10px;
+  border: 1px solid;
+  border-radius: 999px;
+  background: none;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.stageLink:hover {
+  opacity: 1;
+}

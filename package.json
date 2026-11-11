@@ -6,13 +6,13 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "predev": "node --experimental-strip-types --import ./scripts/ts-register.mjs scripts/read-time.mjs",
+    "predev": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
     "build": "next build",
-    "prebuild": "node --experimental-strip-types --import ./scripts/ts-register.mjs scripts/read-time.mjs",
+    "prebuild": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
     "start": "next start",
     "lint": "eslint",
-    "read-time": "node --experimental-strip-types --import ./scripts/ts-register.mjs scripts/read-time.mjs",
-    "test": "node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts && node --experimental-strip-types --import ./scripts/ts-register.mjs scripts/read-time.mjs --check"
+    "read-time": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
+    "test": "node --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts && node --import ./scripts/ts-register.mjs scripts/read-time.mjs --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

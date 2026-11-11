@@ -2,13 +2,17 @@
   "name": "fe",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "predev": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
     "build": "next build",
+    "prebuild": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --experimental-strip-types --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts"
+    "read-time": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
+    "test": "node --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts && node --import ./scripts/ts-register.mjs scripts/read-time.mjs --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

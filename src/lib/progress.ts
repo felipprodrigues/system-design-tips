@@ -190,6 +190,19 @@ export function setStageView(view: StageView) {
   stageView.replace([view]);
 }
 
+/* Dashboard sections someone has folded away. Collapsed rather than open is what
+   is stored, so an empty list — a first visit, or storage switched off — means
+   everything is expanded, which is also what the server renders. */
+const collapsed = createSlugStore("sd-collapsed");
+
+export function useCollapsed(): readonly string[] {
+  return collapsed.use();
+}
+
+export function toggleCollapsed(id: string) {
+  collapsed.toggle(id);
+}
+
 export type Status = "done" | "doing" | "todo";
 
 /** Done beats in-progress: a concept you finished and reopened still reads as done. */

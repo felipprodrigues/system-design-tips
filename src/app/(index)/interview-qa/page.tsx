@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
-import { Hero, PrepBrowser } from "@/components";
+import { Hero, LearnedToggle, PrepBrowser } from "@/components";
 import { parseSections } from "@/lib/interviewPrep";
 import { SITE_NAME } from "@/lib/seo";
 
@@ -37,6 +37,7 @@ export default function InterviewQAPage() {
 
   return (
     <>
+      <LearnedToggle />
       <Hero eyebrow="Interview Q&amp;A" title="Questions, answered">
         {sections.length} frontend interview questions, each written out the way you would
         actually say it in the room — the analogy first, then the mechanism, then the follow-up

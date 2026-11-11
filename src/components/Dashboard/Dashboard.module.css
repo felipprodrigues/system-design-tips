@@ -449,9 +449,12 @@
   margin-top: 26px;
 }
 
-/* Same mono eyebrow as a section head, minus the chevron, with the rule taking the
-   leftover width so the title reads as a divider across the page. */
+/* Same mono eyebrow as a section head, with the rule taking the leftover width so
+   the title reads as a divider across the page. It is a <summary>, so the marker
+   has to be removed in two spellings for Safari to drop its triangle too. */
 .featureLabel {
+  cursor: pointer;
+  list-style: none;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -461,6 +464,16 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.featureLabel::-webkit-details-marker,
+.featureLabel::marker {
+  display: none;
+  content: "";
+}
+
+.feature[open] .chevron {
+  transform: rotate(180deg);
 }
 
 .featureRule {

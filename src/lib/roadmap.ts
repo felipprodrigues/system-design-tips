@@ -1,6 +1,7 @@
 "use client";
 
 import { groups, reading, type ConceptEntry } from "./concepts";
+import { pageMinutes, pages } from "./content";
 import { statusOf, useLearned, useVisited, type Status } from "./progress";
 
 export interface ConceptProgress {
@@ -17,6 +18,18 @@ export interface GroupProgress {
   percent: number;
 }
 
+/* Kept apart from the concept figures above, which still drive the section bars
+   and the reading order Resume follows. */
+export interface Library {
+  concepts: number;
+  pages: number;
+  total: number;
+  done: number;
+  percent: number;
+  totalMinutes: number;
+  remainingMinutes: number;
+}
+
 export interface Roadmap {
   sections: GroupProgress[];
   done: number;
@@ -25,6 +38,7 @@ export interface Roadmap {
   /** Read time across every concept, and across the ones not yet done. */
   totalMinutes: number;
   remainingMinutes: number;
+  library: Library;
   /** Where "Resume" goes: the concept in progress, else the first unread one. */
   next?: ConceptProgress;
   /** Tail of the visited list, which is the most recently opened concept. Carries
@@ -57,13 +71,32 @@ export function deriveRoadmap(learned: readonly string[], seen: readonly string[
   const inOrder = reading.map(({ concept }) => all.find((c) => c.concept.slug === concept.slug)!);
   const next = inOrder.find((c) => c.status === "doing") ?? inOrder.find((c) => c.status === "todo");
 
+  const conceptMinutes = all.reduce((sum, c) => sum + c.concept.minutes, 0);
+  const conceptsLeft = all.filter((c) => c.status !== "done");
+  const pagesRead = pages.filter((page) => statusOf(page.slug, learned, seen) === "done");
+  const pagesLeft = pages.filter((page) => statusOf(page.slug, learned, seen) !== "done");
+  const libraryDone = done + pagesRead.length;
+  const libraryTotal = all.length + pages.length;
+  const sumPages = (list: typeof pages) =>
+    list.reduce((sum, page) => sum + pageMinutes(page.slug), 0);
+
   return {
     sections,
     done,
     total: all.length,
     percent: all.length ? Math.round((done / all.length) * 100) : 0,
-    totalMinutes: all.reduce((sum, c) => sum + c.concept.minutes, 0),
-    remainingMinutes: all.filter((c) => c.status !== "done").reduce((sum, c) => sum + c.concept.minutes, 0),
+    totalMinutes: conceptMinutes,
+    remainingMinutes: conceptsLeft.reduce((sum, c) => sum + c.concept.minutes, 0),
+    library: {
+      concepts: all.length,
+      pages: pages.length,
+      total: libraryTotal,
+      done: libraryDone,
+      percent: libraryTotal ? Math.round((libraryDone / libraryTotal) * 100) : 0,
+      totalMinutes: conceptMinutes + sumPages(pages),
+      remainingMinutes:
+        conceptsLeft.reduce((sum, c) => sum + c.concept.minutes, 0) + sumPages(pagesLeft),
+    },
     next,
     lastVisited: all.find((c) => c.concept.slug === seen[seen.length - 1]),
   };

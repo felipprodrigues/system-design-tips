@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { STATUS_LABEL } from "@/lib/progress";
+import { STATUS_LABEL, toggleCollapsed, useCollapsed } from "@/lib/progress";
 import { formatMinutes, useRoadmap } from "@/lib/roadmap";
 import ProgressRing from "./ProgressRing";
 import SectionCard from "./SectionCard";
@@ -17,6 +17,35 @@ function Check() {
     <svg viewBox="0 0 16 16" className={styles.check} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="Completed" role="img">
       <path d="m3 8.5 3.2 3.2L13 5" />
     </svg>
+  );
+}
+
+/* The server snapshot is an empty list, so the prerendered HTML has every section
+   open and a stored fold lands at hydration.
+
+   onToggle rather than onClick: it fires for the keyboard and for the native
+   summary activation alike. `id` is the storage key, not the heading, so renaming
+   a heading does not strand a fold under the old name. */
+function Feature({ id, title, children }: { id: string; title: React.ReactNode; children: React.ReactNode }) {
+  const folded = useCollapsed().includes(id);
+
+  return (
+    <details
+      className={styles.feature}
+      open={!folded}
+      onToggle={(event) => {
+        if (event.currentTarget.open === folded) toggleCollapsed(id);
+      }}
+    >
+      <summary className={styles.featureLabel}>
+        <svg viewBox="0 0 16 16" className={styles.chevron} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+        {title}
+        <span className={styles.featureRule} aria-hidden="true" />
+      </summary>
+      {children}
+    </details>
   );
 }
 
@@ -44,7 +73,7 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
         <div className={`${styles.card} ${styles.progressCard}`}>
           <p className={styles.cardLabel}>Your progress</p>
           <div className={styles.progressBody}>
-            <ProgressRing percent={roadmap.percent} label={`${roadmap.percent}%`} />
+            <ProgressRing percent={roadmap.library.percent} label={`${roadmap.library.percent}%`} />
             <div>
               {roadmap.next ? (
                 <>
@@ -65,7 +94,8 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
             </div>
           </div>
           <p className={styles.cardFoot}>
-            {roadmap.done} of {roadmap.total} concepts
+            {roadmap.library.done} of {roadmap.library.total} pages &middot;{" "}
+            {roadmap.done} of {roadmap.library.concepts} concepts
           </p>
         </div>
 
@@ -121,33 +151,35 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
           <dl className={styles.figures}>
             <div>
               <dt>Concepts</dt>
-              <dd>{roadmap.total}</dd>
+              <dd>{roadmap.library.concepts}</dd>
+            </div>
+            <div>
+              <dt>Guides &amp; Q&amp;A</dt>
+              <dd>{roadmap.library.pages}</dd>
             </div>
             <div>
               <dt>Total read time</dt>
-              <dd>{formatMinutes(roadmap.totalMinutes)}</dd>
+              <dd>{formatMinutes(roadmap.library.totalMinutes)}</dd>
             </div>
             <div>
               <dt>Left to read</dt>
-              <dd>{formatMinutes(roadmap.remainingMinutes)}</dd>
+              <dd>{formatMinutes(roadmap.library.remainingMinutes)}</dd>
             </div>
           </dl>
         </div>
       </div>
 
-      <div className={styles.sections}>
-        {sections.map((section) => (
-          <SectionCard key={section.title} section={section} open={section.done < section.total} />
-        ))}
-      </div>
+      <Feature id="concepts" title="System Design Concepts">
+        <div className={styles.sections}>
+          {sections.map((section) => (
+            <SectionCard key={section.title} section={section} open={section.done < section.total} />
+          ))}
+        </div>
+      </Feature>
 
       {/* Its own titled rule, like every other block here — without one this pair
           runs straight into the capstones and reads as part of that section. */}
-      <section className={styles.feature}>
-        <h2 className={styles.featureLabel}>
-          Apply It
-          <span className={styles.featureRule} aria-hidden="true" />
-        </h2>
+      <Feature id="apply" title="Apply It">
         <div className={styles.banners}>
           <Link href="/walkthrough" className={styles.banner} data-tone="method">
             <span className={styles.bannerIcon} aria-hidden="true">
@@ -182,13 +214,9 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
             </span>
           </Link>
         </div>
-      </section>
+      </Feature>
       {capstone && (
-        <section className={styles.feature}>
-          <h2 className={styles.featureLabel}>
-            {capstone.title}
-            <span className={styles.featureRule} aria-hidden="true" />
-          </h2>
+        <Feature id="capstone" title={capstone.title}>
           <div className={styles.banners}>
             {capstone.concepts.map(({ concept, status }) => (
               <Link
@@ -220,16 +248,11 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
               </Link>
             ))}
           </div>
-        </section>
+        </Feature>
       )}
 
 
-      <section className={styles.feature}>
-        <h2 className={styles.featureLabel}>
-          Frontend System Design 101
-          <span className={styles.featureRule} aria-hidden="true" />
-        </h2>
-
+      <Feature id="frontend" title="Frontend System Design 101">
         <div className={styles.banners}>
           <Link href="/frontend" className={styles.banner} data-tone="frontend">
             <span className={styles.bannerIcon} aria-hidden="true">
@@ -254,14 +277,9 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
             </span>
           </Link>
         </div>
-      </section>
+      </Feature>
 
-      <section className={styles.feature}>
-        <h2 className={styles.featureLabel}>
-          Interview Q&amp;A
-          <span className={styles.featureRule} aria-hidden="true" />
-        </h2>
-
+      <Feature id="interview-qa" title={<>Interview Q&amp;A</>}>
         <Link href="/interview-qa" className={styles.banner} data-tone="prep">
           <span className={styles.bannerIcon} aria-hidden="true">
             <svg
@@ -291,7 +309,7 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
             Frontend
           </span>
         </Link>
-      </section>
+      </Feature>
     </>
   );
 }

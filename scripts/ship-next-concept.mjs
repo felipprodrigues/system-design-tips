@@ -47,20 +47,18 @@ renameSync(draftPath, join(bodiesDir, `${published(next)}.tsx`));
 const conceptsDataPath = join(root, "src/lib/concepts.ts");
 const conceptsData = readFileSync(conceptsDataPath, "utf8");
 const esc = (value) => value.replace(/"/g, '\\"');
-/* The description becomes the concept page's meta description, so it ships with the entry. */
-if (typeof next.minutes !== "number") {
-  console.error(`"${next.slug}" has no "minutes" in scripts/concepts.json. Read time is shown on the`);
-  console.error(`dashboard and is not derivable here, so set it before shipping: roughly the`);
-  console.error(`rendered word count divided by 200.`);
-  process.exit(1);
-}
-const entry = `      { slug: "${published(next)}", number: ${next.number}, minutes: ${next.minutes}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
+/* The description becomes the concept page's meta description, so it ships with the entry.
+   Read time is not one of its fields: read-time.mjs counts it from the body below. */
+const entry = `      { slug: "${published(next)}", number: ${next.number}, title: "${esc(next.title)}", description: "${esc(next.subtitle)}" },\n`;
 const marker = "      // CONCEPT_ENTRIES_END";
 if (!conceptsData.includes(marker)) {
   console.error("CONCEPT_ENTRIES_END marker not found in src/lib/concepts.ts");
   process.exit(1);
 }
 writeFileSync(conceptsDataPath, conceptsData.replace(marker, entry + marker));
+
+// After the rename above: the counter reads the body from its published path.
+sh("node scripts/read-time.mjs");
 
 /* Same idea for the public concept index in the README. */
 const readmePath = join(root, "README.md");

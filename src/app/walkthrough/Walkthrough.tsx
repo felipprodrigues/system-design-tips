@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   Breadcrumb,
+  LearnedToggle,
   QuizCarousel,
   PageLayout,
   MarkerList,
@@ -218,6 +219,7 @@ export default function Walkthrough() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
           The Method
         </p>
+        <LearnedToggle />
         <h1 className="sd-h1">A 7-Step Walkthrough for Any System Design</h1>
         <p className="sd-lede">
           The order to work in when you&rsquo;re handed a blank page and a vague problem.

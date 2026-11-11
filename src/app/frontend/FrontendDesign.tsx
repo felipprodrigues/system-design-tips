@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   Breadcrumb,
   DeepDiveButton,
+  LearnedToggle,
   MarkerList,
   PageLayout,
   PanelSection,
@@ -186,6 +187,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
 
       <PageLayout>
         <p className="sd-eyebrow">Frontend Design</p>
+        <LearnedToggle />
         <h1 className="sd-h1">A 9-step walkthrough to Frontend System Design</h1>
         <p className="sd-lede">
           The same discipline as backend system design, pointed at a machine you don&rsquo;t own.

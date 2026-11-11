@@ -18,7 +18,16 @@ export default function BuyMeACoffee() {
         onClick={() => ref.current?.showModal()}
         aria-label="Buy me a coffee"
       >
-        <Image src="/bmc-logo.svg" alt="" width={32} height={46} className={styles.btnLogo} />
+        {/* In the persistent header, so it is above the fold on every page and is
+            measured as the LCP element. The copy inside the dialog stays lazy. */}
+        <Image
+          src="/bmc-logo.svg"
+          alt=""
+          width={32}
+          height={46}
+          loading="eager"
+          className={styles.btnLogo}
+        />
       </button>
 
       <dialog ref={ref} className={styles.dialog} onClick={(e) => {

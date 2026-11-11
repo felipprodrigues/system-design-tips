@@ -5,6 +5,7 @@ import { flushSync } from "react-dom";
 import { Dialog } from "@base-ui/react/dialog";
 import { TOPICS, type PrepSection, type Topic } from "@/lib/interviewPrep";
 import { toggleSaved, useSaved } from "@/lib/progress";
+import { setUrlState, useUrlState } from "@/lib/urlState";
 import styles from "./PrepBrowser.module.css";
 
 /* A view-transition-name has to be a bare identifier, and topics have spaces and
@@ -40,27 +41,37 @@ function Star({ section, on }: { section: PrepSection; on: boolean }) {
    second popup. Stars live in localStorage alongside concept progress — no
    account, and nothing to sync. */
 export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
-  const [openAt, setOpenAt] = useState<number | null>(null);
   const [onlySaved, setOnlySaved] = useState(false);
   const [tip, setTip] = useState<Tip | null>(null);
-  const [openTopic, setOpenTopic] = useState<Topic | null>(null);
   const saved = useSaved();
   const body = useRef<HTMLDivElement>(null);
 
+  /* Which group is unfolded and which answer is open both live in the address
+     bar, so ?q=s26 is a link straight to one question from anywhere on the site.
+     `q` is the authored anchor, never the index: the index moves whenever a
+     question is inserted and every link made to it would then point elsewhere. */
+  const params = useUrlState();
+  const asked = params.get("topic");
+  const openTopic = TOPICS.find((topic) => topic === asked) ?? null;
+  const at = sections.findIndex((section) => section.id === params.get("q"));
+  const openAt = at === -1 ? null : at;
+
+  const show = (q: string | null, topic: Topic | null = openTopic) =>
+    setUrlState({ q, topic });
+
   const current = openAt === null ? null : sections[openAt];
-  /* The index into `sections` is what opens the dialog, and both the contents
-     and the cards need it, so it is carried rather than looked up twice. */
-  const indexed = sections.map((section, i) => ({ section, i }));
   const savedCount = sections.filter((s) => saved.includes(s.id)).length;
-  const shown = onlySaved ? indexed.filter(({ section }) => saved.includes(section.id)) : indexed;
+  const shown = onlySaved ? sections.filter((s) => saved.includes(s.id)) : sections;
   /* A topic with nothing left in it after filtering is not rendered, so it cannot
      stay the open one — otherwise the layout sits in its opened state with no
      section to show. */
-  const open = shown.some(({ section }) => section.topic === openTopic) ? openTopic : null;
+  const open = shown.some((section) => section.topic === openTopic) ? openTopic : null;
 
   function step(by: number) {
+    if (openAt === null) return;
+    const next = sections[(openAt + by + sections.length) % sections.length];
     setTip(null);
-    setOpenAt((at) => (at === null ? at : (at + by + sections.length) % sections.length));
+    show(next.id, next.topic);
     // the next answer starts at its own beginning, not where the last one was left
     body.current?.scrollTo({ top: 0 });
   }
@@ -73,8 +84,8 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
   function changeTopic(next: Topic | null) {
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (calm || !document.startViewTransition) return setOpenTopic(next);
-    document.startViewTransition(() => flushSync(() => setOpenTopic(next)));
+    if (calm || !document.startViewTransition) return show(null, next);
+    document.startViewTransition(() => flushSync(() => show(null, next)));
   }
 
   const toggleTopic = (topic: Topic) => changeTopic(openTopic === topic ? null : topic);
@@ -115,7 +126,7 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
           </p>
 
           {TOPICS.map((topic) => {
-            const items = indexed.filter(({ section }) => section.topic === topic);
+            const items = sections.filter((section) => section.topic === topic);
             if (items.length === 0) return null;
 
             return (
@@ -137,18 +148,14 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
                   <span className={styles.count}>{items.length}</span>
                 </summary>
                 <ul className={styles.tocList}>
-                  {items.map(({ section, i }) => (
+                  {items.map((section) => (
                     <li key={section.id}>
                       <button
                         type="button"
                         className={styles.tocItem}
-                        /* Plain setState, no view transition: the dialog is about
-                           to cover the body. The point is where you land when you
-                           close it. */
-                        onClick={() => {
-                          setOpenTopic(section.topic);
-                          setOpenAt(i);
-                        }}
+                        /* No view transition: the dialog is about to cover the
+                           body, and the point is where you land when you close it. */
+                        onClick={() => show(section.id, section.topic)}
                       >
                         <span className={styles.tocNum}>{section.n}</span>
                         {section.title}
@@ -199,7 +206,7 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
               document whichever topic is open. */}
           <div className={`${styles.topics} ${open ? styles.browsing : ""}`}>
             {TOPICS.map((topic) => {
-              const inTopic = shown.filter(({ section }) => section.topic === topic);
+              const inTopic = shown.filter((section) => section.topic === topic);
               if (inTopic.length === 0) return null;
 
               const isOpen = topic === open;
@@ -224,7 +231,7 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
                   </button>
 
                   <div className={styles.grid} hidden={!isOpen}>
-                    {inTopic.map(({ section, i }) => (
+                    {inTopic.map((section) => (
                       <article key={section.id} className={styles.card}>
                         <div className={styles.cardTop}>
                           <span className={styles.cardNum}>
@@ -240,7 +247,7 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
                           <button
                             type="button"
                             className={styles.open}
-                            onClick={() => setOpenAt(i)}
+                            onClick={() => show(section.id)}
                           >
                             {section.title}
                           </button>
@@ -266,7 +273,7 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
           // The bubble unmounts with the dialog, so a stale tip would reappear with it.
           if (!open) {
             setTip(null);
-            setOpenAt(null);
+            show(null);
           }
         }}
       >

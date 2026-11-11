@@ -12,32 +12,28 @@ export interface PrepSection {
   html: string;
 }
 
-/* Contents order. The document is ordered by when each question came up, so
-   BY_TOPIC below is the only record of what a question is about. */
+/* Grouped by what the question is about — the library or the layer — not by the
+   round it came up in. The document is ordered by when each question was asked,
+   so BY_TOPIC is the only record of the subject. Coverage is checked by the test:
+   a number claimed twice, or by nobody, fails it. */
 export const TOPICS = [
-  // Not subjects: one graded mock round, and the write-it-in-front-of-them ones.
-  "Mock round",
-  "Code tasks",
   "JavaScript",
-  "Async & timers",
   "React",
-  "Performance",
-  "Browser & network",
-  "Security",
-  "Architecture & tooling",
+  "Next.js & build",
+  "Browser & CSS",
+  // Not a subject: the write-it-in-front-of-them ones, and the graded rounds.
+  "Code tasks",
+  "Mock rounds",
 ] as const;
 export type Topic = (typeof TOPICS)[number];
 
 const BY_TOPIC: Record<Topic, number[]> = {
-  "Mock round": [52, 53, 54, 56, 57],
-  "Code tasks": [1, 2, 5, 16, 26, 28, 50, 51, 55, 58],
-  JavaScript: [7, 14, 15, 27, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49, 60],
-  "Async & timers": [13, 45],
-  React: [18, 19, 25, 29, 30, 31, 32, 33, 36, 37, 38, 62, 63, 64, 66, 67, 68],
-  Performance: [8, 22, 23, 24, 34, 35, 65],
-  "Browser & network": [9, 10, 11, 20],
-  Security: [17],
-  "Architecture & tooling": [6, 12, 21, 59, 61, 69],
+  JavaScript: [7, 13, 14, 15, 27, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 59, 60],
+  React: [18, 19, 22, 24, 25, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 62, 63, 64, 65, 66, 67, 68],
+  "Next.js & build": [12, 21, 23, 61, 69],
+  "Browser & CSS": [8, 9, 10, 11, 17, 20, 52, 53],
+  "Code tasks": [1, 2, 5, 16, 26, 28, 50, 51, 54, 55, 58],
+  "Mock rounds": [6, 56, 57],
 };
 
 const topicOf = new Map(TOPICS.flatMap((topic) => BY_TOPIC[topic].map((n) => [n, topic] as const)));

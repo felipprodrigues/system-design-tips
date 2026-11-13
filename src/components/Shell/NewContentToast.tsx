@@ -56,7 +56,10 @@ export default function NewContentToast() {
         </div>
 
         <p className={styles.toastBody}>
-          <strong>{title}</strong> &mdash; {body}
+          <strong>{title}</strong>
+        </p>
+        <p className={styles.toastBody} style={{ marginTop: 4 }}>
+          {body}
         </p>
 
         <div className={styles.toastActions}>

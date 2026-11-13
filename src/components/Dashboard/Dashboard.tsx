@@ -276,6 +276,29 @@ export default function Dashboard({ questionCount }: { questionCount: number }) 
               Frontend
             </span>
           </Link>
+
+          <Link href="/linkedin-skills" className={styles.banner} data-tone="frontend">
+            <span className={styles.bannerIcon} aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round">
+                <rect x="2.5" y="3.5" width="15" height="3.5" rx="1" />
+                <rect x="2.5" y="8.25" width="15" height="3.5" rx="1" />
+                <path d="M2.5 14.5h8.5" strokeDasharray="2 2" />
+                <path d="M13.5 13.2 16.5 16.2M16.5 13.2l-3 3" />
+              </svg>
+            </span>
+            <span className={styles.bannerBody}>
+              <span className={styles.bannerEyebrow}>Case study</span>
+              <span className={styles.bannerTitle}>LinkedIn Skills: My Own Experience</span>
+              <span className={styles.bannerSub}>
+                Four things I noticed while updating my own profile skills: pagination that
+                stopped after a delete, a filtered view that kept a deleted row, an order
+                endorsements did not explain, and the tests that would have caught each one.
+              </span>
+            </span>
+            <span className={styles.badge} data-kind="frontend">
+              Frontend
+            </span>
+          </Link>
         </div>
       </Feature>
 

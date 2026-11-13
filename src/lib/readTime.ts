@@ -18,5 +18,6 @@ export const readTime: Record<string, number> = {
   "scaling-a-photo-app": 19,
   "walkthrough": 10,
   "frontend": 89,
+  "linkedin-skills": 23,
   "interview-qa": 138,
 };

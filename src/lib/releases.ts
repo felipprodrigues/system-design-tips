@@ -25,6 +25,11 @@ export const releases: Release[] = [
     title: "Frontend System Design 101",
     body: "A 9-step walkthrough to frontend system design: rendering strategy, state ownership, the eight UI states and the reconnect path, in the order you meet them.",
   },
+  {
+    href: "/linkedin-skills",
+    title: "LinkedIn skills: a personal frontend case study",
+    body: "Four things a paginated skills list did when I was updating my own, what I would build instead, and the tests that would have caught each one.",
+  },
 ];
 
 export const latestRelease = releases[releases.length - 1];

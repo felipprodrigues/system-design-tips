@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
         destination: "/concepts/:slug",
         permanent: true,
       },
+      {
+        source: "/paginated-list-sync",
+        destination: "/linkedin-skills",
+        permanent: true,
+      },
     ];
   },
 };

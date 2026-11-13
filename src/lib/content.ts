@@ -25,6 +25,14 @@ export const pages: ContentPage[] = [
     sources: ["src/app/frontend/FrontendDesign.tsx", "src/app/frontend/data.ts"],
   },
   {
+    slug: "linkedin-skills",
+    href: "/linkedin-skills",
+    sources: [
+      "src/app/linkedin-skills/PaginatedListSync.tsx",
+      "src/app/linkedin-skills/data.ts",
+    ],
+  },
+  {
     slug: "interview-qa",
     href: "/interview-qa",
     sources: ["src/content/interview-qa.html"],

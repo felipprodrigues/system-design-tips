@@ -27,8 +27,8 @@
   --sd-done-wash: rgba(63, 185, 80, 0.12);
 
   /* The destination banners — The Method, Case Studies, the capstone and Frontend 101 —
-     are told apart by hue rather than by reading them. Navigation colours only: content
-     never reaches for either of these. */
+     are told apart by hue rather than by reading them. Navigation hues, with one
+     content exception: the case study claim labels use --sd-warm for an observation. */
   --sd-warm:      #c2a14d;
   --sd-warm-wash: rgba(194, 161, 77, 0.14);
   --sd-violet:      #9b6ef2;

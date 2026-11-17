@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "eslint",
     "read-time": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
-    "test": "node --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts && node --import ./scripts/ts-register.mjs scripts/read-time.mjs --check && vitest run",
+    "test": "node --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts && node --import ./scripts/ts-register.mjs src/lib/eventLoop.test.ts && node --import ./scripts/ts-register.mjs scripts/read-time.mjs --check && vitest run",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

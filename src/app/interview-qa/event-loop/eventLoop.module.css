@@ -1,0 +1,419 @@
+/* The same column the roadmap uses, kept here because the breadcrumb has to sit
+   outside it, flush under the navbar. Same reason as case-studies/page.module.css. */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 28px 96px;
+}
+
+.inner {
+  width: 100%;
+  max-width: 1120px;
+}
+
+.wrap {
+  margin: 28px 0 8px;
+}
+
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chipBtn,
+.roll {
+  font-family: var(--sd-font);
+  font-size: 12.5px;
+  color: var(--sd-muted);
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.chipBtn:hover,
+.roll:hover {
+  color: var(--sd-text);
+  border-color: var(--sd-border-strong);
+}
+
+.chipBtn[aria-pressed="true"] {
+  color: var(--sd-accent);
+  background: var(--sd-accent-wash);
+  border-color: color-mix(in srgb, var(--sd-accent) 45%, transparent);
+}
+
+.roll {
+  margin-left: auto;
+  color: var(--sd-text);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.code {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 10px;
+  padding: 12px 0;
+  overflow-x: auto;
+  font-family: var(--sd-font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.line {
+  padding: 0 14px;
+  white-space: pre;
+  color: var(--sd-muted);
+  border-left: 2px solid transparent;
+  transition: background 0.25s ease;
+}
+
+.lineOn {
+  background: var(--sd-accent-wash);
+  border-left-color: var(--sd-accent);
+  color: var(--sd-text);
+  font-weight: 600;
+}
+
+.point {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  color: var(--sd-text);
+}
+
+.hint {
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--sd-muted);
+}
+
+.boardHead {
+  font-family: var(--sd-font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sd-text);
+  margin-bottom: 10px;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  list-style: none;
+}
+
+.slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 10px 4px 4px;
+  border: 1.5px dashed var(--sd-border-strong);
+  border-radius: 9px;
+}
+
+.slotN {
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  font-family: var(--sd-font-mono);
+  font-size: 10px;
+  color: var(--sd-muted);
+}
+
+.slotOk {
+  border: 1.5px solid var(--sd-done);
+  background: var(--sd-done-wash);
+}
+
+.slotBad {
+  border: 1.5px solid var(--sd-danger);
+  background: var(--sd-danger-wash);
+}
+
+.pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 11px;
+  min-height: 62px;
+  border: 1.5px dashed var(--sd-border);
+  border-radius: 9px;
+}
+
+.poolDone {
+  font-size: 12.5px;
+  color: var(--sd-muted);
+}
+
+.tile {
+  min-width: 42px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--sd-border-strong);
+  border-radius: 8px;
+  background: var(--sd-surface2);
+  color: var(--sd-text);
+  font-family: var(--sd-font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tile:hover:not(:disabled) {
+  border-color: var(--sd-accent);
+  color: var(--sd-accent);
+}
+
+.tile:disabled {
+  opacity: 0.22;
+  cursor: default;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.btn,
+.btnPri {
+  font-family: var(--sd-font);
+  font-size: 13px;
+  min-height: 38px;
+  padding: 0 15px;
+  border-radius: 8px;
+  border: 1px solid var(--sd-border-strong);
+  background: var(--sd-surface);
+  color: var(--sd-text);
+  cursor: pointer;
+}
+
+.btnPri {
+  background: var(--sd-accent);
+  border-color: var(--sd-accent);
+  color: #fff;
+}
+
+.btn:disabled,
+.btnPri:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--sd-accent);
+  color: var(--sd-accent);
+}
+
+.result {
+  margin-top: 12px;
+  min-height: 1.5em;
+  font-size: 13.5px;
+  color: var(--sd-text);
+}
+
+.allRight {
+  color: var(--sd-done);
+}
+
+.spoiler {
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sd-border);
+}
+
+.summary {
+  font-family: var(--sd-font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sd-text);
+  cursor: pointer;
+}
+
+.walk {
+  margin-top: 14px;
+}
+
+.count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--sd-muted);
+}
+
+.msg {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  margin: 14px 0;
+  padding: 12px 14px;
+  min-height: 3.2em;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--sd-text);
+}
+
+.phase {
+  flex: none;
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--sd-border-strong);
+  color: var(--sd-muted);
+  white-space: nowrap;
+}
+
+.phaseMicro {
+  color: var(--sd-accent);
+  background: var(--sd-accent-wash);
+  border-color: color-mix(in srgb, var(--sd-accent) 45%, transparent);
+}
+
+.phaseMacro {
+  color: var(--sd-warm);
+  background: var(--sd-warm-wash);
+  border-color: color-mix(in srgb, var(--sd-warm) 45%, transparent);
+}
+
+.phaseDone {
+  color: var(--sd-done);
+  background: var(--sd-done-wash);
+  border-color: color-mix(in srgb, var(--sd-done) 45%, transparent);
+}
+
+.walkGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.box {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid var(--sd-border);
+  border-radius: 9px;
+}
+
+.boxWait {
+  border-style: dashed;
+}
+
+.boxLabel {
+  margin-bottom: 6px;
+  font-size: 11.5px;
+  color: var(--sd-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-height: 26px;
+}
+
+.chip {
+  font-family: var(--sd-font-mono);
+  font-size: 11.5px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  animation: pop 0.3s ease-out;
+}
+
+.chipStack {
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border);
+  color: var(--sd-text);
+}
+
+.chipWait {
+  border: 1px dashed var(--sd-border-strong);
+  color: var(--sd-muted);
+}
+
+.chipMicro {
+  background: var(--sd-accent-wash);
+  color: var(--sd-accent);
+}
+
+.chipMacro {
+  background: var(--sd-warm-wash);
+  color: var(--sd-warm);
+}
+
+.chipOut {
+  background: var(--sd-text);
+  color: var(--sd-bg);
+  font-weight: 600;
+}
+
+.empty {
+  font-size: 11.5px;
+  color: var(--sd-muted);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 860px) {
+  .grid,
+  .walkGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .roll {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    animation: none;
+  }
+  .line {
+    transition: none;
+  }
+}
+
+.answerHead {
+  margin: 44px 0 16px;
+  font-family: var(--sd-font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--sd-text);
+}

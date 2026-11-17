@@ -12,7 +12,10 @@ import styles from "./PrepBrowser.module.css";
 /* Questions that have outgrown the dialog: a board to fill in and a step-through
    to watch need a page, not a popup, so these open as links and are skipped when
    stepping through the answers. */
-const PRACTICE: Record<string, string> = { s13: "/interview-qa/event-loop" };
+const PRACTICE: Record<string, string> = {
+  s7: "/interview-qa/closures",
+  s13: "/interview-qa/event-loop",
+};
 
 /* A view-transition-name has to be a bare identifier, and topics have spaces and
    an ampersand in them. */

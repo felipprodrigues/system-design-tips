@@ -3,10 +3,16 @@
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Dialog } from "@base-ui/react/dialog";
+import Link from "next/link";
 import { TOPICS, type PrepSection, type Topic } from "@/lib/interviewPrep";
 import { toggleSaved, useSaved } from "@/lib/progress";
 import { setUrlState, useUrlState } from "@/lib/urlState";
 import styles from "./PrepBrowser.module.css";
+
+/* Questions that have outgrown the dialog: a board to fill in and a step-through
+   to watch need a page, not a popup, so these open as links and are skipped when
+   stepping through the answers. */
+const PRACTICE: Record<string, string> = { s13: "/interview-qa/event-loop" };
 
 /* A view-transition-name has to be a bare identifier, and topics have spaces and
    an ampersand in them. */
@@ -53,7 +59,8 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
   const params = useUrlState();
   const asked = params.get("topic");
   const openTopic = TOPICS.find((topic) => topic === asked) ?? null;
-  const at = sections.findIndex((section) => section.id === params.get("q"));
+  const q = params.get("q");
+  const at = q && !PRACTICE[q] ? sections.findIndex((section) => section.id === q) : -1;
   const openAt = at === -1 ? null : at;
 
   const show = (q: string | null, topic: Topic | null = openTopic) =>
@@ -69,7 +76,12 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
 
   function step(by: number) {
     if (openAt === null) return;
-    const next = sections[(openAt + by + sections.length) % sections.length];
+    let to = openAt;
+    // Past the ones that live on their own page: the dialog has nothing to show for them.
+    do {
+      to = (to + by + sections.length) % sections.length;
+    } while (PRACTICE[sections[to].id] && to !== openAt);
+    const next = sections[to];
     setTip(null);
     show(next.id, next.topic);
     // the next answer starts at its own beginning, not where the last one was left
@@ -150,21 +162,28 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
                 <ul className={styles.tocList}>
                   {items.map((section) => (
                     <li key={section.id}>
-                      <button
-                        type="button"
-                        className={styles.tocItem}
-                        /* No view transition: the dialog is about to cover the
-                           body, and the point is where you land when you close it. */
-                        onClick={() => show(section.id, section.topic)}
-                      >
-                        <span className={styles.tocNum}>{section.n}</span>
-                        {section.title}
-                        {saved.includes(section.id) && (
-                          <span className={styles.tocStar} aria-hidden="true">
-                            ★
-                          </span>
-                        )}
-                      </button>
+                      {PRACTICE[section.id] ? (
+                        <Link href={PRACTICE[section.id]} className={styles.tocItem}>
+                          <span className={styles.tocNum}>{section.n}</span>
+                          {section.title}
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className={styles.tocItem}
+                          /* No view transition: the dialog is about to cover the
+                             body, and the point is where you land when you close it. */
+                          onClick={() => show(section.id, section.topic)}
+                        >
+                          <span className={styles.tocNum}>{section.n}</span>
+                          {section.title}
+                          {saved.includes(section.id) && (
+                            <span className={styles.tocStar} aria-hidden="true">
+                              ★
+                            </span>
+                          )}
+                        </button>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -244,18 +263,24 @@ export default function PrepBrowser({ sections }: { sections: PrepSection[] }) {
                         <h3 className={styles.cardTitle}>
                           {/* Stretched: the ::after covers the card, so the whole thing
                           opens the answer while staying one tab stop. */}
-                          <button
-                            type="button"
-                            className={styles.open}
-                            onClick={() => show(section.id)}
-                          >
-                            {section.title}
-                          </button>
+                          {PRACTICE[section.id] ? (
+                            <Link href={PRACTICE[section.id]} className={styles.open}>
+                              {section.title}
+                            </Link>
+                          ) : (
+                            <button
+                              type="button"
+                              className={styles.open}
+                              onClick={() => show(section.id)}
+                            >
+                              {section.title}
+                            </button>
+                          )}
                         </h3>
 
                         <p className={styles.cardTeaser}>{section.teaser}</p>
                         <span className={styles.cardCta} aria-hidden="true">
-                          Read the answer →
+                          {PRACTICE[section.id] ? "Practise it →" : "Read the answer →"}
                         </span>
                       </article>
                     ))}

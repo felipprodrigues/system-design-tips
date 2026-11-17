@@ -1,0 +1,14 @@
+/* The same column the roadmap uses, kept here because the breadcrumb has to sit
+   outside it, flush under the navbar. */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 28px 96px;
+}
+
+.inner {
+  width: 100%;
+  max-width: 1120px;
+}

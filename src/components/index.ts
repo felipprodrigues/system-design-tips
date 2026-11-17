@@ -15,6 +15,7 @@ export { default as ConceptHeader } from "./Concept/ConceptHeader";
 export { default as ConceptLayout } from "./Concept/ConceptLayout";
 export { default as ConceptRail } from "./Concept/ConceptRail";
 export { default as CaseStudyBrowser } from "./CaseStudies/CaseStudyBrowser";
+export { default as CaseStudyCrumb } from "./CaseStudies/CaseStudyCrumb";
 export { default as AppShell } from "./Shell/AppShell";
 export { default as LearnedToggle } from "./Progress/LearnedToggle";
 export { default as BuyMeACoffee } from "./Support/BuyMeACoffee";

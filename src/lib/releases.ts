@@ -30,6 +30,11 @@ export const releases: Release[] = [
     title: "LinkedIn skills: a personal frontend case study",
     body: "Four things a paginated skills list did when I was updating my own, what I would build instead, and the tests that would have caught each one.",
   },
+  {
+    href: "/case-studies?set=frontend",
+    title: "Frontend at Scale case studies",
+    body: "Fifteen write-ups from the teams behind Netflix, Figma, Shopify and Slack: what they rewrote, what it cost, and what the numbers did afterwards.",
+  },
 ];
 
 export const latestRelease = releases[releases.length - 1];

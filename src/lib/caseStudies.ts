@@ -10,6 +10,7 @@ export const THEMES = [
   "Real-time",
   "API design",
   "Scaling",
+  "Frontend at scale",
 ] as const;
 
 export type Theme = (typeof THEMES)[number];
@@ -54,7 +55,7 @@ export const caseStudies: CaseStudy[] = [
     url: "https://www.figma.com/blog/how-figmas-multiplayer-technology-works/",
     takeaway:
       "Concurrent edits from many clients converging on one document, and why they chose their own approach over off-the-shelf conflict resolution.",
-    themes: ["Real-time", "Consistency"],
+    themes: ["Real-time", "Consistency", "Frontend at scale"],
     concept: "cap-theorem",
   },
   {
@@ -218,7 +219,146 @@ export const caseStudies: CaseStudy[] = [
     themes: ["Scaling"],
     concept: "horizontal-vs-vertical-scaling",
   },
+  {
+    title: "Making Netflix.com faster",
+    company: "Netflix",
+    url: "https://netflixtechblog.com/making-netflix-com-faster-f95d15f2e972",
+    takeaway:
+      "Shipping the signed-out homepage without the client framework, then prefetching the next page during the time the visitor spends reading this one.",
+    themes: ["Frontend at scale", "Caching"],
+  },
+  {
+    title: "Rearchitecting Airbnb's frontend",
+    company: "Airbnb",
+    url: "https://medium.com/airbnb-engineering/rearchitecting-airbnbs-frontend-5e213efc24d2",
+    takeaway:
+      "Pulling the view layer out of a Rails monolith into a server-rendered React tier, and the data and routing boundaries that had to be drawn before any of it could move.",
+    themes: ["Frontend at scale", "Scaling"],
+  },
+  {
+    title: "React Fiber architecture",
+    company: "Meta",
+    url: "https://github.com/acdlite/react-fiber-architecture",
+    takeaway:
+      "Why the reconciler was rebuilt around interruptible units of work, the deep dive on what a scheduler buys an interface that a recursive render cannot.",
+    themes: ["Frontend at scale"],
+  },
+  {
+    title: "How Shopify reduced storefront response times with a rewrite",
+    company: "Shopify",
+    url: "https://shopify.engineering/how-shopify-reduced-storefront-response-times-rewrite",
+    takeaway:
+      "Replacing the software behind every storefront with no downtime, by running the new renderer in the shadow of the old one and comparing responses until they matched.",
+    themes: ["Frontend at scale", "Availability & resilience"],
+  },
+  {
+    title: "When a rewrite isn't: rebuilding Slack on the desktop",
+    company: "Slack",
+    url: "https://slack.engineering/rebuilding-slack-on-the-desktop/",
+    takeaway:
+      "Migrating a desktop client people leave open all day, piece by piece behind the running product, because the big-bang rewrite was never going to ship.",
+    themes: ["Frontend at scale"],
+  },
+  {
+    title: "Counting calories: the UberEats.com web app rewrite",
+    company: "Uber",
+    url: "https://www.uber.com/us/en/blog/uber-eats-com-web-app-rewrite/",
+    takeaway:
+      "Treating page weight as a budget the team spends rather than a number it reports, and what that constraint forced out of the rewrite.",
+    themes: ["Frontend at scale"],
+  },
+  {
+    title: "A Pinterest progressive web app performance case study",
+    company: "Pinterest",
+    url: "https://medium.com/dev-channel/a-pinterest-progressive-web-app-performance-case-study-3bd6ed2e6154",
+    takeaway:
+      "A mobile web rebuild measured against the old site on real devices and real networks, with the engagement numbers that followed the load time down.",
+    themes: ["Frontend at scale"],
+    concept: "latency-throughput-availability",
+  },
+  {
+    title: "From development to real users: creating a web performance story",
+    company: "Spotify",
+    url: "https://engineering.atspotify.com/2022/09/from-development-to-real-users-how-to-create-a-web-performance-story",
+    takeaway:
+      "How to prove a performance investment is worth making and that it landed, by pairing lab numbers with what real users actually experienced.",
+    themes: ["Frontend at scale"],
+    concept: "latency-throughput-availability",
+  },
+  {
+    title: "Measuring and optimizing performance of single-page applications",
+    company: "LinkedIn",
+    url: "https://www.linkedin.com/blog/engineering/optimization/measuring-and-optimizing-performance-of-single-page-applications",
+    takeaway:
+      "A single-page app has no page load to measure, so they defined what finished means from real user monitoring and optimized against that instead.",
+    themes: ["Frontend at scale"],
+    concept: "latency-throughput-availability",
+  },
+  {
+    title: "Edison: a faster, more powerful Dropbox on the web",
+    company: "Dropbox",
+    url: "https://dropbox.tech/frontend/edison-webserver-a-faster-more-powerful-dropbox-on-the-web",
+    takeaway:
+      "Replacing the web serving tier so the browser gets markup early and streams the rest, rather than waiting on one slow backend call before anything renders.",
+    themes: ["Frontend at scale", "Scaling"],
+  },
+  {
+    title: "How we use web components at GitHub",
+    company: "GitHub",
+    url: "https://github.blog/engineering/architecture-optimization/how-we-use-web-components-at-github/",
+    takeaway:
+      "Betting the shared component layer on the platform instead of a framework, so behaviour survives the next rendering stack the app moves to.",
+    themes: ["Frontend at scale"],
+  },
+  {
+    title: "How Stripe builds interactive docs with Markdoc",
+    company: "Stripe",
+    url: "https://stripe.dev/blog/markdoc",
+    takeaway:
+      "A content format that gives writers interactivity and page logic without letting application code into the content, so the docs stay editable by people who do not ship code.",
+    themes: ["Frontend at scale", "API design"],
+  },
+  {
+    title: "Building Cloudflare on Cloudflare",
+    company: "Cloudflare",
+    url: "https://blog.cloudflare.com/building-cloudflare-on-cloudflare/",
+    takeaway:
+      "Moving the dashboard and its APIs onto the same edge platform they sell, and what running your own product as its biggest customer exposes.",
+    themes: ["Frontend at scale", "Scaling"],
+    concept: "content-delivery-networks",
+  },
+  {
+    title: "Framework-defined infrastructure",
+    company: "Vercel",
+    url: "https://vercel.com/blog/framework-defined-infrastructure",
+    takeaway:
+      "Deriving the infrastructure a deploy needs from the framework's own code, instead of writing it a second time by hand as configuration.",
+    themes: ["Frontend at scale"],
+  },
 ];
+
+/** The two shelves the browser opens on. Carrying the frontend theme puts a study
+    in that shelf and takes it out of the other one, so every study sits on exactly
+    one of them. */
+export const SHELVES = {
+  frontend: {
+    title: "Frontend at Scale",
+    blurb:
+      "The part of the system the user actually touches, rebuilt by the teams behind Netflix, Figma, Shopify and Slack. What they rewrote, what it cost, and what the numbers did afterwards.",
+    studies: caseStudies.filter((study) => study.themes.includes("Frontend at scale")),
+  },
+  systems: {
+    title: "Postmortem blueprints",
+    blurb:
+      "The backend behind the product: outages with the timeline attached, the papers the patterns came from, and write-ups of designs that held. Each one links to the concept it backs.",
+    studies: caseStudies.filter((study) => !study.themes.includes("Frontend at scale")),
+  },
+} as const;
+
+export type ShelfKey = keyof typeof SHELVES;
+
+export const isShelfKey = (value: string | null): value is ShelfKey =>
+  value !== null && value in SHELVES;
 
 const publishedConcepts = new Map(
   groups.flatMap((group) => group.concepts.map((concept) => [concept.slug, concept.title] as const)),

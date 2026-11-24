@@ -1,7 +1,9 @@
+/* The same column the roadmap uses: (index)/layout.module.css pads outside a
+   1120px inner, so the cap here adds the 28px gutters back in. */
 .page {
   flex: 1;
-  max-width: var(--sd-page-max);
+  max-width: calc(1120px + 56px);
   width: 100%;
   margin: 0 auto;
-  padding: var(--sd-page-pad-y) var(--sd-page-pad-x) 72px;
+  padding: 34px 28px 96px;
 }

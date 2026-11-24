@@ -1,0 +1,40 @@
+.badge {
+  display: inline-block;
+  flex: none;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.tag {
+  vertical-align: middle;
+  padding: 2px 8px;
+  border-radius: var(--sd-radius-xs);
+  background: color-mix(in srgb, var(--ds-tone, var(--sd-accent)) 15%, transparent);
+  color: var(--ds-tone, var(--sd-accent));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.outline {
+  padding: 1px 6px;
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-xs);
+  color: var(--ds-tone, var(--sd-muted));
+  font-family: var(--sd-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.pill {
+  padding: 2px 8px;
+  border-radius: var(--sd-radius-pill);
+  background: var(--ds-tone-wash, var(--sd-accent-wash));
+  border: 1px solid color-mix(in srgb, var(--ds-tone, var(--sd-accent)) 35%, transparent);
+  color: var(--ds-tone, var(--sd-accent));
+  font-family: var(--sd-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  line-height: 1.6;
+}

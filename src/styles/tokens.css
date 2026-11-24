@@ -51,6 +51,13 @@
   --sd-page-max:   900px;
   --sd-page-pad-x: 24px;
   --sd-page-pad-y: 56px;
+
+  --sd-radius-xs:   4px;
+  --sd-radius-sm:   8px;
+  --sd-radius-md:   10px;
+  --sd-radius-lg:   12px;
+  --sd-radius-xl:   16px;
+  --sd-radius-pill: 999px;
 }
 
 /* Light mode — soft neutral gray, never stark white */

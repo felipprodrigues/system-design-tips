@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { CaseStudyBrowser, Hero } from "@/components";
+import { CaseStudyBrowser } from "@/components";
+import { Hero } from "@/design-system";
 import { SITE_NAME } from "@/lib/seo";
 
 const description =

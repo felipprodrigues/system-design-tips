@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { studiesForConcept } from "@/lib/caseStudies";
 import { bySlug } from "@/lib/concepts";
+import type { ConceptSlugProps } from "./types";
 import styles from "./Concept.module.css";
 
 /* Related concepts are authored per entry; related case studies come from the
    link caseStudies.ts already carries. Only half the concepts have a study, so
    that block is dropped entirely rather than rendered empty. */
-export default function ConceptRail({ slug }: { slug: string }) {
+export default function ConceptRail({ slug }: ConceptSlugProps) {
   const entry = bySlug.get(slug);
   if (!entry) throw new Error(`Unknown concept slug: ${slug}`);
 

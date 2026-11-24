@@ -1,0 +1,56 @@
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: var(--sd-radius-sm);
+  color: var(--sd-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.soft {
+  border: none;
+  background: var(--sd-surface2);
+}
+
+.soft:hover {
+  color: var(--sd-text);
+  background: var(--sd-border-strong);
+}
+
+.outline {
+  border: 1px solid var(--sd-border);
+  background: var(--sd-surface);
+}
+
+.outline:hover {
+  color: var(--sd-text);
+  border-color: var(--sd-border-strong);
+}
+
+.ghost {
+  border: none;
+  background: none;
+}
+
+.ghost:hover {
+  color: var(--sd-text);
+  background: var(--sd-surface2);
+}
+
+.sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  font-size: 11px;
+}

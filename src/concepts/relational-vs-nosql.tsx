@@ -10,6 +10,7 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { Definition } from "@/design-system";
 
 const quizCards: QuizCard[] = [
   {
@@ -84,7 +85,7 @@ const terms = [
   { title: "JOIN", def: "A relational query operation that combines rows from two or more tables based on a related column, the mechanism that makes normalized, non-duplicated data practical to query." },
   { title: "Document store", def: "A NoSQL database that stores data as flexible, JSON-like documents rather than fixed rows, allowing different records in the same collection to have different fields." },
   { title: "Polyglot persistence", def: "Using multiple different databases within one system, each chosen for the access pattern it fits best, instead of forcing every use case into a single database." },
-];
+] satisfies Definition[];
 
 const seenInTheWild = [
   "Banks and payment processors like Stripe run their core ledger on relational databases (typically PostgreSQL or a similar system) specifically because ACID guarantees are non-negotiable when money is involved.",

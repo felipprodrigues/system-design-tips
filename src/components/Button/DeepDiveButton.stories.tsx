@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import DeepDiveButton from "./DeepDiveButton";
 
 const meta = {
+  title: "Components/DeepDiveButton",
   component: DeepDiveButton,
   args: { onClick: () => {} },
 } satisfies Meta<typeof DeepDiveButton>;

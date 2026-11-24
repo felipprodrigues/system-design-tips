@@ -9,6 +9,7 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { PathStep, TaggedCard } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -87,7 +88,7 @@ const nfrLevers = [
     tagBg: "rgba(157, 176, 247,0.12)",
     body: "What is the maximum acceptable downtime? A target of 99.9% versus 99.99% changes your redundancy strategy, deployment process, and infrastructure cost by orders of magnitude.",
   },
-];
+] satisfies TaggedCard[];
 
 const botePipeline = [
   { label: "DAU", value: "100,000,000" },
@@ -95,7 +96,7 @@ const botePipeline = [
   { label: "Daily requests", value: "1,000,000,000" },
   { label: "÷ seconds/day", value: "86,400" },
   { label: "Average RPS", value: "≈ 11,574" },
-];
+] satisfies PathStep[];
 
 const storagePipeline = [
   { label: "Daily active writers", value: "100,000,000" },
@@ -103,7 +104,7 @@ const storagePipeline = [
   { label: "Daily storage", value: "5 TB / day" },
   { label: "× 365 days", value: "×365" },
   { label: "Annual storage", value: "≈ 1.8 PB / year" },
-];
+] satisfies PathStep[];
 
 export default function Concept05() {
   const [panelOpen, setPanelOpen] = useState(false);

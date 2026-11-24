@@ -10,6 +10,8 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { Definition } from "@/design-system";
+import type { TitledText } from "@/types/content";
 
 const quizCards: QuizCard[] = [
   {
@@ -78,7 +80,7 @@ const terms = [
   { title: "Statelessness", def: "A server design where no request-specific data is kept in that server's local memory between requests, so any server in the fleet can handle any request equally." },
   { title: "Elasticity", def: "The ability to automatically add or remove capacity in response to real-time demand, practical mainly with horizontal scaling of stateless components." },
   { title: "Single point of failure", def: "A component whose failure takes down the whole system, a risk that vertical scaling never removes since it's still one machine." },
-];
+] satisfies Definition[];
 
 const seenInTheWild = [
   "Stack Overflow famously ran on a relatively small number of powerful, vertically scaled servers for years, a case where vertical scaling was a deliberate, working choice, not a failure to modernize.",
@@ -114,10 +116,7 @@ function PItem({
   num, title, body,
   numColor = "var(--sd-accent)",
   numBg = "rgba(76, 110, 245,0.15)",
-}: {
-  num: string; title: string; body: string;
-  numColor?: string; numBg?: string;
-}) {
+}: TitledText & { num: string; numColor?: string; numBg?: string }) {
   return (
     <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 8, padding: "12px 14px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>

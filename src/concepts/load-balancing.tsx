@@ -9,6 +9,7 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { TaggedCard } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -94,7 +95,7 @@ const algorithms = [
     tagBg: "rgba(157, 176, 247,0.12)",
     body: "Each server is assigned a weight proportional to its capacity. A server with twice the RAM and CPU might receive weight 2, getting twice the traffic. Use when your server fleet is heterogeneous.",
   },
-];
+] satisfies TaggedCard[];
 
 const comparisonRows = [
   { strategy: "Round Robin", use: "Uniform, stateless requests on identical servers", downside: "Ignores actual server load" },

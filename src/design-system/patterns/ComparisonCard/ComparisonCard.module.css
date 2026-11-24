@@ -1,0 +1,29 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-md);
+  overflow: hidden;
+}
+
+.head {
+  padding: 10px 16px;
+  background: var(--ds-tone-wash);
+  color: var(--ds-tone);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.body {
+  flex: 1;
+  padding: 14px 16px;
+}
+
+.foot {
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--sd-border);
+  background: var(--sd-bg);
+}

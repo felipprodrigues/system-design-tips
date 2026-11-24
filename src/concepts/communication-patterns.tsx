@@ -9,6 +9,7 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { TaggedCard } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -123,7 +124,7 @@ const patterns = [
     tagBg: "rgba(127, 147, 242,0.12)",
     body: "A persistent one-way stream from server to client over plain HTTP. Simpler to deploy than WebSockets and passes through existing infrastructure more easily, but carries no client-to-server messages on the same channel.",
   },
-];
+] satisfies TaggedCard[];
 
 // The five shapes, in the order the concept introduces them. Short and long
 // polling share one shape here; the timing difference is covered above.

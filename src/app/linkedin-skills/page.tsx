@@ -3,8 +3,8 @@ import { join } from "node:path";
 import type { Metadata } from "next";
 import { parseSections } from "@/lib/interviewPrep";
 import { SITE_NAME } from "@/lib/seo";
-import { findings } from "./data";
-import PaginatedListSync, { type Deeper } from "./PaginatedListSync";
+import { findings, type FindingLinks } from "./data";
+import PaginatedListSync from "./PaginatedListSync";
 
 /* Sibling to /frontend and /walkthrough: the body brings its own Breadcrumb and
    PageLayout, the same chrome a concept page has, but it is not one of them and
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 /* Titles come from the Q&A document rather than being copied into data.ts, so a
    renamed question renames its link here. A number that no longer resolves is
    dropped rather than rendered as a dead link. */
-function links(): Record<number, Deeper[]> {
+function links(): FindingLinks {
   const sections = parseSections(
     readFileSync(join(process.cwd(), "src/content/interview-qa.html"), "utf8"),
   );

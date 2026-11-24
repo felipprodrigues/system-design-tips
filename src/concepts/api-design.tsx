@@ -10,6 +10,9 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { Definition } from "@/design-system";
+import type { CompareColumn } from "@/types/content";
+import type { KindNode, StyleProfile } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -78,7 +81,7 @@ const styles = [
       { role: "Where it fits", body: "gRPC fits internal service-to-service calls inside one organization's infrastructure, where both ends are services you control, the schema evolves together, and call volume and latency actually matter, not calls made by an arbitrary third-party developer." },
     ],
   },
-];
+] satisfies StyleProfile[];
 
 const terms = [
   { title: "Resource", def: "In REST, a noun the API exposes and lets you act on with HTTP verbs, like a user, an order, or a post, identified by a stable URL." },
@@ -87,7 +90,7 @@ const terms = [
   { title: "N+1 problem", def: "A performance bug, common in naive GraphQL resolvers, where fetching a list of N items triggers N additional individual queries for related data instead of one batched query." },
   { title: "Protocol Buffers (protobuf)", def: "The binary, strictly typed serialization format gRPC uses, defined in a .proto schema file shared by client and server, compiled into native code for each language." },
   { title: "Schema-first API", def: "An API design approach where the contract (types, fields, operations) is defined explicitly up front, as GraphQL and gRPC both require, catching mismatches before runtime rather than after." },
-];
+] satisfies Definition[];
 
 const seenInTheWild = [
   "Facebook created GraphQL specifically to solve mobile over-fetching and under-fetching across News Feed, Marketplace, and other products that all pull from the same enormous social graph with very different client needs.",
@@ -132,7 +135,7 @@ const restVsGraphql = [
       "Server resolves the nested relationship internally",
     ],
   },
-];
+] satisfies Omit<CompareColumn, "wash">[];
 
 /* Boxes for the "where each style sits" figure. */
 const topologyNodes = [
@@ -143,7 +146,7 @@ const topologyNodes = [
   { kind: "Server", name: "Post service", x: 730, y: 140, w: 190, accent: true },
   { kind: "Client", name: "Partner integration", x: 20, y: 300, w: 180, accent: false },
   { kind: "Server", name: "Public REST API", x: 360, y: 300, w: 210, accent: true },
-];
+] satisfies KindNode[];
 
 export default function Concept08() {
   const [panelOpen, setPanelOpen] = useState(false);

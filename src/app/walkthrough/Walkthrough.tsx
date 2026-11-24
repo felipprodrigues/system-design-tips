@@ -1,15 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { LearnedToggle } from "@/components";
 import {
+  ArrowMarker,
   Breadcrumb,
-  LearnedToggle,
-  QuizCarousel,
-  PageLayout,
+  Callout,
+  DataTable,
+  Diagram,
+  Eyebrow,
+  Figure,
+  Heading,
   MarkerList,
-} from "@/components";
-import type { QuizCard } from "@/components";
+  PageLayout,
+  Prose,
+  QuizCarousel,
+  QuizSection,
+  Section,
+  Strong,
+  Text,
+  type QuizCard,
+} from "@/design-system";
 import { hl } from "@/lib/highlight";
+import type { Hue } from "@/types/content";
 
 const quizCards: QuizCard[] = [
   {
@@ -53,11 +66,9 @@ const whyThisExists = [
   "A sequence fixes all three, because each step *produces something the next step needs*. If a step produced nothing, you skipped it, whether or not you said its name out loud.",
 ];
 
-interface Step {
+interface Step extends Hue {
   n: number;
   label: string;
-  color: string;
-  wash: string;
   asks: string;
   produces: string;
   trap: string;
@@ -204,9 +215,6 @@ const keyPoints = [
   "*Redundancy is a claim until you say what fails over and how long it takes.* Step 7 is where a design stops being optimistic.",
 ];
 
-/* Not a concept: it's the order you work in when applying them, so it sits outside
-   the numbered sequence — no group, no prev/next, nothing to mark complete. */
-
 export default function Walkthrough() {
   const [active, setActive] = useState(1);
   const step = steps[active - 1];
@@ -216,54 +224,46 @@ export default function Walkthrough() {
       <Breadcrumb section="The Method" concept="A 7-Step Walkthrough for Any System Design" />
 
       <PageLayout>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", fontFamily: "var(--sd-font-mono)", textTransform: "uppercase", color: "var(--sd-accent)", marginBottom: 10 }}>
+        <Eyebrow variant="accent" style={{ marginBottom: 10 }}>
           The Method
-        </p>
+        </Eyebrow>
         <LearnedToggle />
-        <h1 className="sd-h1">A 7-Step Walkthrough for Any System Design</h1>
-        <p className="sd-lede">
+        <Heading level="page">A 7-Step Walkthrough for Any System Design</Heading>
+        <Text variant="lede">
           The order to work in when you&rsquo;re handed a blank page and a vague problem.
-        </p>
+        </Text>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Big Idea</p>
-          <div className="sd-prose" style={{ fontSize: 16 }}>
+        <Section eyebrow="Big Idea">
+          <Prose size="lg">
             <p>
-              These seven steps are <strong className="sd-strong">an order of operations, not a checklist of topics</strong>. Each one produces something concrete that the next one needs, so a step you named but didn&rsquo;t finish is a step you skipped. The sequence is what stops a design from being a picture you drew first and justified afterwards.
+              These seven steps are <Strong>an order of operations, not a checklist of topics</Strong>. Each one produces something concrete that the next one needs, so a step you named but didn&rsquo;t finish is a step you skipped. The sequence is what stops a design from being a picture you drew first and justified afterwards.
             </p>
-          </div>
-        </div>
+          </Prose>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Walk It</p>
-          <h2 className="sd-h2">Seven Steps, One Diagram</h2>
-
-          <div className="sd-prose">
+        <Section eyebrow="Walk It" title="Seven Steps, One Diagram">
+          <Prose>
             <p>
-              Step through it. <strong className="sd-strong">The diagram only gains a box when a step earns it</strong>, and the greyed-out pieces are what you have not justified yet.
+              Step through it. <Strong>The diagram only gains a box when a step earns it</Strong>, and the greyed-out pieces are what you have not justified yet.
             </p>
-          </div>
+          </Prose>
 
           {/* Stepper and diagram in one card: pressing an arrow changes a picture that is
               already level with your cursor, instead of one somewhere off the top of the
               screen. The arrows sit outside the scrolling area so they stay put on a
               narrow viewport, where the diagram pans under them. */}
-          <div className="sd-figure" style={{ padding: 0, overflow: "hidden", marginBottom: 14 }}>
+          <Figure flush style={{ marginBottom: 14 }}>
             <div style={{ overflowX: "auto", padding: "28px 24px 24px" }}>
-              <svg
+              <Diagram
                 viewBox="0 0 980 210"
-                role="group"
-                aria-label="Seven-step walkthrough. Select a step to see what it produces and what it adds to the diagram."
-                style={{ width: "100%", minWidth: 720, display: "block" }}
+                interactive
+                label="Seven-step walkthrough. Select a step to see what it produces and what it adds to the diagram."
+                title="The seven-step walkthrough"
+                minWidth={720}
               >
-                <title>The seven-step walkthrough</title>
                 <defs>
-                  <marker id="sd-step-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
-                  </marker>
-                  <marker id="sd-loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-muted)" />
-                  </marker>
+                  <ArrowMarker id="sd-step-arrow" color="border-strong" />
+                  <ArrowMarker id="sd-loop-arrow" />
                 </defs>
 
                 {steps.map((s, i) => {
@@ -328,7 +328,6 @@ export default function Walkthrough() {
                   );
                 })}
 
-                {/* Load-shaped findings send you back to the diagram */}
                 <path
                   d="M 910 140 V 180 H 300 V 140"
                   fill="none"
@@ -340,10 +339,9 @@ export default function Walkthrough() {
                 <text x="605" y="199" textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="11.5" fill="var(--sd-muted)">
                   what the numbers reveal sends you back to the diagram
                 </text>
-              </svg>
+              </Diagram>
             </div>
 
-            {/* Divider and caption in one strip: it joins the halves and says where you are. */}
             <div
               aria-live="polite"
               style={{ borderTop: "1px solid var(--sd-border)", borderBottom: "1px solid var(--sd-border)", background: "var(--sd-surface2)", padding: "9px 14px", textAlign: "center", fontFamily: "var(--sd-font-mono)", fontSize: 11.5, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--sd-muted)" }}
@@ -353,17 +351,14 @@ export default function Walkthrough() {
 
             <div style={{ position: "relative" }}>
               <div style={{ overflowX: "auto", padding: "24px 56px" }}>
-                <svg
+                <Diagram
                   viewBox="0 0 940 340"
-                  role="img"
-                  aria-label={`The design after step ${active}. ${step.draws}`}
-                  style={{ width: "100%", minWidth: 640, display: "block" }}
+                  label={`The design after step ${active}. ${step.draws}`}
+                  title={`The design after step ${active}`}
+                  minWidth={640}
                 >
-                  <title>{`The design after step ${active}`}</title>
                   <defs>
-                    <marker id="sd-hl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
-                    </marker>
+                    <ArrowMarker id="sd-hl-arrow" color="border-strong" />
                   </defs>
 
                   {active < 3 && (
@@ -444,7 +439,7 @@ export default function Walkthrough() {
                       still a single point of failure
                     </text>
                   )}
-                </svg>
+                </Diagram>
               </div>
 
               <button
@@ -466,18 +461,17 @@ export default function Walkthrough() {
                 →
               </button>
             </div>
-          </div>
+          </Figure>
 
-          {/* The step's colour is the whole background rather than a stripe down one edge. */}
           <div style={{ display: "flex", gap: 12, alignItems: "flex-start", background: step.wash, border: "1px solid var(--sd-border)", borderRadius: 8, padding: "13px 16px" }}>
             <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: step.color, flexShrink: 0, lineHeight: 1.65 }}>{`0${step.n}`}</span>
-            <p className="sd-text-sm-tight">{step.draws}</p>
+            <Text variant="sm-tight">{step.draws}</Text>
           </div>
 
           <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "10px 14px", margin: "16px 0 10px" }}>
-            <p className="sd-text-sm-tight" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5 }}>
+            <Text variant="sm-tight" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5 }}>
               {step.asks}
-            </p>
+            </Text>
           </div>
 
           <div className="sd-grid-2">
@@ -489,63 +483,42 @@ export default function Walkthrough() {
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: step.color, marginBottom: 5 }}>
                   {pt.role}
                 </div>
-                <p className="sd-text-sm-tight">{hl(pt.body)}</p>
+                <Text variant="sm-tight">{hl(pt.body)}</Text>
               </div>
             ))}
           </div>
 
-          <div className="sd-callout sd-callout-accent" style={{ marginTop: 18 }}>
-            Watch what steps 1 and 2 draw: <strong className="sd-strong">nothing</strong>. That is the whole argument. Two of the seven steps produce no picture at all, and they are the two most often skipped, because skipping them is the only way to start drawing immediately.
-          </div>
-        </div>
+          <Callout tone="accent" style={{ marginTop: 18 }}>
+            Watch what steps 1 and 2 draw: <Strong>nothing</Strong>. That is the whole argument. Two of the seven steps produce no picture at all, and they are the two most often skipped, because skipping them is the only way to start drawing immediately.
+          </Callout>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Why This Exists</p>
-          <h2 className="sd-h2">What Goes Wrong Without An Order</h2>
+        <Section eyebrow="Why This Exists" title="What Goes Wrong Without An Order">
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists.map(hl)} />
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">The Mechanism</p>
-          <h2 className="sd-h2">What Each Step Hands The Next</h2>
-
-          <div className="sd-prose">
+        <Section eyebrow="The Mechanism" title="What Each Step Hands The Next">
+          <Prose>
             <p>
-              This is the test for whether a step is finished. <strong className="sd-strong">If you cannot say what it handed forward, it did not happen.</strong>
+              This is the test for whether a step is finished. <Strong>If you cannot say what it handed forward, it did not happen.</Strong>
             </p>
-          </div>
+          </Prose>
 
-          <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-              <thead>
-                <tr>
-                  {["", "What moves forward", "What it unblocks"].map((h, i) => (
-                    <th key={i} style={{ padding: "12px 16px", textAlign: "left", background: "var(--sd-surface2)", color: "var(--sd-muted)", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "1px solid var(--sd-border)" }}>
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {handoffs.map(([edge, carries, unblocks]) => (
-                  <tr key={edge}>
-                    <td style={{ padding: "12px 16px", borderBottom: "1px solid var(--sd-border)", fontFamily: "var(--sd-font-mono)", fontSize: 12.5, color: "var(--sd-teal)", whiteSpace: "nowrap" }}>{edge}</td>
-                    <td style={{ padding: "12px 16px", borderBottom: "1px solid var(--sd-border)", color: "var(--sd-text)" }}>{carries}</td>
-                    <td style={{ padding: "12px 16px", borderBottom: "1px solid var(--sd-border)", color: "var(--sd-muted)" }}>{unblocks}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          <DataTable
+            caption="What each step hands the next"
+            columns={[
+              { header: "", tone: "teal", mono: true, nowrap: true },
+              { header: "What moves forward" },
+              { header: "What it unblocks", tone: "muted" },
+            ]}
+            rows={handoffs}
+          />
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Going Deeper</p>
-          <h2 className="sd-h2">Where Each Step Lives In The Roadmap</h2>
-
-          <div className="sd-prose">
+        <Section eyebrow="Going Deeper" title="Where Each Step Lives In The Roadmap">
+          <Prose>
             <p>This walkthrough is the map, not the territory. Each step has a concept that does the actual work.</p>
-          </div>
+          </Prose>
 
           <div className="sd-stack">
             {stepConcepts.map(([stepName, title, href]) => (
@@ -560,32 +533,26 @@ export default function Walkthrough() {
             ))}
           </div>
 
-          <div className="sd-callout sd-callout-accent" style={{ marginTop: 18 }}>
+          <Callout tone="accent" style={{ marginTop: 18 }}>
             The seven steps come from ByteByteGo&rsquo;s guide to system design interviews. Their{" "}
             <a href="https://github.com/ByteByteGoHq/system-design-101" target="_blank" rel="noreferrer" style={{ color: "var(--sd-accent)" }}>
               system-design-101 repository
             </a>{" "}
             is the wider reference behind it, and worth reading alongside these concepts.
-          </div>
-        </div>
+          </Callout>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Common Mistakes</p>
-          <h2 className="sd-h2">Ways This Framework Gets Misused</h2>
+        <Section eyebrow="Common Mistakes" title="Ways This Framework Gets Misused">
           <MarkerList mark="✕" color="var(--sd-red)" bg="var(--sd-danger-wash)" items={commonMistakes} />
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Key Points</p>
-          <h2 className="sd-h2">What To Carry Out Of This</h2>
+        <Section eyebrow="Key Points" title="What To Carry Out Of This">
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} />
-        </div>
+        </Section>
 
-        <div className="sd-quiz">
-          <p className="sd-eyebrow-accent">Quiz Review</p>
-          <p className="sd-quiz-title">Check your understanding</p>
+        <QuizSection>
           <QuizCarousel cards={quizCards} />
-        </div>
+        </QuizSection>
       </PageLayout>
     </>
   );

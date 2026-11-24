@@ -16,7 +16,6 @@ import {
   Smartphone,
   Zap,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import {
   ConceptHeader,
   LearnedToggle,
@@ -24,7 +23,9 @@ import {
   QuizCarousel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { LifelinesProps } from "@/design-system";
 import { hl } from "@/lib/highlight";
+import type { ArrowProps, BoxProps, CapstoneStage, FurtherReading, IconLane, Placed, SequenceMessageProps, StagedNode } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -153,7 +154,7 @@ const stages = [
     cost: "Those one to two minutes are an outage for every write. The standby costs as much as the primary while doing nothing, and a promotion that fires on a brief network blip instead of a real death is its own kind of incident.",
     dive: { slug: "latency-throughput-availability", title: "Latency, Throughput & Availability" },
   },
-];
+] satisfies CapstoneStage[];
 
 const recap = [
   { piece: "Scaling", when: "One machine is at its limit", cost: "A ceiling, or statelessness" },
@@ -206,7 +207,7 @@ const furtherReading = [
     note: "The standby-and-promotion model from stage ten, documented by the service most teams actually use for it, including the failover window you are buying.",
     href: "https://aws.amazon.com/rds/features/multi-az/",
   },
-];
+] satisfies FurtherReading[];
 
 const arrowDefs = (
   <defs>
@@ -218,22 +219,6 @@ const arrowDefs = (
     </marker>
   </defs>
 );
-
-interface BoxProps {
-  x: number;
-  y: number;
-  w?: number;
-  h?: number;
-  label: string;
-  sub?: string;
-  n?: number;
-  accent?: boolean;
-  /** The piece this stage just added, ringed so the eye finds it. */
-  isNew?: boolean;
-  /** A lucide icon renders as a nested <svg>, positioned with x and y like any
-      other SVG child. With one present the text left-aligns beside it. */
-  icon?: LucideIcon;
-}
 
 /* One labelled node. `n` stamps the stage number that introduced it, which is the
    only reason the big diagram reads as a summary rather than another architecture
@@ -269,7 +254,9 @@ function Box({ x, y, w = 150, h = 48, label, sub, n, accent, isNew, icon: Icon }
   );
 }
 
-function Arrow({ x1, y1, x2, y2, label }: { x1: number; y1: number; x2: number; y2: number; label?: string }) {
+type PlainArrowProps = Pick<ArrowProps, "x1" | "y1" | "x2" | "y2" | "label">;
+
+function Arrow({ x1, y1, x2, y2, label }: PlainArrowProps) {
   return (
     <g>
       <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-101-arrow)" />
@@ -289,24 +276,7 @@ function Arrow({ x1, y1, x2, y2, label }: { x1: number; y1: number; x2: number; 
    Positions are hand-placed for the full stage-ten layout, so early stages read
    as sparse on purpose — that is what the architecture actually looked like. */
 
-interface Placed {
-  from: number;
-  /** Last stage this exists for, when a later stage replaces it. */
-  until?: number;
-}
-
-interface DiagramNode extends Placed {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  sub?: string;
-  x: number;
-  y: number;
-  w?: number;
-  accent?: boolean;
-}
-
-const diagramNodes: DiagramNode[] = [
+const diagramNodes: StagedNode[] = [
   { id: "phones", icon: Smartphone, label: "Phones", sub: "users", x: 365, y: 16, from: 1 },
   { id: "cdn", icon: Globe, label: "CDN", sub: "edge nodes", x: 100, y: 108, from: 4 },
   { id: "limiter", icon: ShieldCheck, label: "Rate limiter", sub: "per client", x: 365, y: 108, from: 8 },
@@ -323,15 +293,9 @@ const diagramNodes: DiagramNode[] = [
   { id: "standby", icon: LifeBuoy, label: "Standby", sub: "kept in sync", x: 540, y: 480, w: 140, from: 10 },
 ];
 
-interface DiagramEdge extends Placed {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  label?: string;
-}
+type StagedEdge = Placed & PlainArrowProps;
 
-const diagramEdges: DiagramEdge[] = [
+const diagramEdges: StagedEdge[] = [
   { x1: 440, y1: 64, x2: 440, y2: 272, label: "requests", from: 1, until: 1 },
   { x1: 440, y1: 64, x2: 440, y2: 188, label: "requests", from: 2, until: 7 },
   { x1: 440, y1: 64, x2: 440, y2: 104, label: "API calls", from: 8 },
@@ -591,9 +555,9 @@ const lanes = [
   { label: "App server", x: 320, icon: Server },
   { label: "Primary", x: 560, icon: Database, accent: true },
   { label: "Replica", x: 780, icon: Copy, accent: true },
-];
+] satisfies IconLane[];
 
-function Lifelines({ bottom }: { bottom: number }) {
+function Lifelines({ bottom }: Pick<LifelinesProps, "bottom">) {
   return (
     <>
       {lanes.map((l) => {
@@ -611,7 +575,7 @@ function Lifelines({ bottom }: { bottom: number }) {
   );
 }
 
-function Msg({ from, to, y, label, danger }: { from: number; to: number; y: number; label: string; danger?: boolean }) {
+function Msg({ from, to, y, label, danger }: SequenceMessageProps & { danger?: boolean }) {
   const dir = to > from ? -6 : 6;
   return (
     <g>

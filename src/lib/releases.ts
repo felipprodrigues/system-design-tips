@@ -1,9 +1,9 @@
-export interface Release {
+import type { TitledText } from "@/types/content";
+
+export interface Release extends TitledText {
   /** Doubles as the announcement's identity: the localStorage key is derived from
       it, so a new href is a new notice and there is no key to remember to bump. */
   href: string;
-  title: string;
-  body: string;
 }
 
 /* Append-only, newest LAST — the same shape as the concept entries, so shipping

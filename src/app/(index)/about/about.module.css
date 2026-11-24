@@ -31,9 +31,6 @@
   margin-bottom: 0;
 }
 
-/* Availability card. Two panes: a rail that carries the status at a glance, and
-   a body with the ask, the filters (remote, stack, timezone) and the contact
-   buttons. Stacks to one column on narrow screens. */
 .status {
   display: grid;
   grid-template-columns: 196px 1fr;
@@ -73,8 +70,6 @@
   background: var(--sd-done);
 }
 
-/* Decorative mark, drawn inline so every colour is a token and the thing
-   survives the light/dark flip. A raster would not. */
 .art {
   flex: 1;
   display: flex;
@@ -103,7 +98,6 @@
   margin-bottom: 18px;
 }
 
-/* One row, no wrapping: the three filters read as a single line of facts. */
 .facts {
   display: flex;
   flex-wrap: nowrap;
@@ -192,7 +186,6 @@
     padding: 22px 20px 24px;
   }
 
-  /* Below the breakpoint there is no room for one line, so let them wrap. */
   .facts,
   .links {
     flex-wrap: wrap;

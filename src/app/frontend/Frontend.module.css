@@ -16,8 +16,6 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Only the highlights move: the stack diagram itself never animates, because the
-   page argues the stack does not change, only who owns which part of it. */
 .stack rect,
 .stack line,
 .stack path,

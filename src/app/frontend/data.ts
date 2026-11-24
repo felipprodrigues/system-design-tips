@@ -1,11 +1,11 @@
-/* Phase is ours, not the source's: the first two stages produce no code, the
-   middle three produce the app, the last four are passes over what exists. */
+import type { Hue, TitledText } from "../../types/content";
 
-export interface Phase {
+/* A stage's phase: the first two produce no code, the middle three build the app,
+   the last four are passes over what exists. */
+
+export interface Phase extends Hue {
   id: "frame" | "build" | "harden";
   name: string;
-  color: string;
-  wash: string;
   thesis: string;
 }
 
@@ -51,7 +51,6 @@ export interface Stage {
   phase: Phase["id"];
   label: string;
   decides: string;
-  /** `q` is the question asked of the design, `a` what you walk out having chosen. */
   checks: Check[];
   /** How you know the stage is finished rather than merely mentioned. */
   tell: string;
@@ -59,7 +58,7 @@ export interface Stage {
   draws: string;
   /** Diagram ids this stage lights up. */
   lit: string[];
-  analogy?: { title: string; body: string };
+  analogy?: TitledText;
   deepDives?: DeepDive[];
 }
 
@@ -67,7 +66,7 @@ export interface DeepDive {
   id: string;
   question: string;
   intro: string;
-  cards: { title: string; body: string }[];
+  cards: TitledText[];
   note: string;
 }
 
@@ -1443,7 +1442,7 @@ export const stages: Stage[] = [
   },
 ];
 
-/* The stack, top to bottom. `kind` is the mono label; `id` is what a stage claims. */
+/* Top to bottom. A stage's `lit` names these ids. */
 export const layers = [
   { id: "shell", kind: "FRAME", name: "Shell + Router" },
   { id: "ui", kind: "PAINT", name: "UI components" },
@@ -1479,8 +1478,8 @@ export const quadrants = [
   { id: "br", rule: "Fetch it again. Don't store it.", x: 640, y: 340, anchor: "end" },
 ] as const;
 
-/* Published Core Web Vitals thresholds: at or under `good` is good, over `poor`
-   is poor, between them is the middle band. `scale` is only the axis length. */
+/* Core Web Vitals thresholds: at or under `good` is good, over `poor` is poor.
+   `scale` is only the axis length. */
 export const vitals = [
   {
     name: "LCP",
@@ -1596,9 +1595,8 @@ export const keyPoints = [
   "*Every stage has a tell.* If you can't say what you walked away with, you named the stage instead of doing it.",
 ];
 
-/* Stage number to the questions on /interview-qa that answer one of its decisions
-   in full. Authored numbers only: the titles and the group each one opens in are
-   resolved from the Q&A document itself, so nothing here can drift out of date. */
+/* Stage number to the /interview-qa section numbers that answer its decisions.
+   Numbers only: titles and topics are resolved from the Q&A document. */
 export const deeper: { n: number; ids: number[] }[] = [
   { n: 2, ids: [21, 61] },
   { n: 3, ids: [56, 57, 36, 37] },

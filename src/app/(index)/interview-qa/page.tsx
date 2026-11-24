@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
-import { Hero, LearnedToggle, PrepBrowser } from "@/components";
+import { LearnedToggle, PrepBrowser } from "@/components";
+import { Hero } from "@/design-system";
 import { parseSections } from "@/lib/interviewPrep";
 import { SITE_NAME } from "@/lib/seo";
 

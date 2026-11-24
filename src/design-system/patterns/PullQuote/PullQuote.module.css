@@ -1,0 +1,9 @@
+.quote {
+  margin: 20px 0 0;
+  padding: 2px 0 2px 16px;
+  border-left: 2px solid var(--ds-tone, var(--sd-teal));
+  color: var(--sd-text);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.75;
+}

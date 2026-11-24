@@ -1,0 +1,40 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: var(--sd-radius-pill);
+  border: 1px solid var(--sd-border);
+  background: var(--sd-surface);
+  color: var(--sd-muted);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.chip:hover {
+  color: var(--sd-text);
+  border-color: var(--sd-border-strong);
+}
+
+.chip[aria-pressed="true"] {
+  color: var(--ds-tone, var(--sd-accent));
+  border-color: var(--ds-tone, var(--sd-accent));
+  background: var(--ds-tone-wash, var(--sd-accent-wash));
+}
+
+.count {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  opacity: 0.75;
+}

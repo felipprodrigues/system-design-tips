@@ -11,6 +11,7 @@ import {
   Term,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { KindNode, NamedStep, PathStep } from "./types";
 
 /* Single source for every term on this page: the inline <T> tooltips and the
    Key terms glossary both read from here, so the two can't drift apart. */
@@ -130,14 +131,14 @@ const lifecycleSteps = [
   { name: "Application Logic", body: "The server executes business logic: validating input, checking authentication, and performing calculations." },
   { name: "Data Persistence", body: "If the application requires stored data, it queries a database, waits for the result, and processes the record." },
   { name: "Response Generation", body: "The application constructs a response (typically JSON or HTML) and sends it back through the stack to the client." },
-];
+] satisfies NamedStep[];
 
 const anatomySteps = [
   { name: "The Request", body: "A shopper types \"mechanical keyboard\" into the search box and hits enter." },
   { name: "The Routing", body: "The load balancer inspects the request. If search traffic is under heavy load, it might route this one to a pool of \"Search Services\" optimized for read-heavy operations, rather than the \"User Account\" service." },
   { name: "The Processing", body: "The application server receives the request. It doesn't just pass the query directly to the database — it validates that the search string isn't malicious, checks if the user is authenticated, and verifies if the result is already available in memory." },
   { name: "The Data Fetch", body: "If the database is hit, the request creates a \"connection session.\" The database interprets the SQL/NoSQL command, optimizes the execution plan, and returns the rows." },
-];
+] satisfies NamedStep[];
 
 const seenInTheWild = [
   "Cloudflare and Google's public DNS resolvers (1.1.1.1 and 8.8.8.8) exist specifically to make the DNS resolution step of this lifecycle faster and more reliable than relying on a default ISP resolver.",
@@ -166,14 +167,14 @@ const requestPath = [
   { label: "Load Balancer", value: "Forward Request" },
   { label: "App Server", value: "Query Data" },
   { label: "Database", value: "" },
-];
+] satisfies PathStep[];
 
 const responsePath = [
   { label: "Database", value: "" },
   { label: "App Server", value: "Return Result" },
   { label: "Load Balancer", value: "HTTP Response" },
   { label: "Client", value: "Render Result" },
-];
+] satisfies PathStep[];
 
 /* Boxes for the opening figure. `kind` is the small mono label above the name. */
 const chainNodes = [
@@ -181,7 +182,7 @@ const chainNodes = [
   { kind: "Server", name: "DNS Resolver", x: 300, y: 28, w: 196, accent: true },
   { kind: "Server", name: "Web Server", x: 560, y: 168, w: 180, accent: true },
   { kind: "DB", name: "Database", x: 800, y: 168, w: 150, accent: true },
-];
+] satisfies KindNode[];
 
 export default function Concept07() {
   const [panelOpen, setPanelOpen] = useState(false);

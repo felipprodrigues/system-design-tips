@@ -21,14 +21,14 @@ export interface ConceptEntry {
 /* `minutes` is the one field nobody authors: it is joined on below. */
 type ConceptSource = Omit<ConceptEntry, "minutes">;
 
-export interface ConceptGroup {
+export interface ConceptGroup<C = ConceptEntry> {
   title: string;
-  concepts: ConceptEntry[];
+  concepts: C[];
 }
 
 // Kept in sync with what's actually live under src/app/concepts — the
 // ship-next-concept workflow appends an entry here the moment a concept ships.
-const SOURCE: { title: string; concepts: ConceptSource[] }[] = [
+const SOURCE: ConceptGroup<ConceptSource>[] = [
   {
     title: "Fundamentals",
     concepts: [

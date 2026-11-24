@@ -1,14 +1,11 @@
 import { bySlug } from "@/lib/concepts";
+import type { ConceptSlugProps } from "./types";
 import styles from "./Concept.module.css";
-
-interface ConceptHeaderProps {
-  slug: string;
-}
 
 /* The same eyebrow-and-title block was inline-styled into all fourteen bodies.
    Title, number, section and read time all come from the concept index, so the
    body passes a slug and nothing else. */
-export default function ConceptHeader({ slug }: ConceptHeaderProps) {
+export default function ConceptHeader({ slug }: ConceptSlugProps) {
   const entry = bySlug.get(slug);
   if (!entry) throw new Error(`Unknown concept slug: ${slug}`);
   const { concept, group } = entry;

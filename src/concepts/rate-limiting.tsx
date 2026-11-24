@@ -8,6 +8,9 @@ import {
 } from "@/components";
 import type { QuizCard } from "@/components";
 import { hl } from "@/lib/highlight";
+import type { Definition, DiagramEdgeProps } from "@/design-system";
+import type { ExampledColumn } from "@/types/content";
+import type { AccentNodeProps, ExampledColumnProps, FurtherReading, NamedStep } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -48,7 +51,7 @@ const concept = [
   { name: "A limiter has to say so, out loud", body: "A well-designed limiter returns a clear signal rather than a silent drop: an *HTTP 429* status, plus headers like Retry-After or X-RateLimit-Remaining, so a well-behaved client knows it was throttled and exactly when it's safe to try again instead of guessing and retrying blindly." },
   { name: "Distributed enforcement needs a shared store", body: "When the limit has to hold across many API server instances rather than one process, counts or token balances live in a *fast shared store like Redis*. Each server enforcing its own local limit independently would let a client multiply the effective limit by the number of servers, which is the single most common way a correct-looking limiter turns out not to limit anything." },
   { name: "Limits are layered, not singular", body: "A coarse limit at the edge, a CDN or API gateway, blocks obvious abuse *cheaply, before it reaches application servers*. A finer per-endpoint or per-user limit deeper in the stack protects specific expensive operations, like search or file upload, far more tightly than a cheap health-check endpoint needs." },
-];
+] satisfies NamedStep[];
 
 const anatomy = [
   { title: "Limit", def: "The ceiling itself: how many requests are allowed. A number with no window attached means nothing." },
@@ -57,7 +60,7 @@ const anatomy = [
   { title: "Counter store", def: "Where the count or token balance lives. A single process can hold it in memory; a fleet of servers needs a shared store." },
   { title: "Enforcement point", def: "Where the check actually runs: at the CDN, at the API gateway, or inside the service handling the request." },
   { title: "Response", def: "What a rejected client is told. A limit the client can't see is a limit it can't cooperate with." },
-];
+] satisfies Definition[];
 
 const terms = [
   { title: "Token bucket", def: "An algorithm where a bucket refills tokens at a steady rate and each request consumes one, allowing bursts up to the bucket's capacity while capping the long-run average rate." },
@@ -68,7 +71,7 @@ const terms = [
   { title: "429 Too Many Requests", def: "The standard HTTP status returned when a client has exceeded its limit, ideally paired with a Retry-After header telling the client when to try again." },
   { title: "Retry-After", def: "The response header naming the delay, in seconds or as a date, before a retry will be accepted. It's the difference between a client backing off correctly and guessing." },
   { title: "Distributed rate limiting", def: "Enforcing a single limit consistently across many server instances by tracking counts in a shared store, instead of each server enforcing its own local, inconsistent limit." },
-];
+] satisfies Definition[];
 
 const bucketCompare = [
   {
@@ -109,7 +112,7 @@ const bucketCompare = [
       breaks: "Downstream never sees more than 10 a second, which is the point. But the 50th queued request waits five seconds for a response the client may have already given up waiting for.",
     },
   },
-];
+] satisfies ExampledColumn[];
 
 const algorithms = [
   { name: "Token bucket", burst: "Yes, up to capacity", cost: "A balance and a timestamp per key", note: "The general-purpose default: steady average, forgiving of a short burst", use: "Most APIs you've used: a few calls in a row are fine, hammering it for a minute isn't" },
@@ -166,7 +169,7 @@ const furtherReading = [
     note: "A production limiter described from the integrator's side: what the limits are, what a 429 looks like, and the retry behaviour expected of clients.",
     href: "https://docs.stripe.com/rate-limits",
   },
-];
+] satisfies FurtherReading[];
 
 /* Shared arrowhead for the topology and flow diagrams. */
 const flowArrow = (
@@ -177,7 +180,7 @@ const flowArrow = (
   </defs>
 );
 
-function Node({ x, y, w, h, label, sub, accent }: { x: number; y: number; w: number; h: number; label: string; sub?: string; accent?: boolean }) {
+function Node({ x, y, w, h, label, sub, accent }: AccentNodeProps) {
   return (
     <g>
       <rect x={x} y={y} width={w} height={h} rx={9} fill="var(--sd-surface2)" stroke={accent ? "var(--sd-accent)" : "var(--sd-border-strong)"} strokeWidth="1.5" />
@@ -189,7 +192,7 @@ function Node({ x, y, w, h, label, sub, accent }: { x: number; y: number; w: num
   );
 }
 
-function Edge({ d, label, lx, ly }: { d: string; label?: string; lx?: number; ly?: number }) {
+function Edge({ d, label, lx, ly }: Pick<DiagramEdgeProps, "d" | "label" | "lx" | "ly">) {
   return (
     <g>
       <path d={d} fill="none" stroke="var(--sd-border-strong)" strokeWidth="1.5" markerEnd="url(#sd-rl-arrow)" />
@@ -200,7 +203,7 @@ function Edge({ d, label, lx, ly }: { d: string; label?: string; lx?: number; ly
   );
 }
 
-function BucketCard({ item }: { item: (typeof bucketCompare)[number] }) {
+function BucketCard({ item }: ExampledColumnProps) {
   const { example } = item;
   return (
     <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, overflow: "hidden", display: "flex", flexDirection: "column" }}>

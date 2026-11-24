@@ -1,4 +1,6 @@
-import type { QuizCard } from "@/components";
+import type { Definition, QuizCard } from "@/design-system";
+import type { PrepLink } from "@/lib/interviewPrep";
+import type { CompareColumn, FlowStep, Hue, TitledText } from "@/types/content";
 
 /* Everything here is an outside observation of someone else's product, so the
    shape of a finding keeps the guess physically separate from the thing seen.
@@ -27,6 +29,8 @@ export interface Finding {
   /** Interview Q&A sections that already cover the mechanics underneath. */
   qa: number[];
 }
+
+export type FindingLinks = Record<Finding["n"], PrepLink[]>;
 
 export const findings: Finding[] = [
   {
@@ -115,17 +119,17 @@ export const findings: Finding[] = [
 export const ownership = [
   {
     owner: "The server",
-    colour: "var(--sd-accent)",
+    color: "var(--sd-accent)",
     holds: "The records: name, category, endorsement count, rank. Everything that has to survive a reload, and the only copy anyone else can see.",
   },
   {
     owner: "The client",
-    colour: "var(--sd-teal)",
+    color: "var(--sd-teal)",
     holds: "Which filter is selected, which row is being edited, whether a dialog is open, what has been typed. State nobody else needs and no server should hold.",
   },
   {
     owner: "Nobody",
-    colour: "var(--sd-green)",
+    color: "var(--sd-green)",
     holds: "The list on screen. Derived from the records and the filter on every render, which is why it cannot go stale. The moment it becomes a copy with an owner, it can.",
   },
 ];
@@ -137,12 +141,12 @@ export const lifecycle = [
   { name: "Reconcile every cached collection", sub: "not only the one being rendered" },
   { name: "Re-derive the view", sub: "no copy to update, so nothing to forget" },
   { name: "Check the pagination still holds", sub: "the offset moved whether or not you moved it" },
-];
+] satisfies FlowStep[];
 
 export const strategies = [
   {
     label: "Optimistic update",
-    colour: "var(--sd-teal)",
+    color: "var(--sd-teal)",
     wash: "rgba(127, 147, 242, 0.12)",
     points: [
       "Remove the row from the cache first, then send the request",
@@ -153,7 +157,7 @@ export const strategies = [
   },
   {
     label: "Refetch after success",
-    colour: "var(--sd-amber)",
+    color: "var(--sd-amber)",
     wash: "rgba(106, 118, 163, 0.12)",
     points: [
       "Send, wait for confirmation, then read the affected collections again",
@@ -162,7 +166,7 @@ export const strategies = [
       "Nothing to roll back, because nothing changed before it was confirmed",
     ],
   },
-];
+] satisfies CompareColumn[];
 
 export const terms = [
   { title: "Offset pagination", def: "Asking for a window by position: start at 60, give me 10. Cheap to implement, and correct only while nothing in front of position 60 changes." },
@@ -173,12 +177,10 @@ export const terms = [
   { title: "Derived state", def: "A value recomputed from other state on every render rather than stored. It cannot go stale, because there is no copy of it to go stale." },
   { title: "Reconciliation", def: "Bringing a cached copy back into agreement with what the server now holds, after a write moved one of them." },
   { title: "Stable sort", def: "A sort that leaves records with equal keys in the order it found them, so a list does not reshuffle itself between renders for no visible reason." },
-];
+] satisfies Definition[];
 
-export interface TestTier {
+export interface TestTier extends Hue {
   tier: string;
-  colour: string;
-  wash: string;
   runs: string;
   cases: string[];
   catches: string;
@@ -187,7 +189,7 @@ export interface TestTier {
 export const testing: TestTier[] = [
   {
     tier: "Unit",
-    colour: "var(--sd-done)",
+    color: "var(--sd-done)",
     wash: "var(--sd-done-wash)",
     runs: "Milliseconds, no DOM, no network. The pagination and cache arithmetic as plain functions over plain data.",
     cases: [
@@ -202,7 +204,7 @@ export const testing: TestTier[] = [
   },
   {
     tier: "Integration",
-    colour: "var(--sd-accent)",
+    color: "var(--sd-accent)",
     wash: "var(--sd-accent-wash)",
     runs: "The real component against a mocked network, so cache, derivation and rendering are exercised together.",
     cases: [
@@ -217,7 +219,7 @@ export const testing: TestTier[] = [
   },
   {
     tier: "End to end",
-    colour: "var(--sd-violet)",
+    color: "var(--sd-violet)",
     wash: "var(--sd-violet-wash)",
     runs: "A real browser against a real build. Slow, so keep it to the few paths that would be embarrassing to ship broken.",
     cases: [
@@ -230,7 +232,7 @@ export const testing: TestTier[] = [
   },
 ];
 
-export const earlyWarning: { title: string; body: string }[] = [
+export const earlyWarning: TitledText[] = [
   {
     title: "Assert the invariant",
     body: "For an append-only pager, the next offset should equal the number of records loaded for that filter. One check after every cache write turns finding 1 into a stack trace.",

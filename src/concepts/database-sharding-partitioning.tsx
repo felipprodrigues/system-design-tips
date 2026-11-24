@@ -9,6 +9,7 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { TitledText } from "@/types/content";
 
 const quizCards: QuizCard[] = [
   {
@@ -93,7 +94,7 @@ const partitionTypes = [
     title: "Composite Partitioning",
     body: "A combination of strategies — for example, sharding by tenant_id across servers, then partitioning each shard locally by transaction_date.",
   },
-];
+] satisfies TitledText[];
 
 const tradeoffs = [
   {
@@ -108,7 +109,7 @@ const tradeoffs = [
     title: "Cross-Shard Transactions",
     body: "Operations spanning multiple shards are inherently difficult, often requiring two-phase commit protocols or a distributed transaction manager to keep them atomic.",
   },
-];
+] satisfies TitledText[];
 
 export default function Concept02DatabaseSharding() {
   const [panelOpen, setPanelOpen] = useState(false);

@@ -1,0 +1,122 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  max-width: 1040px;
+}
+
+.groupTitle {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+  margin-bottom: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-md);
+  overflow: hidden;
+}
+
+.chip {
+  height: 64px;
+  border-bottom: 1px solid var(--sd-border);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px 12px;
+}
+
+.name {
+  font-family: var(--sd-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sd-text);
+}
+
+.value {
+  font-family: var(--sd-font-mono);
+  font-size: 11px;
+  color: var(--sd-muted);
+}
+
+.usage {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--sd-muted);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-lg);
+  overflow: hidden;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 18px;
+  background: var(--sd-surface);
+  border-bottom: 1px solid var(--sd-border);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.layer {
+  padding: 22px;
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-lg);
+}
+
+.radius {
+  width: 84px;
+  height: 56px;
+  background: var(--sd-surface2);
+  border: 1px solid var(--sd-border-strong);
+}
+
+.shadow {
+  height: 64px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-md);
+}
+
+.motion {
+  width: 48px;
+  height: 28px;
+  border-radius: var(--sd-radius-sm);
+  background: var(--sd-accent);
+  transition-property: transform;
+}
+
+.row:hover .motion {
+  transform: translateX(160px);
+}

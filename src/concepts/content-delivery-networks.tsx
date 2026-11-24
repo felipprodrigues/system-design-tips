@@ -9,6 +9,9 @@ import {
 } from "@/components";
 import type { QuizCard } from "@/components";
 import { hl } from "@/lib/highlight";
+import type { Definition, DiagramEdgeProps } from "@/design-system";
+import type { ExampledColumn } from "@/types/content";
+import type { AccentNodeProps, ExampledColumnProps, FurtherReading, NamedStep } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -61,7 +64,7 @@ const concept = [
   { name: "TTL and invalidation matter just as much here", body: "A long TTL means a stale asset, an outdated CSS file after a deploy, can keep being served for a while. This is why deployed static assets are given *content-hashed filenames*: a changed file becomes a genuinely new URL, so it can never collide with a stale cached entry." },
   { name: "The edge is also a shield", body: "Because edge nodes absorb the vast majority of repeat requests, *only a small fraction of real traffic ever reaches the origin*. That both reduces origin load during normal spikes and blunts many denial-of-service patterns, since the flood is spread across a global network rather than aimed at one machine." },
   { name: "Edge compute is a thin slice, not a backend", body: "Some CDNs run small pieces of application logic on the edge node itself: A/B test routing, header rewriting, redirects, cheap authorization checks. It is genuinely useful for *per-request work that would be silly to send to the origin*, but it is a narrow slice of logic, not a replacement for real personalized backend processing." },
-];
+] satisfies NamedStep[];
 
 const anatomy = [
   { title: "Edge node (PoP)", def: "The server near the user that answers the request. How many there are, and how close they are, is most of what you are buying." },
@@ -70,7 +73,7 @@ const anatomy = [
   { title: "TTL", def: "How long an edge node may serve its copy before re-checking the origin. The dial between freshness and hit ratio." },
   { title: "Cache hit ratio", def: "The fraction of requests answered from the edge rather than forwarded. The single number that tells you how much the CDN is actually doing." },
   { title: "Invalidation", def: "The way content is removed before its TTL expires: an explicit purge, or a new URL. Both work, only one is instant everywhere." },
-];
+] satisfies Definition[];
 
 const terms = [
   { title: "Edge server / point of presence (PoP)", def: "A CDN server located geographically close to end users, holding cached copies of content so requests do not need to travel all the way to the origin." },
@@ -81,7 +84,7 @@ const terms = [
   { title: "Edge compute", def: "Small pieces of application logic executed directly on a CDN's edge nodes rather than at the origin, used for lightweight per-request work like routing or header rewriting." },
   { title: "Anycast", def: "The routing trick that makes one IP address resolve to whichever PoP is nearest the user. It is how a single URL reaches a different machine depending on where you ask from." },
   { title: "Cold cache", def: "An edge node that does not yet hold a requested object, so the request becomes a miss and pays the full trip to the origin. Every region starts cold under origin pull." },
-];
+] satisfies Definition[];
 
 const modeCompare = [
   {
@@ -122,7 +125,7 @@ const modeCompare = [
       breaks: "You paid to put the file in 40 places before knowing whether 38 of them would ever want it. Worth it for a scheduled release everyone downloads at once, wasteful for a long tail of user uploads.",
     },
   },
-];
+] satisfies ExampledColumn[];
 
 const goodFit = [
   "Static assets: images, CSS, JavaScript bundles, fonts",
@@ -199,7 +202,7 @@ const furtherReading = [
     note: "What it looks like when the CDN is the product: appliances placed inside ISP networks, because a generic edge was not close enough or cheap enough at that scale.",
     href: "https://openconnect.netflix.com/",
   },
-];
+] satisfies FurtherReading[];
 
 /* Shared arrowhead for the flow diagram. */
 const flowArrow = (
@@ -210,7 +213,7 @@ const flowArrow = (
   </defs>
 );
 
-function Node({ x, y, w, h, label, sub, accent }: { x: number; y: number; w: number; h: number; label: string; sub?: string; accent?: boolean }) {
+function Node({ x, y, w, h, label, sub, accent }: AccentNodeProps) {
   return (
     <g>
       <rect x={x} y={y} width={w} height={h} rx={9} fill="var(--sd-surface2)" stroke={accent ? "var(--sd-accent)" : "var(--sd-border-strong)"} strokeWidth="1.5" />
@@ -222,7 +225,7 @@ function Node({ x, y, w, h, label, sub, accent }: { x: number; y: number; w: num
   );
 }
 
-function Edge({ d, label, lx, ly, dim }: { d: string; label?: string; lx?: number; ly?: number; dim?: boolean }) {
+function Edge({ d, label, lx, ly, dim }: Pick<DiagramEdgeProps, "d" | "label" | "lx" | "ly" | "dim">) {
   return (
     <g>
       <path d={d} fill="none" stroke={dim ? "var(--sd-border)" : "var(--sd-border-strong)"} strokeWidth="1.5" strokeDasharray={dim ? "4 4" : undefined} markerEnd="url(#sd-cdn-arrow)" />
@@ -233,7 +236,7 @@ function Edge({ d, label, lx, ly, dim }: { d: string; label?: string; lx?: numbe
   );
 }
 
-function ModeCard({ item }: { item: (typeof modeCompare)[number] }) {
+function ModeCard({ item }: ExampledColumnProps) {
   const { example } = item;
   return (
     <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, overflow: "hidden", display: "flex", flexDirection: "column" }}>

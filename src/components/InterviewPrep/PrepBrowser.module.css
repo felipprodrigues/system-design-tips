@@ -652,12 +652,16 @@
 
 /* Cross-references: "§26" in the prose, rewritten by parseSections into the title
    of the section it points at. Reading it tells you what it means; hovering or
-   focusing it shows that section's teaser in the one .tip bubble. Nothing to
-   click — the reference informs in place. */
+   focusing it shows that section's teaser in the one .tip bubble. Only a
+   reference to a practice page is a link; the rest inform in place. */
 .prose :global(.xref) {
   color: var(--sd-accent);
   cursor: help;
   border-bottom: 1px dotted color-mix(in srgb, var(--sd-accent) 55%, transparent);
+}
+.prose :global(a.xref) {
+  cursor: pointer;
+  text-decoration: none;
 }
 .prose :global(.xref):hover,
 .prose :global(.xref):focus-visible {

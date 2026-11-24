@@ -14,7 +14,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/interview-qa/closures`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/interview-qa/deep-vs-shallow-copy`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/interview-qa/event-loop`, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/interview-qa/set-map-weakmap-weakset`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/interview-qa/set`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/interview-qa/map`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/interview-qa/weakmap`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/interview-qa/weakset`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/about`, changeFrequency: "yearly", priority: 0.5 },
     ...groups.flatMap((group) =>
       group.concepts.map((concept) => ({

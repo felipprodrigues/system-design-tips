@@ -1200,98 +1200,62 @@ function UserCardContainer({ id }) {
 
 <h2 id="s40">40. What is a Set?</h2>
 
-<p><strong>A Set is just a list that refuses duplicates.</strong> Picture a plain array — same thing, one extra rule: the same value can never go in twice. You have <code>["a", "b", "c"]</code> and you try to add another <code>"b"</code>? Nothing happens. A <code>"b"</code> is already in there, so the Set silently ignores you. That is the entire concept.</p>
+<p><strong>A Set is a collection of unique values.</strong> It works like a list with one extra rule: a value can only be in it once. Adding a value that is already there does nothing, with no error and no duplicate.</p>
 
-<p>Which means you use a Set whenever you want a guarantee that there is no duplicate data — a list of tags, selected ids, email addresses, nodes you have already visited. You never have to check first; the Set keeps itself clean.</p>
+<pre><code>const tags = new Set(["js", "css", "js"]);   // Set(2) {"js", "css"}
+tags.add("css");                             // already there: nothing changes
+tags.size;                                   // 2</code></pre>
 
-<p><strong>The second reason to use one: asking "is X in here?" is instant.</strong> With an array you have to walk it — <code>arr.includes(x)</code> checks every element until it finds a match, so a list of 10,000 items can mean 10,000 comparisons. A Set answers in one step, no matter how big it is. Put <code>arr.includes()</code> inside a loop and you have an O(n²) function; swap in <code>set.has()</code> and it is O(n).</p>
+<p><strong>Asking "is X in here?" is instant.</strong> <code>arr.includes(x)</code> walks the array until it finds a match, so it is O(n). <code>set.has(x)</code> is a hash lookup, O(1) at any size. Put <code>includes</code> inside a loop and the function is O(n²); swap in <code>has</code> and it is O(n).</p>
 
-<p>Beyond those two things it behaves like an array you would expect: it keeps insertion order, it is iterable, and it holds values of any type.</p>
-
-<p><strong>A concrete one.</strong> Think of the contacts app on your phone. You import a SIM card, then a Google account, then a CSV your colleague emailed you — and now "Maria" is in there four times. That is an array: it took everything it was handed. If the phone number were the key of a Set, the second, third and fourth Maria would simply never have been added. (Hopefully one day my phone book will be fixed.)</p>
-
-<pre><code>const numbers = ["+55 11 90000", "+55 11 91111", "+55 11 90000"];
-
-numbers.length;              // 3 — Maria is in here twice
-new Set(numbers).size;       // 2 — the duplicate never made it in</code></pre>
-
-<p><strong>So should you avoid arrays and use Sets everywhere?</strong> Absolutely not. A Set is important when you need to ensure there is no duplicate data. When you do not have that need, an array is often preferable: it is cheaper per element, you get index access (<code>arr[0]</code>, which a Set has no concept of), you get the whole <code>map</code>/<code>filter</code>/<code>reduce</code>/<code>sort</code>/<code>slice</code> toolkit, and it survives <code>JSON.stringify</code> (a Set serializes to <code>{}</code> — a classic bug). You have to analyze the needs of your own application and decide which structure is the better fit.</p>
-
-<p class="say"><strong>One nuance, if someone pushes on it.</strong> In the classic textbook version, a set is backed by an array, so every insertion has to scan the whole thing for a duplicate first — O(n) to add, versus O(1) for a plain <code>push</code>. JavaScript's <code>Set</code> is hash-backed, so <code>add</code> is O(1) and that particular penalty does not apply. The lesson still does: uniqueness is never free, it is just paid in memory and overhead here instead of time.</p>
+<p><strong>How it decides two values are the same.</strong> Basically <code>===</code>, with one fix: <code>NaN</code> equals itself, so a Set holds at most one <code>NaN</code>. The spec calls this <code>SameValueZero</code>. Objects are compared by identity, not by content: two literals that look identical are two different values, so <code>new Set([{a:1}, {a:1}]).size</code> is <code>2</code>.</p>
 
 <pre><code>const s = new Set([1, 2, 2, 3]);   // Set(3) {1, 2, 3}
 
-s.add(4);         // chainable, returns the Set
-s.has(2);         // true  — O(1), vs O(n) for arr.includes
+s.add(4);         // returns the Set, so calls chain
+s.has(2);         // true
 s.delete(2);      // true if it was there
-s.size;           // 3     — property, not a method
+s.size;           // 3: a property, not a method
 s.clear();
 
-const unique = [...new Set(arr)];                  // the idiom everybody knows
-const unique = Array.from(new Set(arr));
+[...new Set(arr)];                 // dedupe an array
+for (const v of s) {}              // iterates in insertion order</code></pre>
 
-for (const v of s) {}                              // iterable
-s.forEach(v =&gt; {});                                // (value, value, set) — key === value</code></pre>
+<p>ES2025 added the set algebra: <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>symmetricDifference</code>, <code>isSubsetOf</code>, <code>isSupersetOf</code>, <code>isDisjointFrom</code>.</p>
 
-<p><strong>How does it decide two values are "the same"?</strong> Basically <code>===</code>, with one fix: <code>NaN</code> counts as equal to itself, so a Set can only ever hold one <code>NaN</code>. (The spec name for this rule is <code>SameValueZero</code>.) The trap question is objects: they are compared by identity, not by content, so two objects that look identical are still two different values — <code>new Set([{a:1},{a:1}]).size === 2</code>.</p>
+<p><strong>When an array is still the better fit.</strong> A Set has no index access (<code>arr[0]</code>), no <code>map</code>/<code>filter</code>/<code>sort</code>, and <code>JSON.stringify</code> turns it into <code>{}</code>. If you do not need uniqueness or fast membership, keep the array.</p>
 
-<p>ES2025 added set methods — <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>symmetricDifference</code>, <code>isSubsetOf</code>, <code>isSupersetOf</code>, <code>isDisjointFrom</code>. Mentioning them is cheap currency.</p>
-
-<p><strong>When I reach for it:</strong> deduping, "have I visited this node" in a graph walk, tracking selected ids, tag/permission membership — anywhere I would otherwise write <code>arr.includes()</code> inside a loop and make it O(n²).</p>
+<p><strong>When I reach for it:</strong> deduping, "have I visited this node" in a graph walk, selected ids, tag or permission membership: anywhere I would otherwise write <code>arr.includes()</code> inside a loop.</p>
 
 
 <h2 id="s41">41. What is a Map?</h2>
 
-<div class="say"><strong>Analogy &mdash; the cloakroom at a theatre.</strong> You hand over your coat and you get a numbered ticket. When you come back, the attendant does not walk down the rail looking at every coat until they spot yours &mdash; they read the number and go straight to hook 47. <strong>Your ticket is the key, your coat is the value, and the whole point of the system is that finding your coat takes the same time whether there are 10 coats or 10,000.</strong> A <code>Map</code> is that cloakroom.</div>
+<p><strong>A Map is a collection of key&nbsp;&rarr;&nbsp;value pairs.</strong> You store a value under a key, then get it back by that key in one step, without searching. Keys can be any value, objects included, and the Map remembers the order they were added in.</p>
 
-<p><strong>The problem it solves &mdash; start here, because this is the actual purpose.</strong> Say you have 5,000 users and a user id, and you need that user's name. With an array you have to <em>look</em>:</p>
+<p><strong>The problem it solves.</strong> Finding a record in an array means walking it:</p>
 
-<pre><code>// the slow way: walk the shelf until you spot it
-const user = users.find(u =&gt; u.id === 4211);   // checks up to 5,000 items</code></pre>
+<pre><code>const user = users.find(u =&gt; u.id === 4211);   // checks up to every user</code></pre>
 
-<p>Do that once and nobody notices. Do it inside a loop over 5,000 orders and you have just done 25 million comparisons for something that should have been instant. A <code>Map</code> removes the searching entirely: you built the ticket system up front, so now you just read the ticket number.</p>
+<p>Once is fine. Inside a loop over 5,000 orders it is 25 million comparisons. Build a Map once and every lookup after that is O(1):</p>
 
-<pre><code>// the fast way: build the cloakroom once...
-const byId = new Map(users.map(u =&gt; [u.id, u]));   // key = id, value = the user
+<pre><code>const byId = new Map(users.map(u =&gt; [u.id, u]));   // key: id, value: the user
+byId.get(4211);                                    // the user, no searching</code></pre>
 
-// ...then every lookup after that is one step, no searching
-byId.get(4211);     // the user, instantly — same speed with 10 users or 10 million</code></pre>
+<p><strong>Any value can be a key.</strong> That includes objects, DOM nodes and functions, stored as themselves, not turned into strings. Object keys match by identity, same rule as Set (&sect;40): <code>m.get({id: 1})</code> never finds an entry set with a different <code>{id: 1}</code> literal. When to pick a Map over a plain object is &sect;42.</p>
 
-<p>That is the purpose in one sentence: <strong>a Map is a thing you put stuff into under a label of your choosing, so you can get it back later by that label without ever searching for it.</strong> Everything else about Map is a detail hanging off that.</p>
+<pre><code>const m = new Map();             // or new Map([["a", 1], ["b", 2]])
 
-<p><strong>So why not just use an object?</strong> You can! <code>{ 4211: user }</code> does roughly this too, and for simple cases people do exactly that. But an object has one hard limit: <strong>the labels on an object can only be text.</strong> Write <code>obj[4211]</code> and JavaScript quietly turns the number <code>4211</code> into the string <code>"4211"</code> behind your back. Try to use something bigger than text as a label &mdash; an actual object, a function, a button on the page &mdash; and the object mashes it into useless text:</p>
+m.set("a", 1);        // returns the Map, so calls chain
+m.get("a");           // 1, or undefined if the key was never set
+m.has("a");           // true
+m.delete("a");        // true if it was there
+m.size;               // a property, not a method
+m.clear();
 
-<pre><code>const obj = {};
-obj[document.body] = 'hello';
-Object.keys(obj);        // ["[object HTMLBodyElement]"]  ← the button is gone, it's just text now
-                         // every element you store collides into that SAME one key
+for (const [key, value] of m) {}     // insertion order
+m.keys(); m.values(); m.entries();</code></pre>
 
-const m = new Map();
-m.set(document.body, 'hello');
-m.get(document.body);    // 'hello'  ← the real element is the key, not a description of it</code></pre>
-
-<p>That is the one real difference, and it is why Map exists: <strong>an object's label has to be a word; a Map's label can be the thing itself.</strong> "Remember that <em>this exact button</em> has been clicked 3 times" is a Map job and an object simply cannot do it.</p>
-
-<p><strong>The whole API &mdash; it is five methods and one property:</strong></p>
-
-<pre><code>const m = new Map();                 // or new Map([['a', 1], ['b', 2]]) to start it filled
-
-m.set('a', 1);        // put 1 on the hook labelled 'a'  (returns the map, so it chains)
-m.get('a');           // 1        — undefined if that label was never used
-m.has('a');           // true     — "is there anything on this hook?"
-m.delete('a');        // true if something was there
-m.size;               // 2        — a plain property, no counting needed
-m.clear();            // empty the cloakroom
-
-for (const [key, value] of m) { }    // walk it in the order things were added
-m.keys(); m.values(); m.entries();   // the three views
-
-Object.fromEntries(m);               // Map → plain object (only if the keys are strings)
-new Map(Object.entries(obj));        // plain object → Map</code></pre>
-
-<p><strong>Two small things that get asked.</strong> Keys are compared the way <code>===</code> compares, with one fix: <code>NaN</code> matches itself, so a Map can hold only one <code>NaN</code> key. And objects are compared <em>by identity, not by looks</em> &mdash; <code>m.set({id:1}, 'x').get({id:1})</code> gives <code>undefined</code>, because those are two different objects that merely resemble each other. Same rule as Set (&sect;40).</p>
-
-<p><strong>When I reach for it:</strong> any id&nbsp;&rarr;&nbsp;record index I am about to look up repeatedly; counting occurrences (<code>counts.set(w, (counts.get(w) ?? 0) + 1)</code>); attaching data to DOM nodes or component instances; and any cache whose keys arrive at runtime from outside. If I am about to write <code>.find()</code> inside a loop, I build a Map instead.</p>
+<p><strong>When I reach for it:</strong> an id&nbsp;&rarr;&nbsp;record index I will look up repeatedly, counting occurrences (<code>counts.set(w, (counts.get(w) ?? 0) + 1)</code>), data attached to DOM nodes or component instances, and caches whose keys arrive at runtime. If I am about to write <code>.find()</code> inside a loop, I build a Map instead.</p>
 
 
 <h2 id="s42">42. Map vs Object</h2>
@@ -1328,7 +1292,7 @@ store2.has('toString');          // false. nothing is in there but what I put in
 <div class="say"><strong>The decision rule, out loud:</strong> "Object for <strong>records</strong> &mdash; a fixed, known set of fields, especially anything that goes over the wire as JSON. Map for a <strong>hash map</strong> &mdash; keys added and removed at runtime, non-string keys, or when I need <code>size</code> and ordered iteration. The practical clincher is prototype collisions: a user-supplied key called <code>__proto__</code> in a plain object is a real vulnerability class, and in a Map it is just a key. If I must use an object for a dynamic dictionary, I reach for <code>Object.create(null)</code> (&sect;46)."</div>
 
 
-<h2 id="s43">43. WeakMap &mdash; and why we need it</h2>
+<h2 id="s43">43. What is a WeakMap?</h2>
 
 <div class="say"><strong>Analogy &mdash; the lost property office vs. a sticky note.</strong> A normal <code>Map</code> is the <strong>lost property office</strong>: once an umbrella is logged in there, it stays in the building forever, because the office is still holding it. Nobody can ever throw it out &mdash; there is a record. A <code>WeakMap</code> is a <strong>sticky note stuck to the umbrella itself</strong>: the note travels with the umbrella, and the day the umbrella gets thrown away, the note goes in the bin with it. <strong>You remembered something about the umbrella without becoming the reason it can never be thrown away.</strong></div>
 
@@ -1390,7 +1354,7 @@ function getHeight(row) {
 <p><strong>Where it actually shows up:</strong> metadata and caches keyed by DOM nodes or component instances; private fields before <code>#private</code> existed (<code>const _secrets = new WeakMap()</code> &mdash; the data is unreachable without the instance <em>and</em> the module-scoped map); memoizing a function on object identity; cycle detection in a deep clone (&sect;47). React and Immer both use them internally. If you need weakness for a <em>single</em> object rather than a collection, that is <code>WeakRef</code> / <code>FinalizationRegistry</code> (&sect;39).</p>
 
 
-<h2 id="s44">44. WeakSet &mdash; and how it differs from WeakMap</h2>
+<h2 id="s44">44. What is a WeakSet?</h2>
 
 <div class="say"><strong>Where the line is:</strong> a <strong>WeakMap</strong> remembers <em>something about</em> an object &mdash; "this row is 42px tall". A <strong>WeakSet</strong> remembers only <em>that you have seen</em> an object &mdash; "I already dealt with this one". It is the same split as Map vs Set (&sect;42): key&rarr;value versus bare membership. If the thing you need back is a <strong>piece of data</strong>, WeakMap. If it is a <strong>yes/no</strong>, WeakSet.</div>
 

@@ -5,14 +5,20 @@
 import assert from "node:assert/strict";
 import { EXERCISE as callApplyBind } from "../app/interview-qa/call-apply-bind/exercise";
 import { EXERCISE as closures } from "../app/interview-qa/closures/exercise";
-import { EXERCISE as collections } from "../app/interview-qa/set-map-weakmap-weakset/exercise";
 import { EXERCISE as copy } from "../app/interview-qa/deep-vs-shallow-copy/exercise";
+import { EXERCISE as map } from "../app/interview-qa/map/exercise";
+import { EXERCISE as set } from "../app/interview-qa/set/exercise";
+import { EXERCISE as weakmap } from "../app/interview-qa/weakmap/exercise";
+import { EXERCISE as weakset } from "../app/interview-qa/weakset/exercise";
 
 for (const [name, ex] of Object.entries({
   closures,
   copy,
   callApplyBind,
-  collections,
+  set,
+  map,
+  weakmap,
+  weakset,
 })) {
   const printed: string[] = [];
   new Function("console", ex.code.join("\n"))({

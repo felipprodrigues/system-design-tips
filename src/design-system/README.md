@@ -67,6 +67,56 @@ file uses it, it stays in that file.
 - `src/concepts/types.ts` is safe there because only `.tsx` files are concepts. Anything
   else in that folder must not be `.tsx`.
 
+## Practice exercises
+
+An Interview Q&A card that needs a board to fill in and a step-through to watch gets a
+page of its own instead of the dialog. The player is `ClosurePractice`
+(`src/app/interview-qa/closures`). It is a feature component, not part of the design
+system: it holds state and runs only on the client. Storybook: **Features/ClosurePractice**.
+
+**One card, one route, one exercise.** Each page answers exactly one section of
+`src/content/interview-qa.html` and runs one puzzle about that section only. Related
+cards (Set, Map, WeakMap, WeakSet) are separate pages that cross-reference each other,
+never one combined page.
+
+To add one:
+
+1. `src/app/interview-qa/<slug>/exercise.ts` exports `EXERCISE: Exercise`.
+2. `src/app/interview-qa/<slug>/page.tsx` renders the one section by id, then
+   `<ClosurePractice exercise={EXERCISE} />`. Copy an existing page.
+3. Map the section id to the route in `PRACTICE` (`src/lib/interviewPrep.ts`). Every link
+   to the card reads it: the list row, "Practise it", other answers' `§N` references,
+   and `prepHref()` on other pages.
+4. Add the route to `src/app/sitemap.ts` and the exercise to `src/lib/practice.test.ts`.
+5. A shipped route is never deleted silently. Retire it with a permanent redirect in
+   `next.config.ts`.
+
+**The `Exercise` contract** (`closures/exercise.ts`):
+
+| Field | Rule |
+| --- | --- |
+| `code` | The snippet, one line per entry. Each `console.log` ends in `// A`, `// B`… which becomes its slot on the board. |
+| `answer` | What the snippet really prints, in order. `practice.test.ts` runs the code and compares. |
+| `tiles` | Every answer plus decoys: more tiles than slots, repeats included, so the pool never gives the answer away. |
+| `memory` | The heading of the memory panel, saying what an arrow means. |
+| `steps` | Starts on `Start` with nothing in memory, ends on `Done` with the full answer. Each step's `out` is the answer so far. |
+
+**Memory boxes** (`Scope`): an object is named `"#N kind"` (`"#1 object"`, `"#2 array"`),
+a collection `"name, Kind"` (`"visits, Map"`). A var's third field points at another box:
+`"#1"` draws a solid arrow, `"~#1"` a dashed, weak one. `fresh` animates a box in,
+`changed` lights the vars that changed this step, `kept` tags a box with why it is
+still (or no longer) alive. Box names must be unique within a step.
+
+**Step notes** are short sentences in plain language, one idea per sentence:
+
+- Wrap every bit of code in backticks: `` `alias.name = "b"` ``, `` `size` ``, printed
+  values like `` `undefined` ``. It renders as a code chip, so code never reads as an
+  English word.
+- Write `#N` for an object in memory. When a box with that id is on screen, the ref
+  becomes a button: hovering or focusing it highlights that box's border.
+- State the rule before the result: "A method call sets `this` to the object before the
+  dot, so inside `greet`, `this` is `ada`", not "`this` is the object before the dot: `ada`."
+
 ## Storybook
 
 ```bash

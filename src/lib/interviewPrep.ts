@@ -73,6 +73,22 @@ function attr(value: string) {
 /* A bare "§26" means nothing to a reader, so each one becomes the target's
    title. Resolved in a second pass: the target may not be parsed yet. Both
    spellings occur in the hand-authored document. */
+/* Questions that have outgrown the dialog: a board to fill in and a step-through
+   to watch need a page, not a popup. Every link to one of these goes there. */
+export const PRACTICE: Record<string, string> = {
+  s7: "/interview-qa/closures",
+  s13: "/interview-qa/event-loop",
+  s14: "/interview-qa/deep-vs-shallow-copy",
+  s27: "/interview-qa/call-apply-bind",
+  s40: "/interview-qa/set",
+  s41: "/interview-qa/map",
+  s43: "/interview-qa/weakmap",
+  s44: "/interview-qa/weakset",
+};
+
+export const prepHref = ({ id, topic }: PrepLink) =>
+  PRACTICE[id] ?? `/interview-qa?q=${id}&topic=${encodeURIComponent(topic)}`;
+
 const XREF = /(?:§|&sect;)(\d+)/g;
 
 function linkXrefs(html: string, byNumber: Map<number, PrepSection>) {
@@ -89,9 +105,11 @@ function linkXrefs(html: string, byNumber: Map<number, PrepSection>) {
     if (!target) return whole;
 
     // Authored number, not `target.n`: they diverge wherever an id is skipped.
-    return `<span class="xref" tabindex="0" aria-describedby="prep-xref-tip" data-tip="${tips.get(
-      Number(digits),
-    )}">${attr(target.title)}</span>`;
+    const tip = `aria-describedby="prep-xref-tip" data-tip="${tips.get(Number(digits))}"`;
+    const title = attr(target.title);
+    return PRACTICE[target.id]
+      ? `<a class="xref" href="${PRACTICE[target.id]}" ${tip}>${title}</a>`
+      : `<span class="xref" tabindex="0" ${tip}>${title}</span>`;
   });
 }
 

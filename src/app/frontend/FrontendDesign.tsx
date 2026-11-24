@@ -24,7 +24,7 @@ import {
   Text,
 } from "@/design-system";
 import { hl } from "@/lib/highlight";
-import type { PrepLink } from "@/lib/interviewPrep";
+import { prepHref, type PrepLink } from "@/lib/interviewPrep";
 import { setStageView, toggleFrontendCard, useFrontendCards, useStageView } from "@/lib/progress";
 import styles from "./Frontend.module.css";
 import type { Stage } from "./data";
@@ -898,7 +898,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                       <li key={q.id}>
                         <a
                           className={styles.deeperLink}
-                          href={`/interview-qa?q=${q.id}&topic=${encodeURIComponent(q.topic)}`}
+                          href={prepHref(q)}
                         >
                           {q.title}
                         </a>

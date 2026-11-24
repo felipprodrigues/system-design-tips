@@ -3,11 +3,12 @@ import { render, screen, within } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { caseStudies } from "@/lib/caseStudies";
+import { SHELVES } from "@/lib/caseStudies";
 import { parseSections } from "@/lib/interviewPrep";
 import { atRoute, renderWithStorage } from "@/test/appTestUtils";
+import { setMockNavigation } from "../../../.storybook/mocks/next-navigation";
 import AboutPage, { metadata as aboutMetadata } from "./about/page";
-import CaseStudiesPage, { metadata as caseStudiesMetadata } from "./case-studies/page";
+import CaseStudiesPage, { metadata as caseStudiesMetadata } from "../case-studies/page";
 import InterviewQAPage, { metadata as interviewMetadata } from "./interview-qa/page";
 import IndexLayout from "./layout";
 import styles from "./layout.module.css";
@@ -124,10 +125,21 @@ describe("/case-studies", () => {
     expect(caseStudiesMetadata.openGraph).toMatchObject({ type: "website", url: "/case-studies" });
   });
 
-  test("the hero introduces every case study in the browser", () => {
+  test("with no shelf chosen, the hero sits above one picker per shelf", () => {
+    setMockNavigation({ pathname: "/case-studies" });
     render(<CaseStudiesPage />);
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("System blueprints");
-    expect(screen.getAllByRole("article")).toHaveLength(caseStudies.length);
+    expect(screen.queryAllByRole("article")).toHaveLength(0);
+    for (const shelf of Object.values(SHELVES)) {
+      expect(screen.getByRole("button", { name: new RegExp(shelf.title) })).toBeDefined();
+    }
+  });
+
+  test("a chosen shelf lists every study on it", () => {
+    setMockNavigation({ pathname: "/case-studies", query: { set: "systems" } });
+    render(<CaseStudiesPage />);
+    expect(screen.getAllByRole("article")).toHaveLength(SHELVES.systems.studies.length);
+    setMockNavigation({ pathname: "/" });
   });
 });
 

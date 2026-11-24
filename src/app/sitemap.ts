@@ -10,6 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/frontend`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE_URL}/linkedin-skills`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/interview-qa`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE_URL}/interview-qa/closures`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/interview-qa/event-loop`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/about`, changeFrequency: "yearly", priority: 0.5 },
     ...groups.flatMap((group) =>
       group.concepts.map((concept) => ({

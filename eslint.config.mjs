@@ -148,7 +148,7 @@ const eslintConfig = defineConfig([
     files: ["src/lib/*.test.ts", "scripts/**"],
     rules: { "no-console": "off" },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "storybook-static/**", "next-env.d.ts"]),
+  globalIgnores([".next/**", "out/**", "build/**", "storybook-static/**", "drafts/**", "next-env.d.ts"]),
 ]);
 
 export default eslintConfig;

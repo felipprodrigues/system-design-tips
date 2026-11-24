@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import AboutPage from "@/app/(index)/about/page";
-import CaseStudiesPage from "@/app/(index)/case-studies/page";
+import CaseStudiesPage from "@/app/case-studies/page";
 import IndexLayout from "@/app/(index)/layout";
 import FrontendDesign from "@/app/frontend/FrontendDesign";
 import PaginatedListSync from "@/app/linkedin-skills/PaginatedListSync";
@@ -46,9 +46,7 @@ export const CaseStudies: Story = {
   parameters: { nextjs: { navigation: { pathname: "/case-studies" } } },
   render: () => (
     <AppShell>
-      <IndexLayout params={params}>
-        <CaseStudiesPage />
-      </IndexLayout>
+      <CaseStudiesPage />
     </AppShell>
   ),
 };

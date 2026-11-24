@@ -22,8 +22,9 @@ export default function NewContentToast() {
   const seen = useSeen(key);
   const [hidden, setHidden] = useState(false);
 
-  // Nothing to announce to someone already reading the thing being announced.
-  const open = !seen && !hidden && !pathname.startsWith(href);
+  // Nothing to announce to someone already reading the thing being announced. An
+  // href can carry a query that picks a view within a page, and the pathname never does.
+  const open = !seen && !hidden && !pathname.startsWith(href.split("?")[0]);
 
   useEffect(() => {
     if (!open) return;

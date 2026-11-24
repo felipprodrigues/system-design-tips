@@ -1,6 +1,5 @@
-import { Breadcrumb, PageNav } from "@/components";
-import ConceptLayout from "@/components/Concept/ConceptLayout";
 import ConceptRail from "@/components/Concept/ConceptRail";
+import { Breadcrumb, ConceptLayout, PageNav } from "@/design-system";
 import { bySlug, getConceptNav, groups } from "@/lib/concepts";
 import { conceptMetadata } from "@/lib/seo";
 

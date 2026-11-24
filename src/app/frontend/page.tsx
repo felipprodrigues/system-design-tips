@@ -6,9 +6,6 @@ import { SITE_NAME } from "@/lib/seo";
 import { deeper } from "./data";
 import FrontendDesign, { type Deeper } from "./FrontendDesign";
 
-/* Sibling to /walkthrough: same chrome as a concept page, but not one of them, so
-   it brings its own Breadcrumb and PageLayout and stays out of /concepts. */
-
 const description =
   "A nine stage order for frontend system design: framing, the server/client boundary, the client stack, data ownership, UI states, the network, the performance budget, resilience, and the trust boundary.";
 
@@ -25,9 +22,8 @@ export const metadata: Metadata = {
   },
 };
 
-/* Titles come from the Q&A document rather than being copied here, so a renamed
-   question renames its link. A number that no longer resolves is dropped rather
-   than rendered as a dead link — the test is what catches it. */
+/* A number that no longer resolves is dropped rather than rendered as a dead link;
+   src/lib/interviewPrep.test.ts is what catches it. */
 function links(): Deeper[] {
   const sections = parseSections(
     readFileSync(join(process.cwd(), "src/content/interview-qa.html"), "utf8"),

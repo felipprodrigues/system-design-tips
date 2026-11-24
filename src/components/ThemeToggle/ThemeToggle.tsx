@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import { Sun, Moon } from "lucide-react";
 import styles from "./ThemeToggle.module.css";
 
-type Theme = "dark" | "light";
+export type ColorScheme = "dark" | "light";
 
 // layout.tsx's inline script sets `<html data-theme>` from localStorage before
 // hydration, so the attribute is the source of truth and React only reads it.
@@ -17,11 +17,11 @@ function subscribe(onChange: () => void) {
   };
 }
 
-function read(): Theme {
+function read(): ColorScheme {
   return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
 
-function readOnServer(): Theme {
+function readOnServer(): ColorScheme {
   return "dark";
 }
 
@@ -29,7 +29,7 @@ export default function ThemeToggle() {
   const theme = useSyncExternalStore(subscribe, read, readOnServer);
 
   function toggle() {
-    const next: Theme = theme === "light" ? "dark" : "light";
+    const next: ColorScheme = theme === "light" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem("sd-theme", next);

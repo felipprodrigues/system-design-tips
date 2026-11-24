@@ -16,7 +16,6 @@ import {
   Smartphone,
   Zap,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import {
   ConceptHeader,
   LearnedToggle,
@@ -24,7 +23,9 @@ import {
   QuizCarousel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { LifelinesProps, Point, Rect } from "@/design-system";
 import { hl } from "@/lib/highlight";
+import type { ArrowProps, BoxProps, CapstoneStage, IconLane, Placed, SequenceMessageProps, StagedNode } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -147,7 +148,7 @@ const stages = [
     cost: "The only piece here that adds no capability at all, and it still charges: storage per log line, cardinality limits on metrics, sampling decisions, and instrumentation in code that was working fine without it. It is also what makes the other nine debuggable, which is why it is the worst one to defer.",
     dive: { slug: "latency-throughput-availability", title: "Latency, Throughput & Availability", nearest: true },
   },
-];
+] satisfies CapstoneStage[];
 
 /* The closing recap, in the shape the whole page argues for: what each piece does,
    and between every pair, the thing it still could not do. Read straight down, the
@@ -187,24 +188,6 @@ const arrowDefs = (
   </defs>
 );
 
-interface BoxProps {
-  x: number;
-  y: number;
-  w?: number;
-  h?: number;
-  label: string;
-  sub?: string;
-  /** Stamps the stage that introduced this node, which is what makes the full
-      picture read as a history rather than as another architecture diagram. */
-  n?: number;
-  accent?: boolean;
-  /** The piece this stage just added, ringed so the eye finds it. */
-  isNew?: boolean;
-  /** A lucide icon renders as a nested <svg>, positioned with x and y like any
-      other SVG child. With one present the text left-aligns beside it. */
-  icon?: LucideIcon;
-}
-
 function Box({ x, y, w = 150, h = 48, label, sub, n, accent, isNew, icon: Icon }: BoxProps) {
   const textX = Icon ? x + 42 : x + w / 2;
   const anchor = Icon ? "start" : "middle";
@@ -234,22 +217,6 @@ function Box({ x, y, w = 150, h = 48, label, sub, n, accent, isNew, icon: Icon }
       )}
     </g>
   );
-}
-
-interface ArrowProps {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  label?: string;
-  /** Observability reads from the pieces rather than sitting in the traffic path,
-      so its edges are dashed to say they carry telemetry, not requests. */
-  dash?: boolean;
-  accent?: boolean;
-  /** Nudges off the default offset, for the few edges whose gap is too tight
-      for a label to sit above-right of the midpoint without hitting a box. */
-  labelDx?: number;
-  labelDy?: number;
 }
 
 function Arrow({ x1, y1, x2, y2, label, dash, accent, labelDx = 8, labelDy = -5 }: ArrowProps) {
@@ -282,24 +249,7 @@ function Arrow({ x1, y1, x2, y2, label, dash, accent, labelDx = 8, labelDy = -5 
    is making. Positions are hand-placed for the full stage-ten layout, so the
    early stages read as sparse on purpose — that is what the backend was. */
 
-interface Placed {
-  from: number;
-  /** Last stage this exists for, when a later stage replaces it. */
-  until?: number;
-}
-
-interface DiagramNode extends Placed {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  sub?: string;
-  x: number;
-  y: number;
-  w?: number;
-  accent?: boolean;
-}
-
-const diagramNodes: DiagramNode[] = [
+const diagramNodes: StagedNode[] = [
   { id: "nadia", icon: Smartphone, label: "Nadia", sub: "sends", x: 120, y: 16, from: 1 },
   { id: "theo", icon: Smartphone, label: "Theo", sub: "receives", x: 610, y: 16, from: 1 },
   { id: "api", icon: Code, label: "API", sub: "POST /messages", x: 365, y: 100, from: 2 },
@@ -317,13 +267,9 @@ const diagramNodes: DiagramNode[] = [
 
 /* The one piece that is not a box in the traffic path: it is the boundary the app
    servers run inside, so it is drawn as a frame around them. */
-interface DiagramFrame extends Placed {
+interface DiagramFrame extends Placed, Rect {
   id: string;
   label: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
 }
 
 const diagramFrames: DiagramFrame[] = [
@@ -599,16 +545,9 @@ function PieceCarousel() {
   );
 }
 
-interface Lane {
-  label: string;
-  x: number;
-  icon: LucideIcon;
-  accent?: boolean;
-}
-
 /* The headed, dashed vertical lines every message hangs off. Taken as a prop
    rather than hardcoded, because the four sequences below have four casts. */
-function Lifelines({ lanes, bottom }: { lanes: Lane[]; bottom: number }) {
+function Lifelines({ lanes, bottom }: Pick<LifelinesProps, "bottom"> & { lanes: IconLane[] }) {
   return (
     <>
       {lanes.map((l) => {
@@ -627,27 +566,27 @@ function Lifelines({ lanes, bottom }: { lanes: Lane[]; bottom: number }) {
   );
 }
 
-type Tone = "plain" | "danger" | "green";
+type MessageTone = "plain" | "danger" | "green";
 
-const toneColor: Record<Tone, string> = {
+const toneColor: Record<MessageTone, string> = {
   plain: "var(--sd-border-strong)",
   danger: "var(--sd-danger)",
   green: "var(--sd-green)",
 };
 
-const toneMarker: Record<Tone, string> = {
+const toneMarker: Record<MessageTone, string> = {
   plain: "url(#sd-msg-arrow)",
   danger: "url(#sd-msg-arrow-danger)",
   green: "url(#sd-msg-arrow-green)",
 };
 
-const toneText: Record<Tone, string> = {
+const toneText: Record<MessageTone, string> = {
   plain: "var(--sd-muted)",
   danger: "var(--sd-danger)",
   green: "var(--sd-green)",
 };
 
-function Msg({ from, to, y, label, tone = "plain", dash }: { from: number; to: number; y: number; label: string; tone?: Tone; dash?: boolean }) {
+function Msg({ from, to, y, label, tone = "plain", dash }: SequenceMessageProps & { tone?: MessageTone; dash?: boolean }) {
   const dir = to > from ? -6 : 6;
   return (
     <g>
@@ -658,7 +597,7 @@ function Msg({ from, to, y, label, tone = "plain", dash }: { from: number; to: n
 }
 
 /** A note on one lifeline: time passing, or a decision taken with nobody to talk to. */
-function Note({ x, y, text, tone = "plain" }: { x: number; y: number; text: string; tone?: Tone }) {
+function Note({ x, y, text, tone = "plain" }: Point & { text: string; tone?: MessageTone }) {
   return (
     <text x={x} y={y} textAnchor="middle" fontFamily="var(--sd-font-mono)" fontSize="10.5" fontStyle="italic" fill={toneText[tone]}>{text}</text>
   );
@@ -730,26 +669,26 @@ function TraceWaterfall() {
   );
 }
 
-const pollLanes: Lane[] = [
+const pollLanes: IconLane[] = [
   { label: "Nadia", x: 140, icon: Smartphone },
   { label: "Theo", x: 420, icon: Smartphone },
   { label: "App server", x: 720, icon: Server },
 ];
 
-const inlineLanes: Lane[] = [
+const inlineLanes: IconLane[] = [
   { label: "Nadia", x: 130, icon: Smartphone },
   { label: "App server", x: 400, icon: Server },
   { label: "APNs / FCM", x: 700, icon: BellRing, accent: true },
 ];
 
-const queuedLanes: Lane[] = [
+const queuedLanes: IconLane[] = [
   { label: "Nadia", x: 110, icon: Smartphone },
   { label: "App server", x: 350, icon: Server },
   { label: "Queue", x: 580, icon: ListOrdered, accent: true },
   { label: "Worker", x: 800, icon: Cpu },
 ];
 
-const fanoutLanes: Lane[] = [
+const fanoutLanes: IconLane[] = [
   { label: "Nadia", x: 92, icon: Smartphone },
   { label: "Server 1", x: 266, icon: Server },
   { label: "Pub/Sub", x: 440, icon: Radio, accent: true },

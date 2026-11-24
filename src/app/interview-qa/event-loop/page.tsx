@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
-import { Breadcrumb, Hero } from "@/components";
+import { Breadcrumb, Hero } from "@/design-system";
 import prep from "@/components/InterviewPrep/PrepBrowser.module.css";
 import { parseSections } from "@/lib/interviewPrep";
 import { SITE_NAME } from "@/lib/seo";

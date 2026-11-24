@@ -1,0 +1,8 @@
+:global(.sd-figure).scroll {
+  overflow-x: auto;
+}
+
+:global(.sd-figure).flush {
+  padding: 0;
+  overflow: hidden;
+}

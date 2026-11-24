@@ -8,6 +8,8 @@ import {
 } from "@/components";
 import type { QuizCard } from "@/components";
 import { hl } from "@/lib/highlight";
+import type { Definition } from "@/design-system";
+import type { StyleProfile } from "./types";
 
 const quizCards: QuizCard[] = [
   {
@@ -98,7 +100,7 @@ const styles = [
       { role: "Avoid", body: "Assuming the decoupling is free. *Tracing one request across many asynchronous consumers is genuinely harder*, and ordering guarantees stop being something you get for nothing." },
     ],
   },
-];
+] satisfies StyleProfile[];
 
 const moveSignals = [
   ["Every deploy touches unrelated code and Friday releases are dreaded", "SOA or microservices"],
@@ -141,7 +143,7 @@ const terms = [
   { title: "Eventual consistency", def: "Data across services converges to correct over time rather than instantly, which means reads may briefly be stale." },
   { title: "Service mesh", def: "An infrastructure layer that handles retries, timeouts, and observability between microservices, so each service doesn't reinvent them." },
   { title: "API gateway", def: "A single entry point that routes, authenticates, and rate-limits requests to backend services." },
-];
+] satisfies Definition[];
 
 const seenInTheWild = [
   "Early Amazon.com ran as one monolithic application handling everything. It worked until it didn't: every small change meant redeploying the entire site, and one bug could take down the whole store.",

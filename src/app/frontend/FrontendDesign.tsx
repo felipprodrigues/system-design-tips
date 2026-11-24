@@ -1,17 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { LearnedToggle } from "@/components";
 import {
+  ArrowMarker,
   Breadcrumb,
+  Callout,
+  Card,
   DeepDiveButton,
-  LearnedToggle,
+  Diagram,
+  Eyebrow,
+  Figure,
+  Heading,
   MarkerList,
   PageLayout,
+  PanelNote,
   PanelSection,
+  Prose,
+  Section,
   SidePanel,
+  Strong,
   Term,
-} from "@/components";
+  Text,
+} from "@/design-system";
 import { hl } from "@/lib/highlight";
+import type { PrepLink } from "@/lib/interviewPrep";
 import { setStageView, toggleFrontendCard, useFrontendCards, useStageView } from "@/lib/progress";
 import styles from "./Frontend.module.css";
 import type { Stage } from "./data";
@@ -50,11 +63,10 @@ function StageLink({ n, onJump }: { n: number; onJump: (n: number) => void }) {
 function rich(text: string) {
   return text.split(/(\*[^*]+\*|\[[^\]]+\]|`[^`]+`)/g).map((part, i) => {
     if (part.startsWith("*") && part.endsWith("*")) {
-      return <strong key={i} className="sd-strong">{part.slice(1, -1)}</strong>;
+      return <Strong key={i}>{part.slice(1, -1)}</Strong>;
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       const code = part.slice(1, -1);
-      /* A snippet with a line break is a block, not a phrase in a sentence. */
       return (
         <code key={i} className={code.includes("\n") ? styles.codeBlock : styles.code}>
           {code}
@@ -105,16 +117,14 @@ const LAYER_H = 38;
 const LAYER_TOP = 106;
 const LAYER_STEP = 44;
 
-/* A topic names two things where it covers two ("Next.js & build"), and the tags
-   are what the card is about, so each half is its own label. */
-function labelsIn(questions: Deeper["questions"]) {
+function labelsIn(questions: PrepLink[]) {
   const parts = questions.flatMap((q) => q.topic.split(" & "));
   return [...new Set(parts)].map((part) => part[0].toUpperCase() + part.slice(1));
 }
 
 export interface Deeper {
   n: number;
-  questions: { id: string; title: string; topic: string }[];
+  questions: PrepLink[];
 }
 
 export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
@@ -186,19 +196,18 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
       <Breadcrumb section="Frontend Design" concept="A 9-step walkthrough to Frontend System Design" />
 
       <PageLayout>
-        <p className="sd-eyebrow">Frontend Design</p>
+        <Eyebrow>Frontend Design</Eyebrow>
         <LearnedToggle />
-        <h1 className="sd-h1">A 9-step walkthrough to Frontend System Design</h1>
-        <p className="sd-lede">
+        <Heading level="page">A 9-step walkthrough to Frontend System Design</Heading>
+        <Text variant="lede">
           The same discipline as backend system design, pointed at a machine you don&rsquo;t own.
-        </p>
+        </Text>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Big Idea</p>
-          <div className="sd-prose" style={{ fontSize: 16 }}>
+        <Section eyebrow="Big Idea">
+          <Prose size="lg">
             <p>
               A backend design grows outward: each step earns another box on the diagram. A frontend
-              design doesn&rsquo;t. <strong className="sd-strong">The stack is the same nine times over</strong>:
+              design doesn&rsquo;t. <Strong>The stack is the same nine times over</Strong>:
               shell, router, components, store, cache, transport, storage. What each stage changes is
               who owns which part of it, how long the data inside it lives, and what the user is looking at
               while it&rsquo;s still arriving.
@@ -206,20 +215,18 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
             <p>
               So these nine stages are nine passes over one picture, not nine additions to it.
             </p>
-          </div>
-        </div>
+          </Prose>
+        </Section>
 
-        <div className="sd-section" ref={deckRef}>
-          <p className="sd-eyebrow">Walk It</p>
-          <h2 className="sd-h2">Nine Stages, One Stack</h2>
+        <Section ref={deckRef} eyebrow="Walk It" title="Nine Stages, One Stack">
 
-          <div className="sd-prose">
+          <Prose>
             <p>
-              Step through it. <strong className="sd-strong">No stage adds a box after stage 3</strong>.
+              Step through it. <Strong>No stage adds a box after stage 3</Strong>.
               Each one lights up the layers it governs, and the ones left grey are somebody else&rsquo;s
               problem for now.
             </p>
-          </div>
+          </Prose>
 
           <div className={styles.viewBar}>
             <div className={styles.toggle} role="group" aria-label="Stage selector layout">
@@ -322,7 +329,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
             ))}
           </div>
 
-          <div className="sd-figure" style={{ padding: 0, overflow: "hidden", marginBottom: 14 }}>
+          <Figure flush style={{ marginBottom: 14 }}>
             <div
               aria-live="polite"
               style={{
@@ -342,26 +349,15 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
 
             <div style={{ position: "relative" }}>
               <div style={{ overflowX: "auto", padding: "24px 56px" }}>
-                <svg
+                <Diagram
                   viewBox="0 0 760 526"
-                  role="img"
-                  aria-label={`The client stack at stage ${active}, ${stage.label}. ${stage.draws}`}
+                  label={`The client stack at stage ${active}, ${stage.label}. ${stage.draws}`}
+                  title={`The client stack at stage ${active}`}
                   className={styles.stack}
-                  style={{ width: "100%", minWidth: 560, display: "block" }}
+                  minWidth={560}
                 >
-                  <title>{`The client stack at stage ${active}`}</title>
                   <defs>
-                    <marker
-                      id="sd-fe-arrow"
-                      viewBox="0 0 10 10"
-                      refX="9"
-                      refY="5"
-                      markerWidth="6"
-                      markerHeight="6"
-                      orient="auto-start-reverse"
-                    >
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sd-border-strong)" />
-                    </marker>
+                    <ArrowMarker id="sd-fe-arrow" color="border-strong" />
                   </defs>
 
                   <g opacity={dim("user")}>
@@ -441,7 +437,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                       Server / APIs
                     </text>
                   </g>
-                </svg>
+                </Diagram>
               </div>
 
               <button
@@ -463,20 +459,20 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                 →
               </button>
             </div>
-          </div>
+          </Figure>
 
           <div key={active} className={stepped ? styles.slide : undefined} data-dir={dir}>
           <div style={{ display: "flex", gap: 12, alignItems: "flex-start", background: phase.wash, border: "1px solid var(--sd-border)", borderRadius: 8, padding: "13px 16px", marginBottom: 16 }}>
             <span style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12, color: phase.color, flexShrink: 0, lineHeight: 1.65 }}>
               {`0${stage.n}`}
             </span>
-            <p className="sd-text-sm-tight">{stage.draws}</p>
+            <Text variant="sm-tight">{stage.draws}</Text>
           </div>
 
           <div style={{ background: "var(--sd-surface2)", border: "1px solid var(--sd-border)", borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
-            <p className="sd-text-sm-tight" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5 }}>
+            <Text variant="sm-tight" style={{ fontFamily: "var(--sd-font-mono)", fontSize: 12.5 }}>
               {stage.decides}
-            </p>
+            </Text>
           </div>
 
           {stage.analogy && (
@@ -487,7 +483,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
               <div style={{ fontSize: 14, fontWeight: 700, color: "var(--sd-text)", marginBottom: 7 }}>
                 {stage.analogy.title}
               </div>
-              <p className="sd-text-sm-tight">{stage.analogy.body}</p>
+              <Text variant="sm-tight">{stage.analogy.body}</Text>
             </div>
           )}
 
@@ -524,7 +520,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                         onClick={() => setParams({ card: id })}
                       >
                         <span className={styles.qaQ} style={{ color: phase.color }}>{c.q}</span>
-                        <span className="sd-text-xs">{rich(c.a)}</span>
+                        <Text as="span" variant="xs">{rich(c.a)}</Text>
                         <span className={styles.qaMore}>Explain this &rarr;</span>
                       </button>
                       <button
@@ -546,7 +542,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                 {stage.checks.map((c) => (
                   <li key={c.q} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
                     <span style={{ flexShrink: 0, fontFamily: "var(--sd-font-mono)", fontSize: 12, lineHeight: 1.65, color: phase.color }}>▸</span>
-                    <p className="sd-text-sm-tight">
+                    <Text variant="sm-tight">
                       <button
                         type="button"
                         className={styles.qaInline}
@@ -556,7 +552,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                         {c.q}
                       </button>
                       {rich(c.a)}
-                    </p>
+                    </Text>
                   </li>
                 ))}
               </ul>
@@ -567,7 +563,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: phase.color, marginBottom: 5 }}>
               The tell that it&rsquo;s done
             </div>
-            <p className="sd-text-sm-tight">{stage.tell}</p>
+            <Text variant="sm-tight">{stage.tell}</Text>
           </div>
 
           {stage.deepDives && stage.deepDives.length > 0 && (
@@ -580,38 +576,35 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
           )}
           </div>
 
-          <div className="sd-callout sd-callout-accent" style={{ marginTop: 18 }}>
+          <Callout tone="accent" style={{ marginTop: 18 }}>
             Stages 1 and 2 light almost nothing, and that is the argument. {" "}
-            <strong className="sd-strong">
+            <Strong>
               Neither one produces code, and they are the two that get skipped
-            </strong>
+            </Strong>
             , because skipping them is the only way to start building immediately.
-          </div>
-        </div>
+          </Callout>
+        </Section>
 
         <p className={styles.deckEnd}>End of the nine stages</p>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">The Two Axes</p>
-          <h2 className="sd-h2">Where Every Value On Screen Lives</h2>
+        <Section eyebrow="The Two Axes" title="Where Every Value On Screen Lives">
 
-          <div className="sd-prose">
+          <Prose>
             <p>
               Stage 4 is the one most designs lose, and it only ever asks two things:{" "}
-              <strong className="sd-strong">who owns this</strong> and{" "}
-              <strong className="sd-strong">how long does it live</strong>. Two questions make a plane, and
+              <Strong>who owns this</Strong> and{" "}
+              <Strong>how long does it live</Strong>. Two questions make a plane, and
               each quadrant of it comes with its own instruction.
             </p>
-          </div>
+          </Prose>
 
-          <div className="sd-figure" style={{ overflowX: "auto" }}>
-            <svg
+          <Figure scroll>
+            <Diagram
               viewBox="0 0 680 410"
-              role="img"
-              aria-label="A plane with ownership from client to server on the horizontal axis and lifetime from ephemeral to durable on the vertical. Hover state and scroll position are ephemeral and owned by the client; theme preference and URL state are owned by the client and durable; a fetched list is owned by the server and ephemeral; cached results and session identity are owned by the server and durable."
-              style={{ width: "100%", minWidth: 560, display: "block" }}
+              label="A plane with ownership from client to server on the horizontal axis and lifetime from ephemeral to durable on the vertical. Hover state and scroll position are ephemeral and owned by the client; theme preference and URL state are owned by the client and durable; a fetched list is owned by the server and ephemeral; cached results and session identity are owned by the server and durable."
+              title="Ownership against lifetime"
+              minWidth={560}
             >
-              <title>Ownership against lifetime</title>
 
               <line x1={90} y1={350} x2={650} y2={350} stroke="var(--sd-border-strong)" strokeWidth="1.5" />
               <line x1={90} y1={350} x2={90} y2={70} stroke="var(--sd-border-strong)" strokeWidth="1.5" />
@@ -657,29 +650,27 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                   </g>
                 );
               })}
-            </svg>
+            </Diagram>
             <p className="sd-figure-caption" style={{ marginBottom: 0, marginTop: 18 }}>
               The quadrant decides the mechanism, not your preference for a library
             </p>
-          </div>
+          </Figure>
 
-          <div className="sd-callout">
+          <Callout>
             Nothing here is a type of state. They are{" "}
-            <strong className="sd-strong">positions</strong>, and a value can move: an unsaved draft that
+            <Strong>positions</Strong>, and a value can move: an unsaved draft that
             starts in the bottom left and gets autosaved has crossed into the top left, which is the moment it
             becomes your job to keep it.
-          </div>
-        </div>
+          </Callout>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">The Deliverable</p>
-          <h2 className="sd-h2">Eight States, Not One</h2>
+        <Section eyebrow="The Deliverable" title="Eight States, Not One">
           <StageLink n={5} onJump={jumpToStage} />
 
-          <div className="sd-prose">
+          <Prose>
             <p>
               Stage 5 asks what is on screen before the data is. This grid is the whole answer to it:{" "}
-              <strong className="sd-strong">eight states, answered for every screen you ship</strong>, and
+              <Strong>eight states, answered for every screen you ship</Strong>, and
               a screen with one of them designed is a screen that isn&rsquo;t finished.
             </p>
             <p>
@@ -687,7 +678,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
               nobody lost their connection. The other seven have no picture to copy, which is why they
               get discovered in production, one support ticket at a time.
             </p>
-          </div>
+          </Prose>
 
           <div className="sd-grid-2">
             {uiStates.map((s) => (
@@ -695,39 +686,36 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--sd-violet)", marginBottom: 3, fontFamily: "var(--sd-font-mono)" }}>
                   {s.label}
                 </div>
-                <p className="sd-text-xs">{s.note}</p>
+                <Text variant="xs">{s.note}</Text>
               </div>
             ))}
           </div>
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">The Budget</p>
-          <h2 className="sd-h2">What &ldquo;Fast Enough&rdquo; Actually Means</h2>
+        <Section eyebrow="The Budget" title="What &ldquo;Fast Enough&rdquo; Actually Means">
           <StageLink n={7} onJump={jumpToStage} />
 
-          <div className="sd-prose">
+          <Prose>
             <p>
               A budget is a number you agree on <em>before</em> you build, so that &ldquo;is it fast
               enough&rdquo; has an answer instead of an argument.{" "}
-              <strong className="sd-strong">Without one, every performance technique is optional and
-              nothing can ever be called done</strong>, because there is nothing to be done against.
+              <Strong>Without one, every performance technique is optional and
+              nothing can ever be called done</Strong>, because there is nothing to be done against.
             </p>
             <p>
               Four of stage 7&rsquo;s numbers come with the line already drawn. These are the published
               Core Web Vitals thresholds, the same ones search engines and Lighthouse score you on, so
               the only question left is which side of them you land on.
             </p>
-          </div>
+          </Prose>
 
-          <div className="sd-figure" style={{ overflowX: "auto" }}>
-            <svg
+          <Figure scroll>
+            <Diagram
               viewBox="0 0 680 282"
-              role="img"
-              aria-label="Core Web Vitals thresholds. LCP good at or under 2.5 seconds, poor over 4. INP good at or under 200 milliseconds, poor over 500. CLS good at or under 0.1, poor over 0.25. TTFB good at or under 0.8 seconds, poor over 1.8."
-              style={{ width: "100%", minWidth: 540, display: "block" }}
+              label="Core Web Vitals thresholds. LCP good at or under 2.5 seconds, poor over 4. INP good at or under 200 milliseconds, poor over 500. CLS good at or under 0.1, poor over 0.25. TTFB good at or under 0.8 seconds, poor over 1.8."
+              title="Core Web Vitals thresholds"
+              minWidth={540}
             >
-              <title>Core Web Vitals thresholds</title>
 
               {vitals.map((v, i) => {
                 const y = 30 + i * 56;
@@ -769,11 +757,11 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                   </text>
                 </g>
               ))}
-            </svg>
+            </Diagram>
             <p className="sd-figure-caption" style={{ marginBottom: 0, marginTop: 18 }}>
               Good, needs work, poor. The boundaries are published, not chosen by you
             </p>
-          </div>
+          </Figure>
 
           <div className="sd-grid-2">
             {vitals.map((v) => (
@@ -786,19 +774,19 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                     {`good ≤ ${v.good}${v.unit}`}
                   </span>
                 </div>
-                <p className="sd-text-xs">{v.means}</p>
+                <Text variant="xs">{v.means}</Text>
               </div>
             ))}
           </div>
 
-          <div className="sd-prose" style={{ marginTop: 22 }}>
+          <Prose style={{ marginTop: 22 }}>
             <p>
               The other five have no published threshold, so{" "}
-              <strong className="sd-strong">you have to pick a number and write it down</strong>. A budget
+              <Strong>you have to pick a number and write it down</Strong>. A budget
               you chose arbitrarily still beats no budget, because only one of the two can be exceeded.
               These are reasonable places to start arguing from.
             </p>
-          </div>
+          </Prose>
 
           <div className="sd-stack">
             {ownBudgets.map((b) => (
@@ -811,29 +799,25 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                     {b.start}
                   </span>
                 </div>
-                <p className="sd-text-xs">{b.note}</p>
+                <Text variant="xs">{b.note}</Text>
               </div>
             ))}
           </div>
 
-          <div className="sd-callout sd-callout-green" style={{ marginTop: 18 }}>
+          <Callout tone="green" style={{ marginTop: 18 }}>
             Measure them on the device from stage 1, not on your laptop.{" "}
-            <strong className="sd-strong">A budget met on a machine nobody in your requirements owns
-            is not a budget</strong>, it is a screenshot.
-          </div>
-        </div>
+            <Strong>A budget met on a machine nobody in your requirements owns
+            is not a budget</Strong>, it is a screenshot.
+          </Callout>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Why This Exists</p>
-          <h2 className="sd-h2">Why Frontend Design Needs Its Own Order</h2>
+        <Section eyebrow="Why This Exists" title="Why Frontend Design Needs Its Own Order">
           <MarkerList mark="▸" color="var(--sd-accent)" items={whyThisExists.map(hl)} />
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">The Difference</p>
-          <h2 className="sd-h2">Same Discipline, Different Physics</h2>
+        <Section eyebrow="The Difference" title="Same Discipline, Different Physics">
 
-          <div className="sd-prose">
+          <Prose>
             <p>
               The{" "}
               <Term label="seven step backend walkthrough" href="/walkthrough">
@@ -844,7 +828,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
               and these nine stages are the same instinct (work in an order, produce something at each
               step) applied to two problems that fail differently.
             </p>
-          </div>
+          </Prose>
 
           <div style={{ background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
             <div style={{ overflowX: "auto" }}>
@@ -873,31 +857,25 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
               </table>
             </div>
           </div>
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Common Mistakes</p>
-          <h2 className="sd-h2">Ways These Nine Stages Get Misused</h2>
+        <Section eyebrow="Common Mistakes" title="Ways These Nine Stages Get Misused">
           <MarkerList mark="✕" color="var(--sd-danger)" bg="var(--sd-danger-wash)" items={commonMistakes} />
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Key Points</p>
-          <h2 className="sd-h2">What To Carry Out Of This</h2>
+        <Section eyebrow="Key Points" title="What To Carry Out Of This">
           <MarkerList mark="✓" color="var(--sd-green)" items={keyPoints.map(hl)} />
-        </div>
+        </Section>
 
-        <div className="sd-section">
-          <p className="sd-eyebrow">Answered In Full</p>
-          <h2 className="sd-h2">The Same Decisions, As Interview Questions</h2>
+        <Section eyebrow="Answered In Full" title="The Same Decisions, As Interview Questions">
 
-          <div className="sd-prose">
+          <Prose>
             <p>
               A stage names the decision; these are the mechanisms underneath it, each written out
               the way you would say it in the room. They open on the Q&amp;A page and come back here
               when you close them.
             </p>
-          </div>
+          </Prose>
 
           <div className={styles.deeper}>
             {deeper.map(({ n, questions }) => {
@@ -931,7 +909,7 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
               );
             })}
           </div>
-        </div>
+        </Section>
       </PageLayout>
 
       <SidePanel
@@ -942,12 +920,10 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
       >
         {openCheck && (
           <>
-            <div className="sd-panel-card">
-              <div className="sd-panel-card-title">What it is</div>
-              <p className="sd-text-xs">{rich(openCheck.explain.plain)}</p>
-            </div>
-            <div className="sd-panel-card">
-              <div className="sd-panel-card-title">Where you have met it</div>
+            <Card variant="panel" title="What it is">
+              <Text variant="xs">{rich(openCheck.explain.plain)}</Text>
+            </Card>
+            <Card variant="panel" title="Where you have met it">
               {openCheck.explain.seen.length > 1 ? (
                 <ul className={styles.seenList}>
                   {openCheck.explain.seen.map((line) => (
@@ -955,17 +931,16 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
                   ))}
                 </ul>
               ) : (
-                <p className="sd-text-xs">{rich(openCheck.explain.seen[0])}</p>
+                <Text variant="xs">{rich(openCheck.explain.seen[0])}</Text>
               )}
-            </div>
-            <div className="sd-panel-card">
-              <div className="sd-panel-card-title">What you decide here</div>
-              <p className="sd-text-xs">{rich(openCheck.a)}</p>
-            </div>
-            <div className="sd-panel-note">
-              <strong className="sd-strong">How to answer it: </strong>
+            </Card>
+            <Card variant="panel" title="What you decide here">
+              <Text variant="xs">{rich(openCheck.a)}</Text>
+            </Card>
+            <PanelNote>
+              <Strong>How to answer it: </Strong>
               {rich(openCheck.explain.say)}
-            </div>
+            </PanelNote>
           </>
         )}
       </SidePanel>
@@ -978,14 +953,13 @@ export default function FrontendDesign({ deeper }: { deeper: Deeper[] }) {
       >
         {(stage.deepDives ?? []).map((dive, i) => (
           <PanelSection key={dive.id} title={dive.question} defaultOpen={i === 0}>
-            <p className="sd-text-sm">{dive.intro}</p>
+            <Text variant="sm">{dive.intro}</Text>
             {dive.cards.map((card) => (
-              <div key={card.title} className="sd-panel-card">
-                <div className="sd-panel-card-title">{card.title}</div>
-                <p className="sd-text-xs">{card.body}</p>
-              </div>
+              <Card key={card.title} variant="panel" title={card.title}>
+                <Text variant="xs">{card.body}</Text>
+              </Card>
             ))}
-            <div className="sd-panel-note">{dive.note}</div>
+            <PanelNote>{dive.note}</PanelNote>
           </PanelSection>
         ))}
       </SidePanel>

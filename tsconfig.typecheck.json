@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "rootDirs": ["./src", "./.typegen/src"],
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "src/raw-imports.d.ts",
+    "src/app/**/*.ts",
+    "src/app/**/*.tsx",
+    "src/design-system/**/*.ts",
+    "src/design-system/**/*.tsx"
+  ]
+}

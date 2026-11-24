@@ -1,0 +1,7 @@
+:global(.sd-callout).toned {
+  background: color-mix(in srgb, var(--ds-tone) 7%, transparent);
+}
+
+:global(.sd-panel-note).toned {
+  background: color-mix(in srgb, var(--ds-tone) 6%, transparent);
+}

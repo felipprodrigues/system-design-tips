@@ -12,6 +12,8 @@ export interface PrepSection {
   html: string;
 }
 
+export type PrepLink = Pick<PrepSection, "id" | "title" | "topic">;
+
 /* Grouped by what the question is about — the library or the layer — not by the
    round it came up in. The document is ordered by when each question was asked,
    so BY_TOPIC is the only record of the subject. Coverage is checked by the test:

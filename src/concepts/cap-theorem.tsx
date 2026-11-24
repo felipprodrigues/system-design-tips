@@ -10,6 +10,7 @@ import {
   SidePanel,
 } from "@/components";
 import type { QuizCard } from "@/components";
+import type { Definition } from "@/design-system";
 
 const quizCards: QuizCard[] = [
   {
@@ -138,7 +139,7 @@ const terms = [
   { title: "Strong consistency", def: "Every read reflects the most recent write regardless of which replica answers \u2014 the strictest and most expensive model to maintain across replicas." },
   { title: "Eventual consistency", def: "Replicas converge to the same value over time if writes stop, but a read immediately after a write may temporarily see stale data." },
   { title: "PACELC", def: "An extension of CAP: even without a Partition, systems trade Latency against Consistency during normal operation, not just Availability against Consistency during a partition." },
-];
+] satisfies Definition[];
 
 const seenInTheWild = [
   "DynamoDB and Cassandra are classic AP-leaning systems. They default to eventual consistency and stay available during network trouble, which fits shopping carts and activity feeds.",

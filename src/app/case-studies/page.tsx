@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Breadcrumb, CaseStudyBrowser, CaseStudyCrumb, Hero } from "@/components";
+import { CaseStudyBrowser, CaseStudyCrumb } from "@/components";
+import { Breadcrumb, Hero } from "@/design-system";
 import { SITE_NAME } from "@/lib/seo";
 import styles from "./page.module.css";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { groups, reading, type ConceptEntry } from "./concepts";
+import { groups, reading, type ConceptEntry, type ConceptGroup } from "./concepts";
 import { pageMinutes, pages } from "./content";
 import { statusOf, useLearned, useVisited, type Status } from "./progress";
 
@@ -9,35 +9,30 @@ export interface ConceptProgress {
   status: Status;
 }
 
-export interface GroupProgress {
-  title: string;
-  concepts: ConceptProgress[];
+export interface Tally {
   done: number;
   total: number;
-  /** 0-100, for the section's progress bar. */
+  /** 0-100, for a progress bar or ring. */
   percent: number;
 }
+
+export interface ReadingMinutes {
+  /** Read time across everything counted, and across what is not yet done. */
+  totalMinutes: number;
+  remainingMinutes: number;
+}
+
+export type GroupProgress = ConceptGroup<ConceptProgress> & Tally;
 
 /* Kept apart from the concept figures above, which still drive the section bars
    and the reading order Resume follows. */
-export interface Library {
+export interface Library extends Tally, ReadingMinutes {
   concepts: number;
   pages: number;
-  total: number;
-  done: number;
-  percent: number;
-  totalMinutes: number;
-  remainingMinutes: number;
 }
 
-export interface Roadmap {
+export interface Roadmap extends Tally, ReadingMinutes {
   sections: GroupProgress[];
-  done: number;
-  total: number;
-  percent: number;
-  /** Read time across every concept, and across the ones not yet done. */
-  totalMinutes: number;
-  remainingMinutes: number;
   library: Library;
   /** Where "Resume" goes: the concept in progress, else the first unread one. */
   next?: ConceptProgress;

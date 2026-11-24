@@ -71,7 +71,7 @@ function Board({ ex }: { ex: Exercise }) {
   const empty = slots.filter((slot) => slot === null).length;
 
   return (
-    <section className={styles.board} aria-label="Answer board">
+    <section aria-label="Answer board">
       <p className={styles.boardHead}>Print order</p>
 
       <ol className={styles.slots}>
@@ -170,14 +170,16 @@ function Walkthrough({ ex }: { ex: Exercise }) {
   };
 
   return (
-    <div
-      className={styles.walk}
-      onKeyDown={(event) => {
-        if (event.key === "ArrowRight") go(1);
-        if (event.key === "ArrowLeft") go(-1);
-      }}
-    >
-      <div className={styles.bar}>
+    <div className={styles.walk}>
+      <div
+        className={styles.bar}
+        role="toolbar"
+        aria-label="Walkthrough controls"
+        onKeyDown={(event) => {
+          if (event.key === "ArrowRight") go(1);
+          if (event.key === "ArrowLeft") go(-1);
+        }}
+      >
         <button type="button" className={styles.btn} onClick={() => go(-1)} disabled={at === 0}>
           ← Back
         </button>

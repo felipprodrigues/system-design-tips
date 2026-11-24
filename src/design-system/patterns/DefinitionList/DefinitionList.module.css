@@ -1,0 +1,6 @@
+.term {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ds-tone, var(--sd-teal));
+  margin-bottom: 4px;
+}

@@ -1,13 +1,9 @@
 import Link from "next/link";
+import type { ConceptEntry, ConceptNav } from "@/lib/concepts";
 import styles from "./PageNav.module.css";
 
-interface PageNavProps {
-  conceptNumber: number;
-  totalConcepts: number;
-  prevHref?: string;
-  nextHref?: string;
-  sectionTitle: string;
-  label?: string;
+interface PageNavProps extends ConceptNav {
+  label?: ConceptEntry["label"];
 }
 
 export default function PageNav({

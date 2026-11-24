@@ -1,0 +1,10 @@
+.title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ds-tone, var(--sd-text));
+  margin-bottom: 4px;
+}
+
+:global(.sd-panel-card-title).toned {
+  color: var(--ds-tone);
+}

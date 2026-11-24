@@ -10,11 +10,13 @@
     "build": "next build",
     "prebuild": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint --max-warnings=0",
     "read-time": "node --import ./scripts/ts-register.mjs scripts/read-time.mjs",
     "test": "node --import ./scripts/ts-register.mjs src/lib/roadmap.test.ts && node --import ./scripts/ts-register.mjs src/lib/interviewPrep.test.ts && node --import ./scripts/ts-register.mjs src/lib/eventLoop.test.ts && node --import ./scripts/ts-register.mjs src/lib/closures.test.ts && node --import ./scripts/ts-register.mjs scripts/read-time.mjs --check && vitest run",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "typecheck": "next typegen && node scripts/css-module-types.mjs && tsc -p tsconfig.typecheck.json",
+    "check": "npm run lint && npm run typecheck && npm test"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

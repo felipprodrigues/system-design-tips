@@ -1,6 +1,6 @@
 import { ArrowUpRight, Atom, Coffee, Laptop, Mail, MapPin } from "lucide-react";
 import type { Metadata } from "next";
-import { Hero } from "@/components";
+import { Hero } from "@/design-system";
 import { SITE_NAME } from "@/lib/seo";
 import styles from "./about.module.css";
 
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
-/* The rail illustration: laptop, code, and a briefcase it dashes across to.
-   Every fill is a token, so it inverts cleanly between light and dark. */
+/* Every fill is a token, so the illustration inverts cleanly between light and
+   dark. A raster would not. */
 function AvailabilityArt() {
   return (
     <svg viewBox="0 0 168 136" fill="none" aria-hidden="true">

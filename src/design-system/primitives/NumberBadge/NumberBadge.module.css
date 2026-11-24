@@ -1,0 +1,38 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ds-tone, var(--sd-accent)) 15%, transparent);
+  color: var(--ds-tone, var(--sd-accent));
+  font-weight: 700;
+}
+
+.mono {
+  font-family: var(--sd-font-mono);
+}
+
+.xs {
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+}
+
+.sm {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.md {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.lg {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}

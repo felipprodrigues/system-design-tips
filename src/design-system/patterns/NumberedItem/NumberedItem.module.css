@@ -1,0 +1,19 @@
+.item {
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-border);
+  border-radius: var(--sd-radius-sm);
+  padding: 12px 14px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sd-text);
+}

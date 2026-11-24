@@ -1,0 +1,7 @@
+.prose > p + p {
+  margin-top: 12px;
+}
+
+:global(.sd-prose).lg {
+  font-size: 16px;
+}

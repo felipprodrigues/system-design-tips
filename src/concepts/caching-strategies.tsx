@@ -8,6 +8,9 @@ import {
 } from "@/components";
 import type { QuizCard } from "@/components";
 import { hl } from "@/lib/highlight";
+import type { Definition, Lane, LifelinesProps } from "@/design-system";
+import type { NamedStep, SequenceMessageProps } from "./types";
+import type { CompareColumn, FlowStep } from "@/types/content";
 
 const quizCards: QuizCard[] = [
   {
@@ -55,7 +58,7 @@ const concept = [
   { name: "Cache penetration", body: "Requests that ask for something *which never existed*, like a probe for user ID -1 or a stream of invented identifiers. Every one misses the cache, reaches the database, finds nothing, and writes nothing back, so the next identical request repeats the whole trip. Unlike a stampede this can be driven deliberately, and *the fix is counter-intuitive*: cache the \"not found\" answer too, with a short expiry, so the second request stops at the cache." },
   { name: "Avalanche vs breakdown", body: "Two shapes of the same problem. Breakdown is one popular key expiring and sending a focused burst at the database. Avalanche is thousands of unrelated keys, all written at the same moment by a restart or a nightly job, expiring within the same second and shifting their combined traffic at once. *Locking fixes the first*, because there is one key to queue behind. Only *spreading expiry times apart* fixes the second." },
   { name: "Protecting what you cannot lose", body: "When one cache holds both disposable data and data that must survive, like sign-in sessions alongside cached query results, a blanket eviction policy will *happily throw the sessions away* to make room. The usual answer is to let eviction consider only entries that carry an expiry, and give an expiry only to the disposable ones, so anything without a deadline is *never a candidate for removal*." },
-];
+] satisfies NamedStep[];
 
 const terms = [
   { title: "Cache-aside", def: "A pattern where the application checks the cache first, falls back to the database on a miss, and populates the cache afterward, the most common general-purpose caching pattern." },
@@ -66,7 +69,7 @@ const terms = [
   { title: "Stale data", def: "Cached data that no longer matches the current state of the source of truth, the central risk every invalidation strategy is trying to manage." },
   { title: "Cache penetration", def: "Repeated requests for data that does not exist anywhere, which miss the cache every time and reach the database every time, because there is no result to store." },
   { title: "Cache avalanche", def: "Many cached entries expiring at nearly the same moment, usually because they were all written together, sending their combined read traffic at the database at once." },
-];
+] satisfies Definition[];
 
 const seenInTheWild = [
   "Reddit and Twitter/X use Memcached and Redis extensively to cache hot content (popular posts, feeds) so millions of reads don't hit the database directly for the same rapidly re-requested data.",
@@ -114,7 +117,7 @@ const writeStrategies = [
       "Risk of data loss if the cache fails before flushing",
     ],
   },
-];
+] satisfies CompareColumn[];
 
 const cacheAsideSteps = [
   { name: "Check cache", sub: "is the data there?" },
@@ -122,7 +125,7 @@ const cacheAsideSteps = [
   { name: "Read from database", sub: "the source of truth" },
   { name: "Write result into cache", sub: "for next time" },
   { name: "Return to caller", sub: "future reads hit the cache" },
-];
+] satisfies FlowStep[];
 
 /* Lifelines shared by both stampede diagrams. */
 const lanes = [
@@ -130,9 +133,9 @@ const lanes = [
   { label: "Request 2..N", x: 315 },
   { label: "Cache", x: 545, accent: true },
   { label: "Database", x: 760, accent: true },
-];
+] satisfies Lane[];
 
-function Lifelines({ bottom }: { bottom: number }) {
+function Lifelines({ bottom }: Pick<LifelinesProps, "bottom">) {
   return (
     <>
       {lanes.map((l) => (
@@ -146,7 +149,7 @@ function Lifelines({ bottom }: { bottom: number }) {
   );
 }
 
-function Msg({ from, to, y, label }: { from: number; to: number; y: number; label: string }) {
+function Msg({ from, to, y, label }: SequenceMessageProps) {
   const dir = to > from ? -6 : 6;
   return (
     <g>

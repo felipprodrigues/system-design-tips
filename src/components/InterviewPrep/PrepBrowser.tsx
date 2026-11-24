@@ -15,6 +15,12 @@ import styles from "./PrepBrowser.module.css";
 const PRACTICE: Record<string, string> = {
   s7: "/interview-qa/closures",
   s13: "/interview-qa/event-loop",
+  s14: "/interview-qa/deep-vs-shallow-copy",
+  s27: "/interview-qa/call-apply-bind",
+  s40: "/interview-qa/set-map-weakmap-weakset",
+  s41: "/interview-qa/set-map-weakmap-weakset",
+  s43: "/interview-qa/set-map-weakmap-weakset",
+  s44: "/interview-qa/set-map-weakmap-weakset",
 };
 
 /* A view-transition-name has to be a bare identifier, and topics have spaces and

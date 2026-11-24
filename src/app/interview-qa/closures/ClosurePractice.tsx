@@ -16,6 +16,47 @@ const PHASE: Partial<Record<Phase, string>> = {
 };
 
 const SLOT = /\/\/ ([A-Z])\s*$/;
+const TOKEN = /(`[^`]+`|#\d+)/;
+
+const boxId = (scope: Scope) => scope.name.split(" ")[0];
+
+function Note({
+  text,
+  scopes,
+  onRef,
+}: {
+  text: string;
+  scopes: Scope[];
+  onRef: (ref: string | null) => void;
+}) {
+  const ids = new Set(scopes.map(boxId));
+
+  return text.split(TOKEN).map((part, i) => {
+    if (part.startsWith("`")) {
+      return (
+        <code key={i} className={own.noteCode}>
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    if (ids.has(part)) {
+      return (
+        <button
+          key={i}
+          type="button"
+          className={own.ref}
+          onMouseEnter={() => onRef(part)}
+          onMouseLeave={() => onRef(null)}
+          onFocus={() => onRef(part)}
+          onBlur={() => onRef(null)}
+        >
+          {part}
+        </button>
+      );
+    }
+    return part;
+  });
+}
 
 function Code({ code, active = [] }: { code: string[]; active?: number[] }) {
   return (
@@ -75,7 +116,7 @@ interface Arrow {
 /* The boxes are laid out by CSS, so the arrows can only be drawn once the
    browser has placed them: measured on mount, and again on every resize. The
    Stage is keyed by step, so a new step is a fresh mount. */
-function Stage({ scopes }: { scopes: Scope[] }) {
+function Stage({ scopes, hot }: { scopes: Scope[]; hot?: string }) {
   const root = useRef<HTMLDivElement>(null);
   const [arrows, setArrows] = useState<Arrow[]>([]);
   const col = columns(scopes);
@@ -140,7 +181,7 @@ function Stage({ scopes }: { scopes: Scope[] }) {
                 <div
                   key={scope.name}
                   data-box={scope.name}
-                  className={`${own.scope} ${scope.kept ? own.kept : ""} ${scope.fresh ? own.fresh : ""}`}
+                  className={`${own.scope} ${scope.kept ? own.kept : ""} ${scope.fresh ? own.fresh : ""} ${boxId(scope) === hot ? own.hot : ""}`}
                 >
                   <p className={own.scopeHead}>{scope.name}</p>
                   {scope.kept && <span className={own.tag}>{scope.kept}</span>}
@@ -354,7 +395,9 @@ export function Timeline({
 function Walkthrough({ ex }: { ex: Exercise }) {
   const [at, setAt] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [focus, setFocus] = useState<[number, string]>();
   const step = ex.steps[at];
+  const hot = focus?.[0] === at ? focus[1] : undefined;
   const last = ex.steps.length - 1;
 
   useEffect(() => {
@@ -395,7 +438,11 @@ function Walkthrough({ ex }: { ex: Exercise }) {
       <p className={styles.msg}>
         <span className={`${styles.phase} ${PHASE[step.phase] ?? ""}`}>{step.phase}</span>
         <span key={at} className={own.note}>
-          {step.note}
+          <Note
+            text={step.note}
+            scopes={step.scopes}
+            onRef={(ref) => setFocus(ref ? [at, ref] : undefined)}
+          />
         </span>
       </p>
 
@@ -403,7 +450,7 @@ function Walkthrough({ ex }: { ex: Exercise }) {
         <Code code={ex.code} active={step.lines} />
         <div className={own.memory}>
           <p className={styles.boxLabel}>{ex.memory}</p>
-          <Stage key={at} scopes={step.scopes} />
+          <Stage key={at} scopes={step.scopes} hot={hot} />
         </div>
       </div>
 

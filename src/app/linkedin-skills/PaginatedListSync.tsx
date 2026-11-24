@@ -25,7 +25,7 @@ import {
   type Point,
 } from "@/design-system";
 import { hl } from "@/lib/highlight";
-import type { PrepLink } from "@/lib/interviewPrep";
+import { prepHref, type PrepLink } from "@/lib/interviewPrep";
 import type { Hue } from "@/types/content";
 /* The scrolling chip track is defined once, in the /frontend module, and shared
    from here rather than copied: two stylesheets drifting apart is how the same
@@ -88,7 +88,7 @@ function QaLinks({ questions }: { questions: PrepLink[] }) {
         {questions.map((question) => (
           <a
             key={question.id}
-            href={`/interview-qa?q=${question.id}&topic=${encodeURIComponent(question.topic)}`}
+            href={prepHref(question)}
             style={{ display: "inline-block", padding: "5px 10px", background: "var(--sd-surface)", border: "1px solid var(--sd-border)", borderRadius: 7, color: "var(--sd-text)", fontSize: 12.5, lineHeight: 1.4 }}
           >
             {question.title}

@@ -4,24 +4,10 @@ import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Dialog } from "@base-ui/react/dialog";
 import Link from "next/link";
-import { TOPICS, type PrepSection, type Topic } from "@/lib/interviewPrep";
+import { PRACTICE, TOPICS, type PrepSection, type Topic } from "@/lib/interviewPrep";
 import { toggleSaved, useSaved } from "@/lib/progress";
 import { setUrlState, useUrlState } from "@/lib/urlState";
 import styles from "./PrepBrowser.module.css";
-
-/* Questions that have outgrown the dialog: a board to fill in and a step-through
-   to watch need a page, not a popup, so these open as links and are skipped when
-   stepping through the answers. */
-const PRACTICE: Record<string, string> = {
-  s7: "/interview-qa/closures",
-  s13: "/interview-qa/event-loop",
-  s14: "/interview-qa/deep-vs-shallow-copy",
-  s27: "/interview-qa/call-apply-bind",
-  s40: "/interview-qa/set-map-weakmap-weakset",
-  s41: "/interview-qa/set-map-weakmap-weakset",
-  s43: "/interview-qa/set-map-weakmap-weakset",
-  s44: "/interview-qa/set-map-weakmap-weakset",
-};
 
 /* A view-transition-name has to be a bare identifier, and topics have spaces and
    an ampersand in them. */

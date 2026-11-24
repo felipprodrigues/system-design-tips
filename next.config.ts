@@ -32,11 +32,6 @@ const nextConfig: NextConfig = {
         destination: "/linkedin-skills",
         permanent: true,
       },
-      {
-        source: "/interview-qa/set-map-weakmap-weakset",
-        destination: "/interview-qa",
-        permanent: true,
-      },
     ];
   },
 };

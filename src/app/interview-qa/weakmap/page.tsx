@@ -6,8 +6,8 @@ import prep from "@/components/InterviewPrep/PrepBrowser.module.css";
 import { parseSections } from "@/lib/interviewPrep";
 import { SITE_NAME } from "@/lib/seo";
 import styles from "../event-loop/eventLoop.module.css";
-import ClosurePractice from "../closures/ClosurePractice";
-import { EXERCISE } from "./exercise";
+import PracticeTabs from "../closures/PracticeTabs";
+import { EXERCISE, EXTRA } from "./exercise";
 
 /* §43 on a page of its own, for the same reason as /interview-qa/event-loop. */
 const SECTION = "s43";
@@ -20,7 +20,7 @@ function answer() {
 }
 
 const description =
-  "WeakMap and why we need it, answered in full, then a puzzle: what does each console.log print, with a step-through of what the engine may collect.";
+  "WeakMap and why we need it, answered in full, then two puzzles: what does each console.log print, with a step-through of what the engine may collect.";
 
 export const metadata: Metadata = {
   title: "What is a WeakMap, step by step",
@@ -49,7 +49,7 @@ export default function WeakMapPage() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <Hero eyebrow="JavaScript · practice" title="What is a WeakMap">
-            The answer first, written out the way you would say it in the room. Then a puzzle: fill
+            The answer first, written out the way you would say it in the room. Then two puzzles: fill
             in what each line prints, check it, and step through what the engine may collect.
           </Hero>
 
@@ -63,7 +63,7 @@ export default function WeakMapPage() {
 
           <h2 className={styles.answerHead}>Now work it out: what does each line print?</h2>
 
-          <ClosurePractice exercise={EXERCISE} />
+          <PracticeTabs exercises={[EXERCISE, EXTRA]} />
         </div>
       </div>
     </>

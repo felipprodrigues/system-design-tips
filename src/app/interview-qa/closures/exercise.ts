@@ -12,6 +12,12 @@ export type Phase =
   | "Bind"
   | "Add"
   | "Collect"
+  | "Allocate"
+  | "Assign"
+  | "Compare"
+  | "Reassign"
+  | "Return"
+  | "Settle"
   | "Done";
 
 export interface Scope {

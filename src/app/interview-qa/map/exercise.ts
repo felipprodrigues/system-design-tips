@@ -35,3 +35,36 @@ export const EXERCISE: Exercise = {
     { lines: [], scopes: [], stack: [], out, phase: "Done", note: "Final answers: A 2, B undefined, C 1, D 2, E 3,2." },
   ],
 };
+
+const m = (...entries: Scope["vars"]): Scope => ({ name: "m, Map", vars: entries });
+const typed = ["2", "num", "1", "nan", "1,NaN"];
+
+export const EXTRA: Exercise = {
+  hint: "A Map keeps a key's type: the number 1 and the string \"1\" are two keys. An object turns every key into a string. A Map also matches NaN with NaN, and keeps insertion order.",
+  memory: "The Map and a plain object in memory (each row is key, then value)",
+  code: [
+    'const m = new Map([[1, "num"], ["1", "str"]]);',
+    "console.log(m.size);                      // A",
+    "console.log(m.get(1));                    // B",
+    "",
+    'const o = { 1: "num" };',
+    'o["1"] = "str";',
+    "console.log(Object.keys(o).length);       // C",
+    "",
+    'm.set(NaN, "nan");',
+    "console.log(m.get(NaN));                  // D",
+    "m.delete(1);",
+    "console.log([...m.keys()].join());        // E",
+  ],
+  labels: ["A", "B", "C", "D", "E"],
+  answer: typed,
+  tiles: ["1", "1", "2", "num", "str", "nan", "undefined", "1,NaN", "1,1,NaN"],
+  steps: [
+    { lines: [], scopes: [], stack: [], out: [], phase: "Start", note: "Nothing has run yet. Press Next to start." },
+    { lines: [0, 1, 2], scopes: [{ ...m(["1 (number)", '"num"'], ['"1" (string)', '"str"']), fresh: true }], stack: [], out: typed.slice(0, 2), phase: "Add", note: "The number 1 and the string \"1\" are different keys in a Map, so there are two entries, and `get(1)` finds the number one." },
+    { lines: [4, 5, 6], scopes: [m(["1 (number)", '"num"'], ['"1" (string)', '"str"']), { name: "o, object", vars: [['"1"', '"str"']], fresh: true, changed: ['"1"'] }], stack: [], out: typed.slice(0, 3), phase: "Mutate", note: "Object keys are always strings. The literal's `1` was already stored as \"1\", so the assignment overwrote it: one key." },
+    { lines: [8, 9], scopes: [{ ...m(["1 (number)", '"num"'], ['"1" (string)', '"str"'], ["NaN", '"nan"']), changed: ["NaN"] }], stack: [], out: typed.slice(0, 4), phase: "Add", note: "Even though `NaN !== NaN`, a Map treats NaN as one key, so `get(NaN)` finds it." },
+    { lines: [10, 11], scopes: [m(['"1" (string)', '"str"'], ["NaN", '"nan"'])], stack: [], out: typed, phase: "Mutate", note: "Deleting the number key leaves the string \"1\" and NaN, still in insertion order." },
+    { lines: [], scopes: [], stack: [], out: typed, phase: "Done", note: "Final answers: A 2, B num, C 1, D nan, E 1,NaN." },
+  ],
+};

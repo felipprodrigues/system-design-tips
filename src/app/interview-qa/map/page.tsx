@@ -6,8 +6,8 @@ import prep from "@/components/InterviewPrep/PrepBrowser.module.css";
 import { parseSections } from "@/lib/interviewPrep";
 import { SITE_NAME } from "@/lib/seo";
 import styles from "../event-loop/eventLoop.module.css";
-import ClosurePractice from "../closures/ClosurePractice";
-import { EXERCISE } from "./exercise";
+import PracticeTabs from "../closures/PracticeTabs";
+import { EXERCISE, EXTRA } from "./exercise";
 
 /* §41 on a page of its own, for the same reason as /interview-qa/event-loop. */
 const SECTION = "s41";
@@ -20,7 +20,7 @@ function answer() {
 }
 
 const description =
-  "What a Map is answered in full, then a puzzle: what does each console.log print, with a step-through of every entry and the object it is keyed by.";
+  "What a Map is answered in full, then two puzzles: what does each console.log print, with a step-through of every entry and the object it is keyed by.";
 
 export const metadata: Metadata = {
   title: "What is a Map, step by step",
@@ -49,7 +49,7 @@ export default function MapPage() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <Hero eyebrow="JavaScript · practice" title="Map">
-            The answer first, written out the way you would say it in the room. Then a puzzle: fill
+            The answer first, written out the way you would say it in the room. Then two puzzles: fill
             in what each line prints, check it, and step through every entry and its key.
           </Hero>
 
@@ -63,7 +63,7 @@ export default function MapPage() {
 
           <h2 className={styles.answerHead}>Now work it out: what does each line print?</h2>
 
-          <ClosurePractice exercise={EXERCISE} />
+          <PracticeTabs exercises={[EXERCISE, EXTRA]} />
         </div>
       </div>
     </>

@@ -2748,3 +2748,17 @@ export default async function Page({ params }: PageProps&lt;"/blog/[slug]"&gt;) 
 </ul>
 
 <div class="say"><strong>The one-liner:</strong> "A dynamic route is one file with a placeholder segment, so a single template serves every item and each one gets its own real URL. The part people miss is that it is orthogonal to rendering: with <code>generateStaticParams</code> those routes prerender at build and are as fast as hand-written static pages."</div>
+
+
+<h2 id="s70">70. Are JavaScript arguments passed by value or by reference?</h2>
+
+<div class="say"><strong>Analogy:</strong> give someone a copy of a key and you can both open the same locker. If they swap their key for a different one, yours still opens the original locker.</div>
+
+<div class="say"><strong>Interview answer:</strong> "JavaScript passes arguments by value. When the argument is an object, the parameter receives a copy of the reference to that object. Both can mutate the shared object. Reassigning the parameter changes only the function’s local variable. With true pass-by-reference, assigning to the parameter would also reassign the caller’s variable."</div>
+
+
+<h2 id="s71">71. Why does [] === [] return false?</h2>
+
+<div class="say"><strong>Analogy:</strong> two empty lockers can look identical. They’re still two separate lockers. Two keys to the same locker give you access to one locker.</div>
+
+<div class="say"><strong>Interview answer:</strong> "For arrays and other objects, <code>===</code> checks whether both operands refer to the same object. Each <code>[]</code> creates a fresh array. Assigning <code>const c = a</code> gives <code>c</code> a reference to the same array as <code>a</code>."</div>

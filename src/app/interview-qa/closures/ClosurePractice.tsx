@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import styles from "../event-loop/eventLoop.module.css";
 import { ArrowMarker } from "@/design-system";
 import own from "./closures.module.css";
@@ -12,6 +12,9 @@ const PHASE: Partial<Record<Phase, string>> = {
   Read: styles.phaseMicro,
   Mutate: styles.phaseMacro,
   Collect: styles.phaseMacro,
+  Reassign: styles.phaseMacro,
+  Compare: styles.phaseMicro,
+  Settle: styles.phaseMicro,
   Done: styles.phaseDone,
 };
 
@@ -118,6 +121,7 @@ interface Arrow {
    Stage is keyed by step, so a new step is a fresh mount. */
 function Stage({ scopes, hot }: { scopes: Scope[]; hot?: string }) {
   const root = useRef<HTMLDivElement>(null);
+  const head = useId();
   const [arrows, setArrows] = useState<Arrow[]>([]);
   const col = columns(scopes);
   const count = Math.max(0, ...col.values()) + 1;
@@ -217,14 +221,14 @@ function Stage({ scopes, hot }: { scopes: Scope[]; hot?: string }) {
 
       <svg className={own.arrows} aria-hidden="true">
         <defs>
-          <ArrowMarker id="ref-head" color="text" />
+          <ArrowMarker id={head} color="text" />
         </defs>
         {arrows.map((arrow, i) => (
           <path
             key={i}
             d={arrow.d}
             className={`${own.arrow} ${arrow.weak ? own.arrowWeak : ""}`}
-            markerEnd="url(#ref-head)"
+            markerEnd={`url(#${head})`}
           />
         ))}
       </svg>

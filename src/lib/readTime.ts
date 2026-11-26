@@ -19,5 +19,5 @@ export const readTime: Record<string, number> = {
   "walkthrough": 10,
   "frontend": 89,
   "linkedin-skills": 24,
-  "interview-qa": 135,
+  "interview-qa": 136,
 };

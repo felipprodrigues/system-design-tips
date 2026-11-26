@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { atRoute } from "@/test/appTestUtils";
+import { PRACTICE } from "@/lib/interviewPrep";
 import { deeper, stages } from "./data";
 import FrontendDesignPage, { metadata } from "./page";
 
@@ -11,8 +12,11 @@ vi.mock("node:fs", async (importOriginal) => {
   return { ...actual, readFileSync: vi.fn(actual.readFileSync) };
 });
 
+const isQaLink = (href: string | null) =>
+  !!href && (href.startsWith("/interview-qa?q=") || Object.values(PRACTICE).includes(href));
+
 const qaLinks = () =>
-  screen.getAllByRole("link").filter((link) => link.getAttribute("href")?.startsWith("/interview-qa?q="));
+  screen.getAllByRole("link").filter((link) => isQaLink(link.getAttribute("href")));
 
 const actualFs = await vi.importActual<typeof Fs>("node:fs");
 

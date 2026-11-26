@@ -31,3 +31,39 @@ export const EXERCISE: Exercise = {
     { lines: [], scopes: [], stack: [], out, phase: "Done", note: "Final answers: A 42px, B false, C undefined, D undefined." },
   ],
 };
+
+const priv = (...entries: Scope["vars"]): Scope => ({ name: "priv, WeakMap", vars: entries, kept: "weak: does not keep a Counter alive" });
+const counter = (n: number): Scope => ({ name: `#${n} Counter`, vars: [["(own keys)", "none"]] });
+const hidden = ["1", "0", "true", "false", "TypeError"];
+
+export const EXTRA: Exercise = {
+  hint: "A WeakMap keyed by the instance is a way to give each object private data that nobody can list or reach without the map. delete and has work as in a Map. Keys must still be objects.",
+  memory: "The WeakMap and the instances it is keyed by (dashed arrows do not keep an object alive)",
+  code: [
+    "const priv = new WeakMap();",
+    "class Counter {",
+    "  constructor() { priv.set(this, { n: 0 }); }",
+    "  inc() { return ++priv.get(this).n; }",
+    "}",
+    "const c1 = new Counter();",
+    "const c2 = new Counter();",
+    "c1.inc(); c1.inc();",
+    "console.log(c2.inc());                  // A",
+    "console.log(Object.keys(c1).length);    // B",
+    "console.log(priv.delete(c1));           // C",
+    "console.log(priv.has(c1));              // D",
+    'try { priv.set("id", 1); } catch (e) { console.log(e.name); } // E',
+  ],
+  labels: ["A", "B", "C", "D", "E"],
+  answer: hidden,
+  tiles: ["0", "1", "2", "3", "true", "false", "TypeError", "RangeError"],
+  steps: [
+    { lines: [], scopes: [], stack: [], out: [], phase: "Start", note: "Nothing has run yet. Press Next to start." },
+    { lines: [0, 1, 2, 3, 4, 5, 6], scopes: [names(["c1", "", "#1"], ["c2", "", "#2"]), { ...priv(["#1", "{ n: 0 }", "~#1"], ["#2", "{ n: 0 }", "~#2"]), fresh: true }, { ...counter(1), fresh: true }, { ...counter(2), fresh: true }], stack: [], out: [], phase: "Add", note: "Each constructor stores a `{ n: 0 }` in `priv`, keyed by the new instance. The instances themselves have no properties at all." },
+    { lines: [7, 8], scopes: [names(["c1", "", "#1"], ["c2", "", "#2"]), { ...priv(["#1", "{ n: 2 }", "~#1"], ["#2", "{ n: 1 }", "~#2"]), changed: ["#1", "#2"] }, counter(1), counter(2)], stack: ["inc()"], out: hidden.slice(0, 1), phase: "Update", note: "Each instance finds its own entry through `this`. #1 was bumped twice, #2 once, so `c2.inc()` returns 1." },
+    { lines: [9], scopes: [names(["c1", "", "#1"], ["c2", "", "#2"]), priv(["#1", "{ n: 2 }", "~#1"], ["#2", "{ n: 1 }", "~#2"]), counter(1), counter(2)], stack: [], out: hidden.slice(0, 2), phase: "Read", note: "The count lives in the map, not on #1, so `Object.keys` sees nothing. Without access to `priv`, the data is private." },
+    { lines: [10, 11], scopes: [names(["c1", "", "#1"], ["c2", "", "#2"]), { ...priv(["#2", "{ n: 1 }", "~#2"]), changed: [] }, counter(1), counter(2)], stack: [], out: hidden.slice(0, 4), phase: "Collect", note: "`delete` removes #1's entry and returns `true`; after that `has` is `false`. Dropping `c1` would also remove it, on the engine's schedule." },
+    { lines: [12], scopes: [names(["c1", "", "#1"], ["c2", "", "#2"]), priv(["#2", "{ n: 1 }", "~#2"]), counter(1), counter(2)], stack: [], out: hidden, phase: "Read", note: "A string cannot be held weakly, so using it as a key throws a `TypeError`." },
+    { lines: [], scopes: [], stack: [], out: hidden, phase: "Done", note: "Final answers: A 1, B 0, C true, D false, E TypeError." },
+  ],
+};

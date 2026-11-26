@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { atRoute } from "@/test/appTestUtils";
+import { PRACTICE } from "@/lib/interviewPrep";
 import { findings } from "./data";
 import PaginatedListSyncPage, { metadata } from "./page";
 
@@ -10,6 +11,9 @@ vi.mock("node:fs", async (importOriginal) => {
   const actual = await importOriginal<typeof Fs>();
   return { ...actual, readFileSync: vi.fn(actual.readFileSync) };
 });
+
+const isQaLink = (href: string | null) =>
+  !!href && (href.startsWith("/interview-qa?q=") || Object.values(PRACTICE).includes(href));
 
 const actualFs = await vi.importActual<typeof Fs>("node:fs");
 
@@ -28,7 +32,7 @@ const panel = (n: number) => document.getElementById(`finding-panel-${n}`)!;
 const answered = (n: number) =>
   within(panel(n))
     .queryAllByRole("link", { hidden: true })
-    .filter((link) => link.getAttribute("href")?.startsWith("/interview-qa?q="));
+    .filter((link) => isQaLink(link.getAttribute("href")));
 
 describe("/linkedin-skills route", () => {
   test("every finding's Q&A numbers resolve against the real document", () => {

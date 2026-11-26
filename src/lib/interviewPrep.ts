@@ -30,7 +30,7 @@ export const TOPICS = [
 export type Topic = (typeof TOPICS)[number];
 
 const BY_TOPIC: Record<Topic, number[]> = {
-  JavaScript: [7, 13, 14, 15, 27, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 59, 60],
+  JavaScript: [7, 13, 14, 15, 27, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 59, 60, 70, 71],
   React: [18, 19, 22, 24, 25, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 62, 63, 64, 65, 66, 67, 68],
   "Next.js & build": [12, 21, 23, 61, 69],
   "Browser & CSS": [8, 9, 10, 11, 17, 20, 52, 53],
@@ -84,6 +84,13 @@ export const PRACTICE: Record<string, string> = {
   s41: "/interview-qa/map",
   s43: "/interview-qa/weakmap",
   s44: "/interview-qa/weakset",
+  s45: "/interview-qa/promise-methods",
+  s46: "/interview-qa/create-objects",
+  s48: "/interview-qa/property-descriptors",
+  s49: "/interview-qa/generators",
+  s60: "/interview-qa/prototypal-inheritance",
+  s70: "/interview-qa/pass-by-value",
+  s71: "/interview-qa/reference-equality",
 };
 
 export const prepHref = ({ id, topic }: PrepLink) =>

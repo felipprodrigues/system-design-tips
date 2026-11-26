@@ -46,7 +46,8 @@
   border-color: var(--sd-border-strong);
 }
 
-.chipBtn[aria-pressed="true"] {
+.chipBtn[aria-pressed="true"],
+.chipBtn[aria-selected="true"] {
   color: var(--sd-accent);
   background: var(--sd-accent-wash);
   border-color: color-mix(in srgb, var(--sd-accent) 45%, transparent);
